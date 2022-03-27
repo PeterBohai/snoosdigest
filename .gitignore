@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+.pytest_cache/
+
+# Django
+db.sqlite3
+
+# Env
+.env
+
+# PyCharm
+.idea/
+
+# MacOS
+.DS_Store
