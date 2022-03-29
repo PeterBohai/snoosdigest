@@ -133,3 +133,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Reddit's application credentials for accessing Reddit API via the PRAW module
+# https://www.reddit.com/prefs/apps/
+REDDIT_APP_SETTINGS = {
+    'client_id': os.environ.get('REDDIT_APP_CLIENT_ID'),
+    'client_secret': os.environ.get('REDDIT_APP_SECRET'),
+    'user_agent': os.environ.get('REDDIT_APP_USER_AGENT'),
+}

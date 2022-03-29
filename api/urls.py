@@ -3,5 +3,5 @@ from api import views
 
 app_name = 'api'
 urlpatterns = [
-    path('subreddit/<str:subreddit>/posts/top', views.SubredditPostsTop.as_view(), name='subreddit_posts_top'),
+    path('subreddit/<str:subreddit>/top-posts', views.SubredditTopPostsList.as_view(), name='subreddit_posts_top'),
 ]
