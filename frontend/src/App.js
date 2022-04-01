@@ -1,11 +1,12 @@
-import Header from './components/Header'
+import Header from './components/Header';
+import HomeScreen from './screens/HomeScreen';
 
 function App() {
     return (
         <div>
             <Header />
             <main>
-                <h1>Welcome!</h1>
+                <HomeScreen />
             </main>
         </div>
     );
