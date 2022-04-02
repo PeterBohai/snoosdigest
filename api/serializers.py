@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-class RedditPostSerializer(serializers.Serializer):
+class RedditPostPreviewSerializer(serializers.Serializer):
     id = serializers.CharField()
     title = serializers.CharField()
     upvotes = serializers.IntegerField(source='score')
@@ -14,3 +14,21 @@ class RedditPostSerializer(serializers.Serializer):
 
     def get_permalink(self, obj):
         return f'reddit.com{obj.permalink}'
+
+
+class RedditPostSerializer(RedditPostPreviewSerializer):
+    comments = serializers.SerializerMethodField()
+
+    def get_comments(self, obj):
+        obj.comments.replace_more(limit=2)
+        comments = []
+        for comment in obj.comments:
+            comments.append({
+                'id': comment.id,
+                'author': comment.author.name,
+                'body': comment.body,
+                'is_submitter': comment.is_submitter,
+                'score': comment.score,
+                'created_utc': comment.created_utc
+            })
+        return comments
