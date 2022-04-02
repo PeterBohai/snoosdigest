@@ -9,4 +9,8 @@ class RedditPostSerializer(serializers.Serializer):
     num_comments = serializers.IntegerField()
     url = serializers.URLField()
     body = serializers.CharField(source='selftext')
+    permalink = serializers.SerializerMethodField()
     created_utc = serializers.FloatField()
+
+    def get_permalink(self, obj):
+        return f'reddit.com{obj.permalink}'

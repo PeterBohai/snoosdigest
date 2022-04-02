@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -141,3 +143,7 @@ REDDIT_APP_SETTINGS = {
     'client_secret': os.environ.get('REDDIT_APP_SECRET'),
     'user_agent': os.environ.get('REDDIT_APP_USER_AGENT'),
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

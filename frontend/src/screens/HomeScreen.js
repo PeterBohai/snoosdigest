@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { CardActionArea, Divider } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+
+import apiService from '../services/api';
+import PostPreviewCard from '../components/PostPreviewCard';
 
 
 function HomeScreen() {
+    const [posts, setPosts] = useState([]);
+    const chosenSubreddit = 'Bogleheads'
+
+    useEffect(() => {
+        apiService
+            .getTopPosts(chosenSubreddit, 'day', 3)
+            .then(res => {
+                console.log(res.data);
+                setPosts(res.data);
+            });
+    }, []);
+
     return (
         <div>
             <Container>
@@ -16,21 +30,14 @@ function HomeScreen() {
                 <Divider />
                 <Box sx={{pt: 3}}>
                     <Typography gutterBottom variant='h4' component='h4' sx={{fontWeight: 'bold'}}>
-                        r/Bogleheads
+                        {`r/${chosenSubreddit}`}
                     </Typography>
                     
-                    <Card variant="outlined">
-                    <CardActionArea>
-                        <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            Egestas sed sed risus pretium quam vulputate dignissim
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id aliquet risus feugiat in ante metus dictum at. Semper risus in hendrerit gravida rutrum. Sodales neque sodales ut etiam sit amet nisl.
-                        </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    </Card>
+                    <Stack spacing={3}>
+                        {posts.map(post => 
+                            <PostPreviewCard post={post} key={post.id} />
+                        )}
+                    </Stack>
                 </Box>
             </Container>
         </div>
