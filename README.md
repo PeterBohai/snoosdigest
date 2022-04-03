@@ -1,11 +1,11 @@
 # Snoos Digest
-![Python](https://img.shields.io/badge/python-v3.9.6-blue)
-![Django](https://img.shields.io/badge/Django-v4.0.3-success)
-![React.js](https://img.shields.io/badge/React.js-^18.0.0-61dafb)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white)
+<img alt="python" src="https://img.shields.io/badge/python-v3.9.6-blue" />
+<img alt="Django" src="https://img.shields.io/badge/Django-v4.0.3-success" />
+<img alt="React" src="https://img.shields.io/badge/React.js-^18.0.0-61dafb" />
+<img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white" />
 <br/>
 <a href="https://www.linkedin.com/in/peterbohai">
-  ![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white)
+<img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" />
 </a>
 
 Snoos Digest is a web application that provides users with only the top posts from select subreddits on reddit.
