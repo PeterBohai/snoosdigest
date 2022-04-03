@@ -1,11 +1,19 @@
 # Snoos Digest
-<img alt="python" src="https://img.shields.io/badge/python-v3.9.6-blue" />
-<img alt="Django" src="https://img.shields.io/badge/Django-v4.0.3-success" />
-<img alt="React" src="https://img.shields.io/badge/React.js-^18.0.0-61dafb" />
-<img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white" />
+<a href="https://github.com/PeterBohai/snoosdigest/blob/main/requirements.txt">
+  <img alt="python" src="https://img.shields.io/badge/python-v3.9.6-blue">
+</a>
+<a href="https://github.com/PeterBohai/snoosdigest/blob/main/requirements.txt">
+  <img alt="Django" src="https://img.shields.io/badge/Django-v4.0.3-success">
+</a>
+<a href="https://github.com/PeterBohai/snoosdigest/blob/main/frontend/package.json">
+  <img alt="React.js" src="https://img.shields.io/badge/React.js-^18.0.0-61dafb">
+</a>
+<a href="https://www.postgresql.org/">
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white">
+</a>
 <br/>
 <a href="https://www.linkedin.com/in/peterbohai">
-<img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" />
+  <img alt="LinedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white">
 </a>
 
 Snoos Digest is a web application that provides users with only the top posts from select subreddits on reddit.
