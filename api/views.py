@@ -23,7 +23,7 @@ class RedditPostDetail(APIView):
         post = reddit.submission(id=post_id)
 
         post.comment_sort = 'top'
-        post.comment_limit = 16
+        post.comment_limit = 8
 
         serialized_post = RedditPostSerializer(post)
         return Response(serialized_post.data)

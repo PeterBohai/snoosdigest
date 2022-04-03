@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as RouterLink} from 'react-router-dom';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -14,8 +15,8 @@ function PostPreviewCard({post}) {
     const postContent =  postBody || post.permalink
 
     return (
-        <Card variant="outlined">
-            <CardActionArea>
+        <Card variant="outlined" sx={{borderColor: 'grey.500'}}>
+            <CardActionArea component={RouterLink} to={`/posts/${post.id}`}>
                 <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                     {post.title}
