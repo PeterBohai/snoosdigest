@@ -21,7 +21,7 @@ function PostPreviewCard({post}) {
                 <Typography gutterBottom variant="h5" component="div">
                     {post.title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body2" color="text.secondary">
                     {postContent}
                 </Typography>
                 </CardContent>
