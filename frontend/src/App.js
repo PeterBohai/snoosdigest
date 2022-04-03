@@ -1,4 +1,5 @@
 import Header from './components/Header';
+import Footer from './components/Footer';
 import HomeScreen from './screens/HomeScreen';
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
             <main>
                 <HomeScreen />
             </main>
+            <Footer />
         </div>
     );
 }

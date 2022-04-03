@@ -28,7 +28,7 @@ function HomeScreen() {
             <Container>
                 <Typography gutterBottom variant='h3' component='h3' sx={{mt: 2}}>Popular</Typography>
                 <Divider />
-                <Box sx={{pt: 3}}>
+                <Box sx={{pt: 3, pb: 3}}>
                     <Typography gutterBottom variant='h4' component='h4' sx={{fontWeight: 'bold'}}>
                         {`r/${chosenSubreddit}`}
                     </Typography>
