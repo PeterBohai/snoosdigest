@@ -7,6 +7,12 @@ import CardActionArea from '@mui/material/CardActionArea';
 
 
 function PostPreviewCard({post}) {
+    const contentMaxChars = 320;
+    const postBody = post.body.slice(0, contentMaxChars) + (post.body.length > contentMaxChars ? '...' : '');
+    
+    // If body is empty, the post is simply linking to the permalink
+    const postContent =  postBody || post.permalink
+
     return (
         <Card variant="outlined">
             <CardActionArea>
@@ -15,8 +21,7 @@ function PostPreviewCard({post}) {
                     {post.title}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    {/* If body is empty, the post is simply linking to the permalink */}
-                    {post.body || post.permalink}
+                    {postContent}
                 </Typography>
                 </CardContent>
             </CardActionArea>
