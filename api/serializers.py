@@ -20,13 +20,17 @@ class RedditPostSerializer(RedditPostPreviewSerializer):
     comments = serializers.SerializerMethodField()
 
     def get_comments(self, obj):
-        obj.comments.replace_more(limit=2)
+        obj.comments.replace_more(limit=1)
         comments = []
         for comment in obj.comments:
+            # If the comment or author's account is deleted, comment will be removed - Skip
+            if not comment.author:
+                continue
+
             comments.append({
                 'id': comment.id,
                 'author': comment.author.name,
-                'body': comment.body,
+                'body': comment.body.strip(),
                 'is_submitter': comment.is_submitter,
                 'score': comment.score,
                 'created_utc': comment.created_utc
