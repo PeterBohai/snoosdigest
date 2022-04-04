@@ -10,9 +10,6 @@ import CardActionArea from '@mui/material/CardActionArea';
 function PostPreviewCard({post}) {
     const contentMaxChars = 320;
     const postBody = post.body.slice(0, contentMaxChars) + (post.body.length > contentMaxChars ? '...' : '');
-    
-    // If body is empty, the post is simply linking to the permalink
-    const postContent =  postBody || post.permalink
 
     return (
         <Card variant="outlined" sx={{borderColor: 'grey.500'}}>
@@ -22,7 +19,7 @@ function PostPreviewCard({post}) {
                     {post.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {postContent}
+                    {postBody}
                 </Typography>
                 </CardContent>
             </CardActionArea>

@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import apiService from '../services/api';
+import utilsService from '../services/utils';
 import CommentCard from '../components/CommentCard';
+
 
 
 function PostDetailScreen() {
@@ -50,16 +56,37 @@ function PostDetailScreen() {
                 <ThemeProvider theme={theme}>
                     {/* Post Section */}
                     <Box sx={{pl: sidePadding}}>
-                        <Typography gutterBottom variant='h4' component='h1'>
+                        <Typography variant='h4' component='h1'>
                             {post.title}
                         </Typography>
-                    
-                        <Typography variant='body1' component='p'>
-                        {post.body || post.permalink} 
+                        <Typography variant='subtitle1' color='text.secondary'>
+                            {utilsService.getRelativeTime(post.created_utc)} by {post.author}
                         </Typography>
+                    
+                        <Typography variant='body1' component='p' sx={{my: 3}}>
+                            {utilsService.isValidHttpUrl(post.body) 
+                                ? <Link href={post.body} target='_blank'>{post.body}</Link>
+                                : post.body
+                            }
+                        </Typography>
+
+                        <Grid container direction='row' alignItems='center' sx={{ml: - 1.1}}>
+                            <Grid item>
+                                <ArrowDropUpIcon color='action' sx={{fontSize: 32}} />
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='subtitle1' color='text.secondary' fontWeight='bold'>
+                                    {post.upvotes}
+                                </Typography>
+                            </Grid>
+                            <Button href={post.url} target='_blank' sx={{ml: 2}}>Post Link</Button>
+                        </Grid>
                     </Box>
 
-                    <Divider sx={{mt: 5, mb: 5}}/>
+                    <Typography variant='h6' sx={{pl: sidePadding, mt: 5}}>
+                        TOP COMMENTS
+                    </Typography>
+                    <Divider sx={{ml: sidePadding, mb: 5}}/>
 
                     {/* Comments Section */}
                     <Box>
