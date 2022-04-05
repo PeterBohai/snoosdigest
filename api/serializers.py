@@ -29,6 +29,7 @@ class RedditPostPreviewSerializer(serializers.Serializer):
                 return permalink
         return obj.selftext.strip()
 
+
 class RedditPostSerializer(RedditPostPreviewSerializer):
     comments = serializers.SerializerMethodField()
 

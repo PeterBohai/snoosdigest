@@ -10,11 +10,15 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import LinkIcon from '@mui/icons-material/Link';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import apiService from '../services/api';
 import utilsService from '../services/utils';
 import CommentCard from '../components/CommentCard';
+import { grey } from '@mui/material/colors';
 
 
 
@@ -43,6 +47,11 @@ function PostDetailScreen() {
               fontWeight: 500
           }
         },
+        palette: {
+            secondary: {
+                main: grey[500]
+            }
+        }
       });
 
     theme = responsiveFontSizes(theme);
@@ -52,10 +61,10 @@ function PostDetailScreen() {
 
     return (
         <Container>
-            <Box sx={{py: botTopPadding, pr: sidePadding, whiteSpace: 'pre-line'}}>
+            <Box sx={{my: botTopPadding, px: sidePadding, whiteSpace: 'pre-line'}}>
                 <ThemeProvider theme={theme}>
                     {/* Post Section */}
-                    <Box sx={{pl: sidePadding}}>
+                    <Box sx={{}}>
                         <Typography variant='h4' component='h1'>
                             {post.title}
                         </Typography>
@@ -69,30 +78,43 @@ function PostDetailScreen() {
                                 : post.body
                             }
                         </Typography>
-
-                        <Grid container direction='row' alignItems='center' sx={{ml: - 1.1}}>
-                            <Grid item>
-                                <ArrowDropUpIcon color='action' sx={{fontSize: 32}} />
+                        <Stack direction='row' alignItems="center" justifyContent='flex-start' spacing={3}>
+                            <Grid container direction='row' alignItems='center' maxWidth={'3.5rem'}>
+                                <Grid item>
+                                    <ChangeHistoryIcon color='action' sx={{fontSize: 32}} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant='body1' color='text.secondary' fontWeight='700'>
+                                        {post.upvotes}
+                                    </Typography>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Typography variant='subtitle1' color='text.secondary' fontWeight='bold'>
-                                    {post.upvotes}
-                                </Typography>
+                            <Grid container direction='row' alignItems='center'>
+                                <Grid item sx={{mb: -0.5, mr: 0.5}}>
+                                    <ChatBubbleOutlineIcon color='secondary' sx={{fontSize: 32}} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant='body1' color='secondary' fontWeight='500'>
+                                        {post.num_comments} Comments
+                                    </Typography>
+                                </Grid>
+                                <Button href={post.url} startIcon={<LinkIcon />} target='_blank' color='secondary' sx={{ml: 2}} size='large'>
+                                    Reddit
+                                </Button>
                             </Grid>
-                            <Button href={post.url} target='_blank' sx={{ml: 2}}>Post Link</Button>
-                        </Grid>
+                        </Stack>
                     </Box>
 
-                    <Typography variant='h6' sx={{pl: sidePadding, mt: 5}}>
+                    <Typography variant='h6' sx={{mt: 5}}>
                         TOP COMMENTS
                     </Typography>
-                    <Divider sx={{ml: sidePadding, mb: 5}}/>
+                    <Divider sx={{mb: 5}}/>
 
                     {/* Comments Section */}
                     <Box>
                         <Stack spacing={2}>
                             {postComments.map(comment => 
-                                <CommentCard comment={comment} key={comment.id} sidePadding={sidePadding} />
+                                <CommentCard comment={comment} key={comment.id} />
                             )}
                         </Stack>
                     </Box>
