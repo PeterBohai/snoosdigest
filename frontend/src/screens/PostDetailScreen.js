@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import CardMedia from '@mui/material/CardMedia';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import LinkIcon from '@mui/icons-material/Link';
@@ -59,6 +60,22 @@ function PostDetailScreen() {
     const botTopPadding = 8;
     const sidePadding = 5;
 
+    const postContent = (post) => {
+        if (Object.keys(post).length === 0) {
+            return ''
+        }
+        if (post.img_url.length !== 0 ) {
+            return <img src={post.img_url} alt='' />
+        }
+        if (post.video_url.length !== 0 ) {
+            return <CardMedia component='video' image={post.video_url} controls />
+        }
+        if (utilsService.isValidHttpUrl(post.body)) {
+            return <Link href={post.body} target='_blank'>{post.body}</Link>
+        }
+        return post.body
+    }
+
     return (
         <Container>
             <Box sx={{my: botTopPadding, px: sidePadding, whiteSpace: 'pre-line'}}>
@@ -73,13 +90,10 @@ function PostDetailScreen() {
                         </Typography>
                     
                         <Typography variant='body1' component='p' sx={{my: 3}}>
-                            {utilsService.isValidHttpUrl(post.body) 
-                                ? <Link href={post.body} target='_blank'>{post.body}</Link>
-                                : post.body
-                            }
+                            {postContent(post)}
                         </Typography>
-                        <Stack direction='row' alignItems="center" justifyContent='flex-start' spacing={3}>
-                            <Grid container direction='row' alignItems='center' maxWidth={'3.5rem'}>
+                        <Stack direction='row' alignItems="center" justifyContent='flex-start' spacing={2}>
+                            <Grid container direction='row' alignItems='center' maxWidth={'5.8rem'}>
                                 <Grid item>
                                     <ChangeHistoryIcon color='action' sx={{fontSize: 32}} />
                                 </Grid>

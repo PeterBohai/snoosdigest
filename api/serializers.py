@@ -8,7 +8,9 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     upvotes = serializers.IntegerField(source='score')
     upvote_ratio = serializers.FloatField(min_value=0.0)
     num_comments = serializers.IntegerField()
-    url = serializers.URLField()
+    url = serializers.URLField(source='shortlink')  # 'shortlink' is always the post's link, 'url' might be image link
+    img_url = serializers.SerializerMethodField()
+    video_url = serializers.SerializerMethodField()
     body = serializers.SerializerMethodField()
     permalink = serializers.SerializerMethodField()
     created_utc = serializers.FloatField()
@@ -28,6 +30,16 @@ class RedditPostPreviewSerializer(serializers.Serializer):
             if permalink_post_id != obj.id:
                 return permalink
         return obj.selftext.strip()
+
+    def get_img_url(self, obj):
+        if 'i.redd.it' in obj.url:
+            return obj.url
+        return ''
+
+    def get_video_url(self, obj):
+        if 'v.redd.it' in obj.url and obj.media and obj.media.get('reddit_video'):
+            return obj.media['reddit_video'].get('fallback_url', '')
+        return ''
 
 
 class RedditPostSerializer(RedditPostPreviewSerializer):
