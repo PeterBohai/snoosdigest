@@ -1,4 +1,5 @@
 import React from 'react';
+import Markdown from 'markdown-to-jsx';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,9 +9,14 @@ import Box from '@mui/material/Box';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 import utilsService from '../services/utils';
+import configService from '../services/config'
 
 
 function CommentCard({ comment }) {
+
+    const commentBody = (comment) => {
+        return <Markdown options={configService.markdownBaseOptions}>{comment.body}</Markdown>
+    }
 
     return (
         <Card variant='outlined' sx={{borderColor: 'transparent'}}>
@@ -23,7 +29,7 @@ function CommentCard({ comment }) {
                         </Typography>
                     </Typography>
                     <Typography variant='body1'>
-                        {comment.body}
+                        {commentBody(comment)}
                     </Typography>
                 </Box>
 

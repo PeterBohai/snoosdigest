@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams} from 'react-router-dom';
+import Markdown from 'markdown-to-jsx';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -9,17 +10,16 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import CardMedia from '@mui/material/CardMedia';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import LinkIcon from '@mui/icons-material/Link';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
+import CommentCard from '../components/CommentCard';
 import apiService from '../services/api';
 import utilsService from '../services/utils';
-import CommentCard from '../components/CommentCard';
-import { grey } from '@mui/material/colors';
+import configService from '../services/config'
 
 
 
@@ -39,22 +39,7 @@ function PostDetailScreen() {
             });
     }, [id]);
 
-    let theme = createTheme({
-        typography: {
-          body1: {
-            fontSize: '1.2rem'
-          },
-          h4: {
-              fontWeight: 500
-          }
-        },
-        palette: {
-            secondary: {
-                main: grey[500]
-            }
-        }
-      });
-
+    let theme = createTheme(configService.muiPostDetailScreenTheme);
     theme = responsiveFontSizes(theme);
 
     const botTopPadding = 8;
@@ -73,7 +58,7 @@ function PostDetailScreen() {
         if (utilsService.isValidHttpUrl(post.body)) {
             return <Link href={post.body} target='_blank'>{post.body}</Link>
         }
-        return post.body
+        return <Markdown options={configService.markdownBaseOptions}>{post.body}</Markdown>
     }
 
     return (
@@ -82,7 +67,7 @@ function PostDetailScreen() {
                 <ThemeProvider theme={theme}>
                     {/* Post Section */}
                     <Box sx={{}}>
-                        <Typography variant='h4' component='h1'>
+                        <Typography variant='h3' component='h1'>
                             {post.title}
                         </Typography>
                         <Typography variant='subtitle1' color='text.secondary'>
@@ -119,7 +104,7 @@ function PostDetailScreen() {
                         </Stack>
                     </Box>
 
-                    <Typography variant='h6' sx={{mt: 5}}>
+                    <Typography variant='h6' sx={{mt: 5}} fontWeight='bold'>
                         TOP COMMENTS
                     </Typography>
                     <Divider sx={{mb: 5}}/>
