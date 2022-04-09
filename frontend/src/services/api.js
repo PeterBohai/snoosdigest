@@ -8,9 +8,17 @@ function getTopPosts(subreddit, timeFilter, numPosts) {
             n: numPosts,
             time_filter: timeFilter
         }
-    })
+    });
 }
 
-export default {
-    getTopPosts: getTopPosts,
+function getPost(postId) {
+    return axios.get(`${baseUrl}/posts/${postId}`);
+}
+
+const exportedFunctions = {
+    getTopPosts,
+    getPost,
 };
+
+
+export default exportedFunctions;
