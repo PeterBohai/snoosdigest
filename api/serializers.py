@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from api import utils
+
 
 class RedditPostPreviewSerializer(serializers.Serializer):
     id = serializers.CharField()
@@ -29,7 +31,7 @@ class RedditPostPreviewSerializer(serializers.Serializer):
                 return ''
             if permalink_post_id != obj.id:
                 return permalink
-        return obj.selftext.strip()
+        return utils.normalize_text_content(obj.selftext)
 
     def get_img_url(self, obj):
         if 'i.redd.it' in obj.url:
@@ -56,7 +58,7 @@ class RedditPostSerializer(RedditPostPreviewSerializer):
             comments.append({
                 'id': comment.id,
                 'author': comment.author.name,
-                'body': comment.body.strip(),
+                'body':  utils.normalize_text_content(comment.body),
                 'is_submitter': comment.is_submitter,
                 'upvotes': comment.score,
                 'created_utc': comment.created_utc
