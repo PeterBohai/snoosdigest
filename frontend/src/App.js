@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import './App.css';
 import Header from './components/Header';
 import PostDetailScreen from './screens/PostDetailScreen';
 import Footer from './components/Footer';

@@ -70,7 +70,12 @@ const markdownBaseOptions = {
                 style: {},
                 align: 'left'
             }
-        }
+        },
+        blockquote: {
+            props: {
+                className: 'markdown'
+            }
+        },
     },
 }
 
