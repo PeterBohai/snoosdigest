@@ -17,7 +17,7 @@ function HomeScreen() {
 
     useEffect(() => {
         apiService
-            .getTopPosts(chosenSubreddit, 'day', 3)
+            .getTopPosts(chosenSubreddit, 'day', 6)
             .then(res => {
                 console.log(res.data);
                 setPosts(res.data);
@@ -31,7 +31,9 @@ function HomeScreen() {
         <div>
             <Container>
             <ThemeProvider theme={theme}>
-                <Typography gutterBottom variant='h3' component='h3' sx={{mt: 2}}>Popular</Typography>
+                <Typography gutterBottom variant='h3' component='h3'>
+                    Popular
+                </Typography>
                 <Divider />
                 <Box sx={{pt: 3, pb: 3}}>
                     <Typography gutterBottom variant='h4' component='h4' sx={{fontWeight: 'bold'}}>

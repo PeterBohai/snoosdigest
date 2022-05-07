@@ -1,6 +1,27 @@
 import { Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
+// Base Theme designed with https://bareynol.github.io/mui-theme-creator/
+const baseTheme = {
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#795548',      // Brown 500
+    },
+    secondary: {
+      main: '#d50000',      // Red A700
+    },
+    info: {
+      main: '#fafafa',      // Grey 50
+    },
+  },
+  typography: {
+    button: {
+      textTransform: 'none'     // Remove button text all caps
+    }
+  }
+};
+
 const muiPostDetailScreenTheme = {
     typography: {
       body1: {
@@ -82,6 +103,7 @@ const markdownBaseOptions = {
 const exportedConfigs = {
     markdownBaseOptions,
     muiPostDetailScreenTheme,
+    baseTheme,
 };
 
 export default exportedConfigs;
