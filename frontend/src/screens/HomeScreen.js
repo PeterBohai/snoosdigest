@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import apiService from '../services/api';
 import PostPreviewCard from '../components/PostPreviewCard';
@@ -23,9 +24,13 @@ function HomeScreen() {
             });
     }, []);
 
+    let theme = createTheme();
+    theme = responsiveFontSizes(theme);
+
     return (
         <div>
             <Container>
+            <ThemeProvider theme={theme}>
                 <Typography gutterBottom variant='h3' component='h3' sx={{mt: 2}}>Popular</Typography>
                 <Divider />
                 <Box sx={{pt: 3, pb: 3}}>
@@ -39,6 +44,7 @@ function HomeScreen() {
                         )}
                     </Stack>
                 </Box>
+            </ThemeProvider>
             </Container>
         </div>
     );

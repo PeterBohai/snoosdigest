@@ -18,20 +18,30 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     created_utc = serializers.FloatField()
 
     def get_permalink(self, obj):
-        return f'https://www.reddit.com{obj.permalink}'.strip()
+        return utils.generate_full_reddit_link(obj.permalink)
 
     def get_author(self, obj):
         return obj.author.name
 
     def get_body(self, obj):
+        body = obj.selftext or ''
+
+        # Check if body is just a http link
         permalink = self.get_permalink(obj)
-        permalink_post_id = obj.id_from_url(permalink)
-        if not obj.selftext:
-            if permalink_post_id == obj.id:
-                return ''
-            if permalink_post_id != obj.id:
-                return permalink
-        return utils.normalize_text_content(obj.selftext)
+        if not body:
+            if obj.id_from_url(permalink) != obj.id:
+                # Link is another reddit post
+                body = permalink.end
+            elif hasattr(obj, 'url_overridden_by_dest'):
+                # Link is a non-reddit article
+                body = obj.url_overridden_by_dest
+
+        # Check if body is a cross-post (nests another reddit post directly in the post body)
+        if not body and hasattr(obj, 'crosspost_parent_list'):
+            crosspost_id = obj.crosspost_parent_list[0].get('id', '')
+            body = utils.generate_reddit_link_from_id(crosspost_id)
+
+        return utils.normalize_text_content(body)
 
     def get_img_url(self, obj):
         if 'i.redd.it' in obj.url:

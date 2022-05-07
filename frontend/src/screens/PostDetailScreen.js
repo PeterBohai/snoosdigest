@@ -19,7 +19,7 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/s
 import CommentCard from '../components/CommentCard';
 import apiService from '../services/api';
 import utilsService from '../services/utils';
-import configService from '../services/config'
+import configService from '../services/config';
 
 
 
