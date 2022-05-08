@@ -1,4 +1,4 @@
-import React, { useState }from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as RouterLink} from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
@@ -21,7 +21,9 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
+import apiService from '../services/api';
 import configService from '../services/config';
+
 
 const drawerWidth = 260;
 
@@ -44,6 +46,16 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
 
 function Header() {
     const [open, setOpen] = useState(false);
+    const [watchlist, setWatchlist] = useState([])
+
+    useEffect(() => {
+        apiService
+            .getUserWatchlist()
+            .then(res => {
+                console.log(res.data);
+                setWatchlist(res.data);
+            });
+    }, []);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
@@ -103,7 +115,7 @@ function Header() {
                     </List>
                     <Divider />
                     <List>
-                    {['r/Bogleads', 'r/FIRE', 'r/fatFIRE', 'r/financialindependence3212321'].map((text, index) => (
+                    {watchlist.map((text, index) => (
                         <ListItem button key={text} sx={{maxWidth: '100%'}}>
                             <ListItemIcon sx={{minWidth: '36px'}}>
                                 <ArrowCircleRightIcon color='primary' />

@@ -43,7 +43,7 @@ function PostPreviewCard({post}) {
             <CardActionArea component={RouterLink} to={`/posts/${post.id}`}>
             <ThemeProvider theme={theme}>
                 <CardContent sx={{height: 80, overflow: 'hidden'}}>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom variant="h5" fontWeight='500'>
                         {post.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" >
