@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink, useNavigate} from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -23,6 +23,7 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/s
 
 import apiService from '../services/api';
 import configService from '../services/config';
+import utilsService from '../services/utils';
 
 
 const drawerWidth = 260;
@@ -46,6 +47,7 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
 
 function Header() {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
     const [watchlist, setWatchlist] = useState([])
 
     useEffect(() => {
@@ -66,7 +68,11 @@ function Header() {
         } else {
             setOpen(false);
         }
-        
+    };
+
+    const handleSubredditClick = (subreddit_name) => {
+        setOpen(false);
+        navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
     return (
@@ -115,13 +121,13 @@ function Header() {
                     </List>
                     <Divider />
                     <List>
-                    {watchlist.map((text, index) => (
-                        <ListItem button key={text} sx={{maxWidth: '100%'}}>
+                    {watchlist.map((subreddit_name, index) => (
+                        <ListItem button key={subreddit_name} sx={{maxWidth: '100%'}} onClick={() => handleSubredditClick(subreddit_name)}>
                             <ListItemIcon sx={{minWidth: '36px'}}>
                                 <ArrowCircleRightIcon color='primary' />
                             </ListItemIcon>
                             <ListItemText 
-                                primary={text}
+                                primary={subreddit_name}
                                 primaryTypographyProps={{ 
                                     style: {
                                         whiteSpace: 'nowrap',

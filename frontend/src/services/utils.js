@@ -18,11 +18,16 @@ function isValidHttpUrl(string) {
     }
   
     return url.protocol === 'http:' || url.protocol === 'https:';
-  }
+}
+
+function removeSubredditPrefix(subreddit_with_prefix) {
+    return subreddit_with_prefix.slice(2);
+}
 
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
+    removeSubredditPrefix,
 };
 
 export default exportedFunctions;

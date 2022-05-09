@@ -9,7 +9,7 @@ reddit = praw.Reddit(**settings.REDDIT_APP_SETTINGS)
 
 
 def get_user_subreddit_watchlist():
-    return ['news', 'personalfinance', 'investing', 'explainlikeimfive']
+    return ['news', 'personalfinance', 'investing']
 
 
 class UserSubredditWatchList(APIView):
@@ -44,9 +44,16 @@ class SubredditTopPostsList(APIView):
         n = int(request.query_params['n'])
         time_filter = request.query_params['time_filter']
 
-        top_posts = list(reddit.subreddit(subreddit).top(time_filter, limit=n))
+        praw_subreddit = reddit.subreddit(subreddit)
+        top_posts = list(praw_subreddit.top(time_filter, limit=n))
+
+        response = {
+            'subreddit_name': praw_subreddit.display_name_prefixed
+        }
         serialized_posts = RedditPostPreviewSerializer(top_posts, many=True)
-        return Response(serialized_posts.data)
+        response['posts'] = serialized_posts.data
+
+        return Response(response)
 
 
 class RedditPostDetail(APIView):
