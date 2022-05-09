@@ -1,68 +1,70 @@
-import praw
+from typing import Union
+
+from praw import Reddit
+from praw.models import Subreddit, Submission
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 
 from api.serializers import RedditPostPreviewSerializer, RedditPostSerializer
 
-reddit = praw.Reddit(**settings.REDDIT_APP_SETTINGS)
+reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 
 
-def get_user_subreddit_watchlist():
+def get_user_subreddit_watchlist() -> list[str]:
     return ['news', 'personalfinance', 'investing']
 
 
 class UserSubredditWatchList(APIView):
-    def get(self, request):
+    def get(self, request: Request) -> Response:
         # Example GET request: /api/user/watchlist
-        subreddits = get_user_subreddit_watchlist()
+        subreddits: list[str] = get_user_subreddit_watchlist()
         return Response([f'r/{subreddit}' for subreddit in subreddits])
 
 
 class HomePagePostsList(APIView):
-    def get(self, request):
-        # Example GET request: /api/posts/homepage?time_filter=day
-        posts_per_subreddit = request.query_params.get('posts_per_subreddit')
-        if not posts_per_subreddit:
-            posts_per_subreddit = 2
+    def get(self, request: Request) -> Response:
+        # Example GET request: /api/posts/homepage?time_filter=day&posts_per_subreddit=3
+        posts_per_subreddit: int = int(request.query_params.get('posts_per_subreddit', 2))
 
-        time_filter = request.query_params['time_filter']
-        subreddits = get_user_subreddit_watchlist()
+        time_filter: str = request.query_params['time_filter']
+        subreddits: list[str] = get_user_subreddit_watchlist()
 
-        response = {}
+        response: dict[str, list[dict]] = {}
         for subreddit in subreddits:
-            praw_subreddit = reddit.subreddit(subreddit)
-            top_posts = list(praw_subreddit.top(time_filter, limit=posts_per_subreddit))
+            praw_subreddit: Subreddit = reddit.subreddit(subreddit)
+            top_posts: list[Submission] = list(praw_subreddit.top(time_filter, limit=posts_per_subreddit))
+
             response[praw_subreddit.display_name_prefixed] = RedditPostPreviewSerializer(top_posts, many=True).data
 
         return Response(response)
 
 
 class SubredditTopPostsList(APIView):
-    def get(self, request, subreddit):
+    def get(self, request: Request, subreddit: str) -> Response:
         # Example GET request: /api/subreddits/news/top-posts?time_filter=day&n=2
-        n = int(request.query_params['n'])
-        time_filter = request.query_params['time_filter']
+        n: int = int(request.query_params['n'])
+        time_filter: str = request.query_params['time_filter']
 
-        praw_subreddit = reddit.subreddit(subreddit)
-        top_posts = list(praw_subreddit.top(time_filter, limit=n))
+        praw_subreddit: Subreddit = reddit.subreddit(subreddit)
+        top_posts: list[Submission] = list(praw_subreddit.top(time_filter, limit=n))
 
-        response = {
-            'subreddit_name': praw_subreddit.display_name_prefixed
+        response: dict[str, Union[str, list[dict]]] = {
+            'subreddit_name': praw_subreddit.display_name_prefixed,
+            'posts': RedditPostPreviewSerializer(top_posts, many=True).data
         }
-        serialized_posts = RedditPostPreviewSerializer(top_posts, many=True)
-        response['posts'] = serialized_posts.data
 
         return Response(response)
 
 
 class RedditPostDetail(APIView):
-    def get(self, request, post_id):
+    def get(self, request: Request, post_id: str) -> Response:
         # Example GET request: /api/posts/ukq48t
-        post = reddit.submission(id=post_id)
+        post: Submission = reddit.submission(id=post_id)
 
         post.comment_sort = 'top'
         post.comment_limit = 8
 
-        serialized_post = RedditPostSerializer(post)
+        serialized_post: RedditPostSerializer = RedditPostSerializer(post)
         return Response(serialized_post.data)
