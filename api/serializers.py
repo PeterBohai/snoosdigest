@@ -1,4 +1,7 @@
+from typing import Union
+
 from rest_framework import serializers
+from praw.models import Submission
 
 from api import utils
 
@@ -6,7 +9,7 @@ from api import utils
 class RedditPostPreviewSerializer(serializers.Serializer):
     id = serializers.CharField()
     title = serializers.CharField()
-    author = serializers.SerializerMethodField()
+    author = serializers.CharField(source='author.name')
     upvotes = serializers.IntegerField(source='score')
     upvote_ratio = serializers.FloatField(min_value=0.0)
     num_comments = serializers.IntegerField()
@@ -17,39 +20,36 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     permalink = serializers.SerializerMethodField()
     created_utc = serializers.FloatField()
 
-    def get_permalink(self, obj):
+    def get_permalink(self, obj: Submission) -> str:
         return utils.generate_full_reddit_link(obj.permalink)
 
-    def get_author(self, obj):
-        return obj.author.name
-
-    def get_body(self, obj):
-        body = obj.selftext or ''
+    def get_body(self, obj: Submission) -> str:
+        body: str = obj.selftext or ''
 
         # Check if body is just a http link
-        permalink = self.get_permalink(obj)
+        permalink: str = self.get_permalink(obj)
         if not body:
             if obj.id_from_url(permalink) != obj.id:
                 # Link is another reddit post
-                body = permalink.end
+                body = permalink
             elif hasattr(obj, 'url_overridden_by_dest'):
                 # Link is a non-reddit article
                 body = obj.url_overridden_by_dest
 
         # Check if body is a cross-post (nests another reddit post directly in the post body)
         if not body and hasattr(obj, 'crosspost_parent_list'):
-            crosspost_id = obj.crosspost_parent_list[0].get('id', '')
+            crosspost_id: str = obj.crosspost_parent_list[0].get('id', '')
             body = utils.generate_reddit_link_from_id(crosspost_id)
 
         return utils.normalize_text_content(body)
 
-    def get_img_url(self, obj):
+    def get_img_url(self, obj: Submission) -> str:
         if 'i.redd.it' in obj.url:
             return obj.url
         return ''
 
-    def get_video_url(self, obj):
-        if 'v.redd.it' in obj.url and obj.media and obj.media.get('reddit_video'):
+    def get_video_url(self, obj: Submission) -> str:
+        if 'v.redd.it' in obj.url and obj.media.get('reddit_video'):
             return obj.media['reddit_video'].get('fallback_url', '')
         return ''
 
@@ -57,9 +57,9 @@ class RedditPostPreviewSerializer(serializers.Serializer):
 class RedditPostSerializer(RedditPostPreviewSerializer):
     comments = serializers.SerializerMethodField()
 
-    def get_comments(self, obj):
+    def get_comments(self, obj: Submission) -> list[dict[str, Union[str, int]]]:
         obj.comments.replace_more(limit=0)
-        comments = []
+        comments: list[dict[str, Union[str, int]]] = []
         for comment in obj.comments:
             # If the comment or author's account is deleted, comment will be removed - Skip
             if not comment.author:

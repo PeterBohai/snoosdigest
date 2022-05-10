@@ -1,5 +1,5 @@
 def normalize_text_content(text: str) -> str:
-    text: str = text.replace('&#x200B;', '')
+    text = text.replace('&#x200B;', '')
     return text.strip()
 
 
