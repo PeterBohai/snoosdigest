@@ -58,7 +58,7 @@ function PostPreviewCard({post}) {
                             </Grid>
                             <Grid item>
                                 <Typography variant='body1' color='text.primary' fontWeight='700'>
-                                    {post.upvotes}
+                                    {utilsService.formatNumber(post.upvotes)}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -68,7 +68,7 @@ function PostPreviewCard({post}) {
                             </Grid>
                             <Grid item>
                                 <Typography variant='body1' color='text.secondary' fontWeight='500'>
-                                    {post.num_comments} Comments
+                                    {utilsService.formatNumber(post.num_comments)} Comments
                                 </Typography>
                             </Grid>
                         </Grid>

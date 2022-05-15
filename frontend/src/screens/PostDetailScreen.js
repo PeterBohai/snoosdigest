@@ -84,7 +84,7 @@ function PostDetailScreen() {
                                 </Grid>
                                 <Grid item>
                                     <Typography variant='body1' color='text.secondary' fontWeight='700'>
-                                        {post.upvotes}
+                                        {utilsService.formatNumber(post.upvotes)}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -94,7 +94,7 @@ function PostDetailScreen() {
                                 </Grid>
                                 <Grid item>
                                     <Typography variant='body1' color='secondary' fontWeight='500'>
-                                        {post.num_comments} Comments
+                                        {utilsService.formatNumber(post.num_comments)} Comments
                                     </Typography>
                                 </Grid>
                                 <Button href={post.url} startIcon={<LinkIcon />} target='_blank' color='secondary' sx={{ml: 2}} size='large'>
