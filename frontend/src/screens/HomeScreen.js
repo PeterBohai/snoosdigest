@@ -51,8 +51,8 @@ function HomeScreen() {
                         {
                             <Stack spacing={3}>
                                 {(posts ? posts : [...Array(2)]).map((post, index) => (
-                                    post ? 
-                                    <PostPreviewCard post={post} key={index} />
+                                    post 
+                                    ? <PostPreviewCard post={post} key={index} />
                                     : <Skeleton variant="rectangular" height={168} key={index} />
                                 ))}
                             </Stack>
