@@ -40,7 +40,7 @@ function PostPreviewCard({post}) {
 
     return (
         <Card variant="outlined" sx={{borderColor: 'grey.400'}} >
-            <CardActionArea component={RouterLink} to={`/posts/${post.id}`}>
+            <CardActionArea component={RouterLink} to={`/posts/${post.reddit_id}`}>
             <ThemeProvider theme={theme}>
                 <CardContent sx={{height: 80, overflow: 'hidden'}}>
                     <Typography gutterBottom variant="h5" fontWeight='500'>

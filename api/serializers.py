@@ -1,24 +1,28 @@
 from typing import Union
 
 from rest_framework import serializers
+from django.utils import timezone
 from praw.models import Submission
 
+from api.models import SubredditPost
 from api import utils
 
 
 class RedditPostPreviewSerializer(serializers.Serializer):
-    id = serializers.CharField()
+    reddit_id = serializers.CharField(source='id')
     title = serializers.CharField()
-    author = serializers.CharField(source='author.name')
+    author_name = serializers.CharField(source='author.name')
     upvotes = serializers.IntegerField(source='score')
     upvote_ratio = serializers.FloatField(min_value=0.0)
     num_comments = serializers.IntegerField()
-    url = serializers.URLField(source='shortlink')  # 'shortlink' is always the post's link, 'url' might be image link
+    reddit_url = serializers.URLField(source='shortlink')  # 'shortlink' is always the post's link, 'url' might be image link
     img_url = serializers.SerializerMethodField()
     video_url = serializers.SerializerMethodField()
     body = serializers.SerializerMethodField()
     permalink = serializers.SerializerMethodField()
     created_utc = serializers.FloatField()
+    over_18 = serializers.BooleanField(allow_null=True)
+    spoiler = serializers.BooleanField(allow_null=True)
 
     def get_permalink(self, obj: Submission) -> str:
         return utils.generate_full_reddit_link(obj.permalink)
@@ -74,3 +78,16 @@ class RedditPostSerializer(RedditPostPreviewSerializer):
                 'created_utc': comment.created_utc
             })
         return comments
+
+
+class SubredditPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubredditPost
+        fields = '__all__'
+
+    def create(self, validated_data):
+        """
+        Create and return a new `SubredditPost` instance, given the validated data.
+        """
+        validated_data['data_updated_timestamp_utc'] = timezone.now()
+        return SubredditPost.objects.create(**validated_data)

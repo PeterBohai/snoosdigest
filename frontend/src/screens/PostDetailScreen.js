@@ -79,7 +79,7 @@ function PostDetailScreen() {
                             <Box>
                                 <Typography variant='h3' component='h1'>{post.title}</Typography>
                                 <Typography variant='subtitle1' color='text.secondary'>
-                                    {utilsService.getRelativeTime(post.created_utc)} by {post.author}
+                                    {utilsService.getRelativeTime(post.created_utc)} by {post.author_name}
                                 </Typography>
                             
                                 <Typography variant='body1' component='p' sx={{my: 3}}>
@@ -105,7 +105,7 @@ function PostDetailScreen() {
                                                 {utilsService.formatNumber(post.num_comments)} Comments
                                             </Typography>
                                         </Grid>
-                                        <Button href={post.url} startIcon={<LinkIcon />} target='_blank' color='secondary' sx={{ml: 2}} size='large'>
+                                        <Button href={post.reddit_url} startIcon={<LinkIcon />} target='_blank' color='secondary' sx={{ml: 2}} size='large'>
                                             Reddit
                                         </Button>
                                     </Grid>
