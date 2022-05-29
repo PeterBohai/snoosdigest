@@ -180,4 +180,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=int(os.environ.get('ACCESS_TOKEN_LIFETIME_DAYS'))),
 }
 
+# Project global constants
+NAMESPACE = 'snoosdigest'       # Ideally url of production site
 

@@ -1,7 +1,9 @@
 from typing import Union
 
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
+from django.conf import settings
 from praw.models import Submission
 
 from api.models import SubredditPost
@@ -91,3 +93,14 @@ class SubredditPostSerializer(serializers.ModelSerializer):
         """
         validated_data['data_updated_timestamp_utc'] = timezone.now()
         return SubredditPost.objects.create(**validated_data)
+
+
+class SnoosDigestTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Custom private claims
+        token[f'{settings.NAMESPACE}/username'] = user.username
+
+        return token

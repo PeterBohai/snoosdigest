@@ -8,8 +8,9 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.serializers import RedditPostPreviewSerializer, RedditPostSerializer, SubredditPostSerializer
+from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer
 from api.models import Subreddit, SubredditPost
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
 from api import queries
@@ -102,3 +103,7 @@ class RedditPostDetail(APIView):
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
         return Response(serialized_post.data)
+
+
+class SnoosDigestTokenObtainPairView(TokenObtainPairView):
+    serializer_class = SnoosDigestTokenObtainPairSerializer
