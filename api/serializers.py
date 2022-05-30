@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth.models import User
 from praw.models import Submission
 
 from api.models import SubredditPost
@@ -104,3 +105,9 @@ class SnoosDigestTokenObtainPairSerializer(TokenObtainPairSerializer):
         token[f'{settings.NAMESPACE}/username'] = user.username
 
         return token
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'date_joined']

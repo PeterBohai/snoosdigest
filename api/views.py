@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer
+from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer, UserSerializer
 from api.models import Subreddit, SubredditPost
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
 from api import queries
@@ -107,3 +107,10 @@ class RedditPostDetail(APIView):
 
 class SnoosDigestTokenObtainPairView(TokenObtainPairView):
     serializer_class = SnoosDigestTokenObtainPairSerializer
+
+
+class UserProfile(APIView):
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
