@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+from users.models import User
+
 
 def normalize_text_content(text: str) -> str:
     text = text.replace('&#x200B;', '')

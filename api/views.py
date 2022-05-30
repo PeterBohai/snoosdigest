@@ -5,7 +5,6 @@ import logging
 from praw import Reddit
 from praw.models import Subreddit as PrawSubreddit, Submission as PrawSubmission
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -15,6 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 
+from users.models import User
 from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer, UserSerializer
 from api.models import Subreddit, SubredditPost
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
