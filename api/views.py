@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer, UserSerializer
@@ -110,6 +111,8 @@ class SnoosDigestTokenObtainPairView(TokenObtainPairView):
 
 
 class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = request.user
         serializer = UserSerializer(user)
