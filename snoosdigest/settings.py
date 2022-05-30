@@ -154,7 +154,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            'format': '[{asctime}] {filename}:{levelname}: {message}',
+            'format': '[{asctime}][{filename}][{levelname}] {message}',
             'style': '{',
         },
     },
