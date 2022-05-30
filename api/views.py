@@ -1,24 +1,18 @@
 from typing import Union
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 import logging
 
 from praw import Reddit
 from praw.models import Subreddit as PrawSubreddit, Submission as PrawSubmission
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
-from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import status
 
-from users.models import User
-from api.serializers import RedditPostSerializer, SubredditPostSerializer, SnoosDigestTokenObtainPairSerializer, UserSerializer
-from api.models import Subreddit, SubredditPost
+from api.serializers import RedditPostSerializer, SubredditPostSerializer
+from api.models import SubredditPost
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
-from api import queries, utils
+from api import queries
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)
@@ -57,13 +51,6 @@ def get_subreddit_top_posts(subreddit_name: str, time_filter: str, num_posts: in
     serialized_posts = queries.update_or_insert_subreddit_posts(subreddit_posts, praw_subreddit, time_filter)
 
     return praw_subreddit.display_name_prefixed, serialized_posts[:num_posts]
-
-
-class UserSubredditWatchList(APIView):
-    def get(self, request: Request) -> Response:
-        # Example GET request: /api/user/watchlist
-        subreddits: list[str] = get_user_subreddit_watchlist()
-        return Response([f'r/{subreddit}' for subreddit in subreddits])
 
 
 class HomePagePostsList(APIView):
@@ -108,41 +95,3 @@ class RedditPostDetail(APIView):
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
         return Response(serialized_post.data)
-
-
-class SnoosDigestTokenObtainPairView(TokenObtainPairView):
-    serializer_class = SnoosDigestTokenObtainPairSerializer
-
-
-class UserProfile(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-
-
-class UserRegister(APIView):
-    def post(self, request: Request) -> Response:
-        data = request.data
-
-        try:
-            new_user = User.objects.create(
-                username=data['email'],
-                email=data['email'],
-                password=make_password(data['password'])
-            )
-            serializer = UserSerializer(new_user)
-            return Response({
-                **serializer.data,
-                'access_token': utils.generate_user_access_token(new_user)
-            })
-
-        except IntegrityError as err:
-            # Duplicate username detected
-            logger.warning(f'django.db.utils.IntegrityError: {err}')
-
-            return Response({
-                'detail': 'Username already exists'
-            }, status=status.HTTP_400_BAD_REQUEST)

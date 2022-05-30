@@ -6,8 +6,4 @@ urlpatterns = [
     path('subreddits/<str:subreddit>/top-posts', views.SubredditTopPostsList.as_view(), name='subreddit_posts_top'),
     path('posts/homepage', views.HomePagePostsList.as_view(), name='home_page_posts'),
     path('posts/<str:post_id>', views.RedditPostDetail.as_view(), name='reddit_post_detail'),
-    path('user/watchlist', views.UserSubredditWatchList.as_view(), name='users_watchlist'),
-    path('users/login', views.SnoosDigestTokenObtainPairView.as_view(), name='users_login'),
-    path('users/register', views.UserRegister.as_view(), name='users_register'),
-    path('users/profile', views.UserProfile.as_view(), name='users_profile'),
 ]

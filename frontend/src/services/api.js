@@ -24,7 +24,7 @@ function getHomePagePosts(timeFilter) {
 }
 
 function getUserWatchlist() {
-    return axios.get(`${baseUrl}/user/watchlist`);
+    return axios.get(`${baseUrl}/users/watchlist`);
 }
 
 const exportedFunctions = {
