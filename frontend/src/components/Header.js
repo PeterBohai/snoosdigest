@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate} from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation} from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -46,8 +46,9 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
 
 
 function Header() {
-    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [open, setOpen] = useState(false);
     const [watchlist, setWatchlist] = useState([])
 
     useEffect(() => {
@@ -89,9 +90,9 @@ function Header() {
                             Snoos Digest
                         </Typography>
                     </Link>
-                    <Stack direction="row" spacing={2}>
-                        <Button variant="outlined" color='info'>Log In</Button>
-                        <Button variant='contained' color='info'>Sign Up</Button>
+                    <Stack direction="row" spacing={1}>
+                        {location.pathname === '/login' ? null : <Button variant="outlined" color='info' component={RouterLink} to='/login'>Log In</Button>}
+                        {location.pathname === '/signup' ? null : <Button variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>}
                     </Stack>
                 </Toolbar>
             </AppBar>
