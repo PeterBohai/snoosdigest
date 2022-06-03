@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import HomeScreen from './screens/HomeScreen';
 import SubredditScreen from './screens/SubredditScreen';
 import LogInScreen from './screens/LoginScreen';
+import PublicOnlyRoute from './components/PublicOnlyRoute';
 
 function App() {
     return (
@@ -15,7 +16,12 @@ function App() {
             <main>
                 <Routes>
                     <Route path='/' element={<HomeScreen />} />
-                    <Route path='/login' element={<LogInScreen />} />
+                    <Route path='/login' element={
+                        <PublicOnlyRoute>
+                            <LogInScreen />
+                        </PublicOnlyRoute>
+                        } 
+                    />
                     <Route path='/subreddits/:subreddit' element={<SubredditScreen />} />
                     <Route path='/posts/:id' element={<PostDetailScreen />} />
                 </Routes>

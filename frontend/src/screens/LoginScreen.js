@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux'
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,16 +14,23 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import configService from '../services/config';
+import { attemptUserLogin } from '../store/userSlice';
 
 
 let theme = createTheme(configService.baseTheme);
 theme = responsiveFontSizes(theme);
 
 function LogInScreen() {
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const loginCredentials = {
+        email: data.get('email'),
+        password: data.get('password')
+    }
+    dispatch(attemptUserLogin(loginCredentials))
     console.log({
         email: data.get('email'),
         password: data.get('password'),
