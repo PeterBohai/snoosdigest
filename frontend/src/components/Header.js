@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink, useNavigate, useLocation} from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
@@ -24,6 +25,7 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/s
 import apiService from '../services/api';
 import configService from '../services/config';
 import utilsService from '../services/utils';
+import { userActions } from '../store/userSlice';
 
 
 const drawerWidth = 260;
@@ -48,8 +50,10 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
 function Header() {
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [watchlist, setWatchlist] = useState([])
+    const [watchlist, setWatchlist] = useState([]);
+    const userData = useSelector(state => state.user.userData);
 
     useEffect(() => {
         apiService
@@ -76,6 +80,11 @@ function Header() {
         navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
+    const handleLogOut = () => {
+        localStorage.removeItem('access');
+        dispatch(userActions.logout());
+    }
+
     return (
         <Box sx={{mb: 12}}>
             <ThemeProvider theme={theme}>
@@ -91,8 +100,18 @@ function Header() {
                         </Typography>
                     </Link>
                     <Stack direction="row" spacing={1}>
-                        {location.pathname === '/login' ? null : <Button variant="outlined" color='info' component={RouterLink} to='/login'>Log In</Button>}
-                        {location.pathname === '/signup' ? null : <Button variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>}
+                        {location.pathname === '/login' || userData
+                            ? null 
+                            : <Button variant="outlined" color='info' component={RouterLink} to='/login'>Log In</Button>
+                        }
+                        {location.pathname === '/signup' || userData
+                            ? null 
+                            : <Button variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>
+                        }
+                        {userData
+                            ? <Button variant="outlined" color='info' onClick={handleLogOut}>Log Out</Button> 
+                            : null
+                        }
                     </Stack>
                 </Toolbar>
             </AppBar>

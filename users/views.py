@@ -56,7 +56,7 @@ class UserRegister(APIView):
             serializer = UserSerializer(new_user)
             return Response({
                 **serializer.data,
-                'access_token': utils.generate_user_access_token(new_user)
+                'access': utils.generate_user_access_token(new_user)
             })
 
         except IntegrityError as err:
