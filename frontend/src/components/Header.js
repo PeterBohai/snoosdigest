@@ -17,7 +17,11 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Logout from '@mui/icons-material/Logout';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
@@ -53,6 +57,7 @@ function Header() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [watchlist, setWatchlist] = useState([]);
+    const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
     const userData = useSelector(state => state.user.userData);
 
     useEffect(() => {
@@ -80,7 +85,16 @@ function Header() {
         navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
+    const handleOpenUserProfileMenu = (event) => {
+        setUserProfileMenuToggle(event.currentTarget);
+    };
+    
+    const handleCloseUserProfileMenu = () => {
+        setUserProfileMenuToggle(null);
+    }
+
     const handleLogOut = () => {
+        handleCloseUserProfileMenu();
         localStorage.removeItem('access');
         dispatch(userActions.logout());
     }
@@ -108,9 +122,60 @@ function Header() {
                             ? null 
                             : <Button variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>
                         }
-                        {userData
-                            ? <Button variant="outlined" color='info' onClick={handleLogOut}>Log Out</Button> 
-                            : null
+                        {
+                        // When user is logged in, show a profile avatar on the right side of the AppBar
+                        !userData
+                            ? null
+                            : (
+                                <Box>
+                                    <IconButton onClick={handleOpenUserProfileMenu} sx={{ p: 0 }}>
+                                        <Avatar alt={userData['snoosdigest/username']}>{userData['snoosdigest/username'][0].toUpperCase()}</Avatar>
+                                    </IconButton>
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id='menu-appbar'
+                                        anchorEl={userProfileMenuToggle}
+                                        keepMounted
+                                        anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+                                        transformOrigin={{ vertical: 'top', horizontal: 'right', }}
+                                        open={Boolean(userProfileMenuToggle)}
+                                        onClose={handleCloseUserProfileMenu}
+                                        PaperProps={{
+                                            elevation: 0,
+                                            sx: {
+                                              overflow: 'visible',
+                                              filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
+                                              mt: 1.5,
+                                              '& .MuiAvatar-root': {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mr: 1,
+                                              },
+                                              '&:before': {
+                                                content: '""',
+                                                display: 'block',
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 14,
+                                                width: 10,
+                                                height: 10,
+                                                bgcolor: 'background.paper',
+                                                transform: 'translateY(-50%) rotate(45deg)',
+                                                zIndex: 0,
+                                              },
+                                            },
+                                          }}
+                                    >
+                                        <MenuItem key='logout' onClick={handleLogOut}>
+                                            <ListItemIcon>
+                                                <Logout fontSize='small' />
+                                            </ListItemIcon>
+                                            Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </Box>
+                            )
                         }
                     </Stack>
                 </Toolbar>
