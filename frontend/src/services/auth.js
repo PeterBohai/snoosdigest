@@ -8,19 +8,16 @@ function verifyAccessToken() {
     try  {
         const decodedToken = jwt_decode(accessToken);
         const currentDate = new Date();
-        console.log(`${new Date().toLocaleString()} Decoded token:`, decodedToken);
         
+        // Token is expired
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
-            // Token is expired
             store.dispatch(userActions.logout());
             localStorage.removeItem('access');
             console.log('Token has expired, user logged out');
-            return;
         } 
     } catch {
-        // If the accessToken is null, then user is not logged in yet
+        // If accessToken is null, then user is not logged in yet. Otherwise, the token is invalid - log out user
         if (accessToken !== null) {
-            // Invalid token
             store.dispatch(userActions.logout());
             localStorage.removeItem('access');
         } 
