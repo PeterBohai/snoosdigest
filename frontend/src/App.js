@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import './App.css';
 import Header from './components/Header';
@@ -9,7 +10,14 @@ import SubredditScreen from './screens/SubredditScreen';
 import LogInScreen from './screens/LoginScreen';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
 
+import authService from './services/auth';
+
+
 function App() {
+    useEffect(() => {
+        authService.verifyAccessToken();
+    }, []);
+
     return (
         <Router>
             <Header />
