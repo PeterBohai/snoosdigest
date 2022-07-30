@@ -62,12 +62,12 @@ function Header() {
 
     useEffect(() => {
         apiService
-            .getUserWatchlist()
+            .getUserSubscriptions()
             .then(res => {
                 console.log(res.data);
                 setWatchlist(res.data);
             });
-    }, []);
+    }, [userData]);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);

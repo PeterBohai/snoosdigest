@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, } from 'react-redux';
 import { Link as RouterLink} from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -17,6 +18,7 @@ import utilsService from '../services/utils';
 
 function HomeScreen() {
     const [subredditPosts, setSubredditPosts] = useState({});
+    const userData = useSelector(state => state.user.userData);
 
     useEffect(() => {
         apiService
@@ -25,7 +27,7 @@ function HomeScreen() {
                 console.log(res.data);
                 setSubredditPosts(res.data);
             });
-    }, []);
+    }, [userData]);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);

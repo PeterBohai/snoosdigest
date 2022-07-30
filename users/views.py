@@ -23,11 +23,18 @@ def get_user_subreddit_watchlist() -> list[str]:
     return ['news', 'personalfinance', 'investing']
 
 
-class UserSubredditWatchList(APIView):
+class UserSubredditSubscriptions(APIView):
     def get(self, request: Request) -> Response:
-        # Example GET request: /api/users/watchlist
-        subreddits: list[str] = get_user_subreddit_watchlist()
-        return Response([f'r/{subreddit}' for subreddit in subreddits])
+        # Example GET request: /api/users/subscriptions
+        user = request.user
+
+        if user.is_anonymous:
+            return Response(['r/news', 'r/personalfinance', 'r/investing'])
+
+        user_sub_objs = user.user_subscriptions.all()
+        user_subscriptions: list = [user_sub.subreddit.display_name_prefixed for user_sub in user_sub_objs]
+
+        return Response(user_subscriptions)
 
 
 class SnoosDigestTokenObtainPairView(TokenObtainPairView):

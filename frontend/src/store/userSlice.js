@@ -4,16 +4,21 @@ import jwt_decode from "jwt-decode";
 
 const baseUrl = 'http://127.0.0.1:8000/api'
 
-let initialUserData = null
-try {
-    initialUserData = jwt_decode(localStorage.getItem('access'))
-} catch {
+function setUserData(jwtAccessToken) {
+    try {
+        const userData = jwt_decode(jwtAccessToken);
+        userData.access = jwtAccessToken;
+        return userData;
+    } catch {
+        return null;
+    }
 }
+
 
 const userInitialState = {
     userLoginPending: false,
     userError: null,
-    userData: initialUserData
+    userData: setUserData(localStorage.getItem('access'))
 }
 
 export const attemptUserLogin = createAsyncThunk('user/attemptLogin', async (loginDetails) => {
@@ -43,7 +48,7 @@ const userSlice = createSlice({
             .addCase(attemptUserLogin.fulfilled, (state, action) => {
                 state.userLoginPending = false;
                 try {
-                    state.userData = jwt_decode(action.payload.access);
+                    state.userData = setUserData(action.payload.access);
                 } catch {
                     state.userData = null;
                     state.userError = 'InvalidTokenError';
