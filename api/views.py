@@ -28,7 +28,7 @@ def get_subreddit_top_posts(subreddit_name: str, time_filter: str, num_posts: in
     posts_up_to_date = True
 
     filter_params = {
-        'subreddit__display_name': subreddit_name,
+        'subreddit__display_name__iexact': subreddit_name,
         f'top_{time_filter}_order__lte': MAX_NUM_POSTS_PER_SUBREDDIT
     }
     subreddit_posts = SubredditPost.objects.filter(**filter_params).order_by(f'top_{time_filter}_order')
