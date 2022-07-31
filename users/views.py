@@ -27,14 +27,8 @@ class UserSubredditSubscriptions(APIView):
     def get(self, request: Request) -> Response:
         # Example GET request: /api/users/subscriptions
         user = request.user
-
-        if user.is_anonymous:
-            return Response(['r/news', 'r/personalfinance', 'r/investing'])
-
-        user_sub_objs = user.user_subscriptions.all()
-        user_subscriptions: list = [user_sub.subreddit.display_name_prefixed for user_sub in user_sub_objs]
-
-        return Response(user_subscriptions)
+        user_subscriptions: list[str] = utils.get_user_subscriptions(user)
+        return Response([f'r/{sub_name}' for sub_name in user_subscriptions])
 
 
 class SnoosDigestTokenObtainPairView(TokenObtainPairView):

@@ -13,6 +13,7 @@ from api.serializers import RedditPostSerializer, SubredditPostSerializer
 from api.models import SubredditPost
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
 from api import queries
+from users.utils import get_user_subscriptions
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)
@@ -58,8 +59,8 @@ class HomePagePostsList(APIView):
         # Example GET request: /api/posts/homepage?time_filter=day&posts_per_subreddit=3
         posts_per_subreddit: int = int(request.query_params.get('posts_per_subreddit', 2))
         time_filter: str = request.query_params['time_filter']
-
-        subreddits: list[str] = get_user_subreddit_watchlist()
+        user = request.user
+        subreddits: list[str] = get_user_subscriptions(user)
 
         response: dict[str, list[dict]] = {}
         for subreddit in subreddits:
