@@ -45,6 +45,8 @@ class UserSubredditSubscriptions(APIView):
         # Look up for the subreddit in the DB
         try:
             subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=subreddit_input.lower())
+            if user.user_subscriptions.filter(subreddit=subreddit).exists():
+                return Response('Already subscribed', status=status.HTTP_400_BAD_REQUEST)
         except Subreddit.DoesNotExist:
             # If it does not exist in the DB, query reddit API
             praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_input.lower())
