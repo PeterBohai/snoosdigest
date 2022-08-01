@@ -39,10 +39,10 @@ class UserSubredditSubscriptions(APIView):
 
         user: User = request.user
         if user.is_anonymous:
-            return Response('User must be logged in to add subscriptions', status=status.HTTP_400_BAD_REQUEST)
+            return Response('User must be logged in to add subscriptions', status=status.HTTP_401_UNAUTHORIZED)
 
         subreddit_input: str = request.data['subreddit']
-        # Look up for the subreddit in the DB
+        # Look for the subreddit in the DB
         try:
             subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=subreddit_input.lower())
             if user.user_subscriptions.filter(subreddit=subreddit).exists():
