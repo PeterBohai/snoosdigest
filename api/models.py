@@ -15,6 +15,9 @@ class Subreddit(models.Model):
     class Meta:
         db_table = 'subreddit'
 
+    def __str__(self):
+        return f'Subreddit [{self.subreddit_id}]: {self.display_name_prefixed}'
+
 
 class SubredditPost(models.Model):
     subreddit_post_id = models.AutoField(primary_key=True)

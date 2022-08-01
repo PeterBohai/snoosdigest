@@ -3,7 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.conf import settings
 
 
-from users.models import User
+from users.models import User, UserSubscription
 
 
 class SnoosDigestTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -21,3 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'date_joined']
+
+
+class UserSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserSubscription
+        fields = ['user', 'subreddit', 'sort_order', 'favorite']
