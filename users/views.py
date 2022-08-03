@@ -1,5 +1,6 @@
 import logging
 
+import prawcore
 from praw import Reddit
 from praw.models import Subreddit as PrawSubreddit
 from django.conf import settings
@@ -47,13 +48,22 @@ class UserSubredditSubscriptions(APIView):
             subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=subreddit_input.lower())
             if user.user_subscriptions.filter(subreddit=subreddit).exists():
                 return Response('Already subscribed', status=status.HTTP_400_BAD_REQUEST)
+
         except Subreddit.DoesNotExist:
             # If it does not exist in the DB, query reddit API
-            praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_input.lower())
+            try:
+                matched_subreddits: list[PrawSubreddit] = reddit.subreddits.search_by_name(subreddit_input.lower(), exact=True)
+                if len(matched_subreddits) != 1:
+                    return Response('Multiple potential subreddits found, please be more specific', status=status.HTTP_400_BAD_REQUEST)
 
-            # If it does not event exist in reddit API, return error response
-            if not hasattr(praw_subreddit, 'id') or not hasattr(praw_subreddit, 'created'):
-                return Response(f'{subreddit_input} is not a valid subreddit', status=status.HTTP_400_BAD_REQUEST)
+                praw_subreddit: PrawSubreddit = matched_subreddits[0]
+                # If it does not event exist in reddit API, return error response
+                if not hasattr(praw_subreddit, 'id') or not hasattr(praw_subreddit, 'created'):
+                    logger.error(f'{praw_subreddit} does not have "id" or "created" attributes')
+                    return Response(f'"{subreddit_input}" is not a valid subreddit, please try again', status=status.HTTP_400_BAD_REQUEST)
+            except prawcore.NotFound as err:
+                logger.error(f'prawcore.NotFound Exception: {err}')
+                return Response(f'"{subreddit_input}" is not a valid subreddit, please try again', status=status.HTTP_400_BAD_REQUEST)
 
             # Store the "new" valid subreddit in the DB
             subreddit: Subreddit = queries.insert_subreddit_data(praw_subreddit)
@@ -64,7 +74,11 @@ class UserSubredditSubscriptions(APIView):
         })
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            response = {
+                'created': serializer.data,
+                'subreddit_display_name_prefixed': subreddit.display_name_prefixed
+            }
+            return Response(response, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response('Bad request', status=status.HTTP_400_BAD_REQUEST)
 

@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 
+import apiService from '../services/api';
+
 const baseUrl = 'http://127.0.0.1:8000/api'
 
 function setUserData(jwtAccessToken) {
@@ -14,11 +16,11 @@ function setUserData(jwtAccessToken) {
     }
 }
 
-
 const userInitialState = {
     userLoginPending: false,
     userError: null,
-    userData: setUserData(localStorage.getItem('access'))
+    userData: setUserData(localStorage.getItem('access')),
+    subscriptions: [],
 }
 
 export const attemptUserLogin = createAsyncThunk('user/attemptLogin', async (loginDetails) => {
@@ -31,6 +33,13 @@ export const attemptUserLogin = createAsyncThunk('user/attemptLogin', async (log
     localStorage.setItem('access', responseBody.access)
     return response.data
 });
+
+export const updateUserSubscriptions = createAsyncThunk('user/updateSubscriptions', async () => {
+    const response = await apiService.getUserSubscriptions();
+    const responseBody = response.data
+    console.log(responseBody);
+    return responseBody;
+})
 
 const userSlice = createSlice({
     name: 'user',
@@ -57,6 +66,12 @@ const userSlice = createSlice({
             .addCase(attemptUserLogin.rejected, (state, action) => {
                 state.userLoginPending = false;
                 state.userData = null;
+                state.userError = action.payload || null;
+            })
+            .addCase(updateUserSubscriptions.fulfilled, (state, action) => {
+                state.subscriptions = action.payload;
+            })
+            .addCase(updateUserSubscriptions.rejected, (state, action) => {
                 state.userError = action.payload || null;
             })
     }

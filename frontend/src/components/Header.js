@@ -13,7 +13,7 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import MuiAppBar from '@mui/material/AppBar';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
+import ListSubheader from '@mui/material/ListSubheader';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -23,13 +23,14 @@ import Menu from '@mui/material/Menu';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
-import apiService from '../services/api';
 import configService from '../services/config';
 import utilsService from '../services/utils';
-import { userActions } from '../store/userSlice';
+import { userActions, updateUserSubscriptions } from '../store/userSlice';
+import AddSubredditDialog from './AddSubredditDialog';
 
 
 const drawerWidth = 260;
@@ -55,19 +56,15 @@ function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
-    const [watchlist, setWatchlist] = useState([]);
-    const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
+    const userSubscriptions = useSelector(state => state.user.subscriptions);
     const userData = useSelector(state => state.user.userData);
+    const [open, setOpen] = useState(false);
+    const [openAddSubreddit, setOpenAddSubreddit] = useState(false);
+    const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
 
     useEffect(() => {
-        apiService
-            .getUserSubscriptions()
-            .then(res => {
-                console.log(res.data);
-                setWatchlist(res.data);
-            });
-    }, [userData]);
+        dispatch(updateUserSubscriptions());
+    }, [userData, dispatch]);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
@@ -91,6 +88,10 @@ function Header() {
     
     const handleCloseUserProfileMenu = () => {
         setUserProfileMenuToggle(null);
+    }
+
+    const handleAddSubredditClick = () => {
+        setOpenAddSubreddit(true);
     }
 
     const handleLogOut = () => {
@@ -197,16 +198,10 @@ function Header() {
                 <Toolbar />
                 <Box>
                     <List>
-                        <ListItem button key={'Add Subreddit'}>
-                            <ListItemIcon sx={{minWidth: '36px'}}>
-                                <AddCircleOutlineIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={'Add Subreddit'} />
-                        </ListItem>
-                    </List>
-                    <Divider />
-                    <List>
-                    {watchlist.map((subreddit_name, index) => (
+                    <ListSubheader component='div' id='your-subreddits-subheader'>
+                       YOUR SUBREDDITS
+                    </ListSubheader>
+                    {userSubscriptions.map((subreddit_name, index) => (
                         <ListItem button key={subreddit_name} sx={{maxWidth: '100%'}} onClick={() => handleSubredditClick(subreddit_name)}>
                             <ListItemIcon sx={{minWidth: '36px'}}>
                                 <ArrowCircleRightIcon color='primary' />
@@ -224,6 +219,12 @@ function Header() {
                         </ListItem>
                     ))}
                     </List>
+                    
+                    <Fab size='small' color='primary' aria-label='add subreddit' sx={{ position: 'absolute', bottom: 20, right: 20 }} onClick={handleAddSubredditClick}>
+                        <AddIcon />
+                    </Fab>
+                    
+                    <AddSubredditDialog openAddSubreddit={openAddSubreddit} setOpenAddSubreddit={setOpenAddSubreddit}/>
                 </Box>
             </Drawer>
             </ThemeProvider>
