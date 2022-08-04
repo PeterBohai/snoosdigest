@@ -63,7 +63,10 @@ function Header() {
     const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
 
     useEffect(() => {
-        dispatch(updateUserSubscriptions());
+        if (userData) {
+            console.log('dispatch(updateUserSubscriptions());');
+            dispatch(updateUserSubscriptions());
+        }
     }, [userData, dispatch]);
 
     let theme = createTheme(configService.baseTheme);
@@ -98,6 +101,8 @@ function Header() {
         handleCloseUserProfileMenu();
         localStorage.removeItem('access');
         dispatch(userActions.logout());
+        console.log('dispatch(updateUserSubscriptions());');
+        dispatch(updateUserSubscriptions());
     }
 
     return (

@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import configService from '../services/config';
-import { attemptUserLogin } from '../store/userSlice';
+import { attemptUserLogin, updateUserSubscriptions } from '../store/userSlice';
 
 
 let theme = createTheme(configService.baseTheme);
@@ -30,7 +30,7 @@ function LogInScreen() {
         email: data.get('email'),
         password: data.get('password')
     }
-    dispatch(attemptUserLogin(loginCredentials))
+    dispatch(attemptUserLogin(loginCredentials));
     console.log({
         email: data.get('email'),
         password: data.get('password'),

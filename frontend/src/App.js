@@ -20,6 +20,7 @@ function App() {
 
     useEffect(() => {
         authService.verifyAccessToken();
+        console.log('dispatch(updateUserSubscriptions());');
         dispatch(updateUserSubscriptions());
     }, [dispatch]);
 

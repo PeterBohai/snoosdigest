@@ -28,6 +28,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
 
     const handleClose = () => {
         setOpenAddSubreddit(false);
+        setSubredditNameInput('');
     };
 
     const handleLogin = () => {
@@ -40,6 +41,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
             .postUserSubscriptions(subredditNameInput)
             .then(res => {
                 console.log(res.data);
+                console.log('dispatch(updateUserSubscriptions());');
                 dispatch(updateUserSubscriptions());
                 setOpenAddSubreddit(false);
             })
