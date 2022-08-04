@@ -18,7 +18,7 @@ import utilsService from '../services/utils';
 
 function HomeScreen() {
     const [subredditPosts, setSubredditPosts] = useState({});
-    const userData = useSelector(state => state.user.userData);
+    const userSubscriptions = useSelector(state => state.user.subscriptions);
 
     useEffect(() => {
         apiService
@@ -27,7 +27,7 @@ function HomeScreen() {
                 console.log(res.data);
                 setSubredditPosts(res.data);
             });
-    }, [userData]);
+    }, [userSubscriptions]);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import './App.css';
 import Header from './components/Header';
@@ -11,12 +12,17 @@ import LogInScreen from './screens/LoginScreen';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
 
 import authService from './services/auth';
+import { updateUserSubscriptions } from './store/userSlice';
 
 
 function App() {
+    const dispatch = useDispatch();
+
     useEffect(() => {
         authService.verifyAccessToken();
-    }, []);
+        console.log('dispatch(updateUserSubscriptions());');
+        dispatch(updateUserSubscriptions());
+    }, [dispatch]);
 
     return (
         <Router>

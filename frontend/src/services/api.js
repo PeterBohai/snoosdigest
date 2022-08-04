@@ -16,6 +16,20 @@ function getPost(postId) {
     return axios.get(`${baseUrl}/posts/${postId}`);
 }
 
+function postUserSubscriptions(subreddit_name) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    const requestConfig = {};
+    if (userData) {
+        // Send JWT access token through the Authorization header for server to authenticate and identify the user
+        requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
+    }
+    const postData = {
+        subreddit: subreddit_name,
+    }
+    return axios.post(`${baseUrl}/users/subscriptions`, postData, requestConfig)
+}
+
 function getHomePagePosts(timeFilter) {
     const storeState = store.getState();
     const userData = storeState.user.userData;
@@ -45,6 +59,7 @@ const exportedFunctions = {
     getPost,
     getHomePagePosts,
     getUserSubscriptions,
+    postUserSubscriptions,
 };
 
 

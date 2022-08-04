@@ -1,5 +1,6 @@
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
+from cachetools import cached, TTLCache
 
 from users.models import User
 
@@ -11,6 +12,7 @@ def generate_user_access_token(user: User) -> str:
     return str(jwt_refresh_token.access_token)
 
 
+@cached(cache=TTLCache(maxsize=50, ttl=2))
 def get_user_subscriptions(user: User) -> list[str]:
 
     if user.is_anonymous:
