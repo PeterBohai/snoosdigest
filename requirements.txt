@@ -6,3 +6,4 @@ django-cors-headers==3.11.0
 praw==7.5.0
 mypy==0.950
 djangorestframework-simplejwt==5.2.0
+cachetools==5.2.0

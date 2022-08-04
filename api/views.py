@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
+from cachetools import cached, TTLCache
 
 from api.serializers import RedditPostSerializer, SubredditPostSerializer
 from api.models import SubredditPost
@@ -23,6 +24,7 @@ def get_user_subreddit_watchlist() -> list[str]:
     return ['news', 'personalfinance', 'investing']
 
 
+@cached(cache=TTLCache(maxsize=500, ttl=10))
 def get_subreddit_top_posts(subreddit_name: str, time_filter: str, num_posts: int) -> tuple[str, list[dict]]:
     # Query database first
     posts_up_to_date = True
