@@ -54,12 +54,27 @@ function getUserSubscriptions() {
     return axios.get(`${baseUrl}/users/subscriptions`, requestConfig);
 }
 
+function deleteUserSubscriptions(subreddit_name_prefixed) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    const requestConfig = {};
+    if (userData) {
+        // Send JWT access token through the Authorization header for server to authenticate and identify the user
+        requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
+    }
+    const postData = {
+        subreddit: subreddit_name_prefixed.slice(2),
+    }
+    return axios.delete(`${baseUrl}/users/subscriptions`, {...requestConfig, data: postData});
+}
+
 const exportedFunctions = {
     getTopPosts,
     getPost,
     getHomePagePosts,
     getUserSubscriptions,
     postUserSubscriptions,
+    deleteUserSubscriptions,
 };
 
 

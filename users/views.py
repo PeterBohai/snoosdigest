@@ -86,7 +86,7 @@ class UserSubredditSubscriptions(APIView):
         """Example DELETE request: /api/users/subscriptions --data {subreddit: bogleheads}"""
         user: User = request.user
         if user.is_anonymous:
-            return Response('User must be logged in to add subscriptions', status=status.HTTP_401_UNAUTHORIZED)
+            return Response('User must be logged in to delete subscriptions', status=status.HTTP_401_UNAUTHORIZED)
 
         subreddit_input: str = request.data.get('subreddit', '')
 
