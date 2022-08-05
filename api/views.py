@@ -5,6 +5,7 @@ import logging
 from praw import Reddit
 from praw.models import Subreddit as PrawSubreddit, Submission as PrawSubmission
 from django.conf import settings
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -69,6 +70,8 @@ class HomePagePostsList(APIView):
             display_name_prefixed, posts = get_subreddit_top_posts(subreddit, time_filter, posts_per_subreddit)
             response[display_name_prefixed] = posts
 
+        if not subreddits and not response:
+            return Response(response, status=status.HTTP_204_NO_CONTENT)
         return Response(response)
 
 

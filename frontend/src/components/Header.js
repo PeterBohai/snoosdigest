@@ -23,11 +23,19 @@ import Menu from '@mui/material/Menu';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import configService from '../services/config';
+import apiService from '../services/api';
 import utilsService from '../services/utils';
 import { userActions, updateUserSubscriptions } from '../store/userSlice';
 import AddSubredditDialog from './AddSubredditDialog';
@@ -51,6 +59,42 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
     }),
 }));
 
+function DeleteSubredditAlert({ handleDelete, subreddit, setSubreddit, open, setOpen }) {
+    
+    const handleYes = () => {
+        handleDelete(subreddit);
+        setOpen(false);
+        setSubreddit('');
+    };
+    
+    const handleClose = () => {
+        setOpen(false);
+        setSubreddit('');
+    };
+
+    return <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+    >
+        <DialogTitle id="alert-dialog-title">
+            {`Delete ${subreddit} Confirmation`}
+        </DialogTitle>
+        <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete "{subreddit}" from your list?
+        </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+        <Button onClick={handleClose}>CANCEL</Button>
+        <Button onClick={handleYes} autoFocus color='secondary'>
+            YES
+        </Button>
+        </DialogActions>
+    </Dialog>
+}
+
 
 function Header() {
     const navigate = useNavigate();
@@ -60,7 +104,10 @@ function Header() {
     const userData = useSelector(state => state.user.userData);
     const [open, setOpen] = useState(false);
     const [openAddSubreddit, setOpenAddSubreddit] = useState(false);
+    const [openDeleteSubredditAlert, setOpenDeleteSubredditAlert] = useState(false);
+    const [selectedDeleteSubreddit, setSelectedDeleteSubreddit] = useState('');
     const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
+    const [subheaderYourSubredditState, setSubheaderYourSubredditState] = useState({hover: false, edit: false});
 
     useEffect(() => {
         if (userData) {
@@ -77,6 +124,7 @@ function Header() {
             setOpen(true);
         } else {
             setOpen(false);
+            setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: false})
         }
     };
 
@@ -95,6 +143,7 @@ function Header() {
 
     const handleAddSubredditClick = () => {
         setOpenAddSubreddit(true);
+        setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: false})
     }
 
     const handleLogOut = () => {
@@ -103,6 +152,48 @@ function Header() {
         dispatch(userActions.logout());
         console.log('dispatch(updateUserSubscriptions());');
         dispatch(updateUserSubscriptions());
+    }
+
+    const handleDeleteSubreddit = (subreddit_prefixed) => {
+        apiService.deleteUserSubscriptions(subreddit_prefixed)
+            .then(res => {
+                console.log('dispatch(updateUserSubscriptions());');
+                dispatch(updateUserSubscriptions());
+            })
+            .catch(err => {
+                console.error(err.response);
+            })
+    }
+
+    const handleDeleteSubredditClick = (subreddit) => {
+        setOpenDeleteSubredditAlert(true);
+        setSelectedDeleteSubreddit(subreddit);
+    }
+
+    const YOUR_SUBREDDIT_EDIT_BUTTON = () => {
+        if (!userData) {
+            return null;
+        }
+        if (subheaderYourSubredditState.edit) {
+            return <Button 
+                edge="end" 
+                aria-label="edit-subscriptions" 
+                onClick={() => setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: false})}
+            >
+                <EditIcon sx={{ fontSize: 18, pr:0.5}}/>  <Typography>Done</Typography>
+            </Button>
+        } 
+        
+        if (subheaderYourSubredditState.hover && !subheaderYourSubredditState.edit) {
+            return <IconButton 
+                edge="end" 
+                aria-label="edit-subscriptions" 
+                onClick={() => setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: true})}
+            >
+                <EditIcon sx={{ fontSize: 18}}/>
+            </IconButton>
+        }
+        return null;
     }
 
     return (
@@ -203,11 +294,31 @@ function Header() {
                 <Toolbar />
                 <Box>
                     <List>
-                    <ListSubheader component='div' id='your-subreddits-subheader'>
-                       YOUR SUBREDDITS
-                    </ListSubheader>
+                        <ListItem
+                            secondaryAction={
+                                <YOUR_SUBREDDIT_EDIT_BUTTON />
+                            }
+                            sx={{pl: 0, pb:0, pt:0}}
+                            onMouseEnter={() => setSubheaderYourSubredditState({...subheaderYourSubredditState, hover: true})}
+                            onMouseLeave={() => setSubheaderYourSubredditState({...subheaderYourSubredditState, hover: false})}
+                        >
+                            <ListSubheader component='div' id='your-subreddits-subheader'>YOUR SUBREDDITS</ListSubheader>
+                        </ListItem>
+    
                     {userSubscriptions.map((subreddit_name, index) => (
-                        <ListItem button key={subreddit_name} sx={{maxWidth: '100%'}} onClick={() => handleSubredditClick(subreddit_name)}>
+                        <ListItem 
+                            button={!subheaderYourSubredditState.edit} 
+                            key={subreddit_name} 
+                            sx={{maxWidth: '100%'}} 
+                            onClick={subheaderYourSubredditState.edit ? null: () => handleSubredditClick(subreddit_name)}
+                            secondaryAction={
+                                subheaderYourSubredditState.edit 
+                                ? <IconButton aria-label="delete" onClick={() => handleDeleteSubredditClick(subreddit_name)}>
+                                    <DeleteIcon sx={{fontSize: 20}}/>
+                                </IconButton>
+                                : null
+                            }
+                        >
                             <ListItemIcon sx={{minWidth: '36px'}}>
                                 <ArrowCircleRightIcon color='primary' />
                             </ListItemIcon>
@@ -219,7 +330,7 @@ function Header() {
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis'
                                     }
-                                }} 
+                                }}
                             />
                         </ListItem>
                     ))}
@@ -229,6 +340,13 @@ function Header() {
                         <AddIcon />
                     </Fab>
                     
+                    <DeleteSubredditAlert 
+                        handleDelete={handleDeleteSubreddit}
+                        subreddit={selectedDeleteSubreddit}
+                        setSubreddit={setSelectedDeleteSubreddit}
+                        open={openDeleteSubredditAlert} 
+                        setOpen={setOpenDeleteSubredditAlert} 
+                    />
                     <AddSubredditDialog openAddSubreddit={openAddSubreddit} setOpenAddSubreddit={setOpenAddSubreddit}/>
                 </Box>
             </Drawer>

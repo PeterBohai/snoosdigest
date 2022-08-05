@@ -29,6 +29,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
     const handleClose = () => {
         setOpenAddSubreddit(false);
         setSubredditNameInput('');
+        setInputErrorText('');
     };
 
     const handleLogin = () => {
@@ -44,10 +45,14 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
                 console.log('dispatch(updateUserSubscriptions());');
                 dispatch(updateUserSubscriptions());
                 setOpenAddSubreddit(false);
+                setSubredditNameInput('');
+                setInputErrorText('');
             })
             .catch(err => {
-                console.log(`Endpoint responded with status code ${err.response.status}`)
-                setInputErrorText(err.response.data);
+                console.log(`Endpoint responded with status code ${err.response.status}`);
+                const errorResponse = err.response;
+                const errorData = errorResponse >= 500 ? 'Internal server error' : errorResponse.data;
+                setInputErrorText(errorData);
             });
     }
 

@@ -24,8 +24,11 @@ function HomeScreen() {
         apiService
             .getHomePagePosts('day')
             .then(res => {
-                console.log(res.data);
+                console.log(res);
                 setSubredditPosts(res.data);
+                if (res.status === 204) {
+                    setSubredditPosts(null);
+                }
             });
     }, [userSubscriptions]);
 
@@ -37,7 +40,9 @@ function HomeScreen() {
             <Container>
             <ThemeProvider theme={theme}>
                 {/* If subredditPosts is not loaded, provide empty (2D) Array to map function in order to properly display loading skeletons */}
-                {(Object.keys(subredditPosts).length === 0 ? [...Array(3)].map(e => new Array(2)) : Object.entries(subredditPosts)).map(([subreddit, posts], index) => 
+                { subredditPosts === null ? null:
+                
+                (Object.keys(subredditPosts).length === 0 ? [...Array(3)].map(e => new Array(2)) : Object.entries(subredditPosts)).map(([subreddit, posts], index) => 
                     <Box sx={{pt: 3, pb: 3}} key={index}> 
                         {
                             subreddit ? (
