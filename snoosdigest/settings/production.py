@@ -2,7 +2,7 @@ from snoosdigest.settings.base import *
 
 DEBUG = False
 
-TEMPLATES['DIRS'] += [BASE_DIR / 'frontend/build', ]
+TEMPLATES[0]['DIRS'] += [BASE_DIR / 'frontend/build', ]
 
 STATICFILES_DIRS += [
     BASE_DIR / 'frontend/build/static',
