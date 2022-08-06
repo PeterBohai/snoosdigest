@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import apiService from '../services/api';
 
-const baseUrl = 'http://127.0.0.1:8000/api'
+const baseUrl = '/api'
 
 function setUserData(jwtAccessToken) {
     try {
