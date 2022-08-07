@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import HomeScreen from './screens/HomeScreen';
 import SubredditScreen from './screens/SubredditScreen';
 import LogInScreen from './screens/LoginScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
 
 import authService from './services/auth';
@@ -33,6 +34,12 @@ function App() {
                     <Route path='/login' element={
                         <PublicOnlyRoute>
                             <LogInScreen />
+                        </PublicOnlyRoute>
+                        } 
+                    />
+                    <Route path='/signup' element={
+                        <PublicOnlyRoute>
+                            <SignUpScreen />
                         </PublicOnlyRoute>
                         } 
                     />
