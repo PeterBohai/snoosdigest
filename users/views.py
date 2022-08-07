@@ -1,8 +1,6 @@
 import logging
 
-import prawcore
 from praw import Reddit
-from praw.models import Subreddit as PrawSubreddit
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
@@ -18,69 +16,55 @@ from users.serializers import SnoosDigestTokenObtainPairSerializer, UserSerializ
 from users import utils
 
 from api.models import Subreddit
-from api import queries
+from api import queries, consts
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)
-
-
-def get_user_subreddit_watchlist() -> list[str]:
-    return ['news', 'personalfinance', 'investing']
 
 
 class UserSubredditSubscriptions(APIView):
     def get(self, request: Request) -> Response:
         """Example GET request: /api/users/subscriptions"""
         user = request.user
-        user_subscriptions: list[str] = utils.get_user_subscriptions(user)
+        user_subscriptions: list[str] = utils.get_user_subscriptions(user, reddit)
         return Response([f'r/{sub_name}' for sub_name in user_subscriptions])
 
     def post(self, request: Request) -> Response:
         """Example POST request: /api/users/subscriptions --data {subreddit: bogleheads}"""
-
         user: User = request.user
         if user.is_anonymous:
-            return Response('User must be logged in to add subscriptions', status=status.HTTP_401_UNAUTHORIZED)
+            err = 'User must be logged in to add subscriptions'
+            logger.error(f'Response(status=400, {err})')
+            return Response(err, status=status.HTTP_401_UNAUTHORIZED)
 
         subreddit_input: str = request.data['subreddit']
-        # Look for the subreddit in the DB
+
         try:
-            subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=subreddit_input.lower())
-            if user.user_subscriptions.filter(subreddit=subreddit).exists():
-                return Response('Already subscribed', status=status.HTTP_400_BAD_REQUEST)
+            subreddit: Subreddit = queries.get_subreddit(subreddit_input, reddit)
+        except ValueError as err:
+            logger.error(f'Response(status=400, {err})')
+            return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
 
-        except Subreddit.DoesNotExist:
-            # If it does not exist in the DB, query reddit API
-            try:
-                matched_subreddits: list[PrawSubreddit] = reddit.subreddits.search_by_name(subreddit_input.lower(), exact=True)
-                if len(matched_subreddits) != 1:
-                    return Response('Multiple potential subreddits found, please be more specific', status=status.HTTP_400_BAD_REQUEST)
-
-                praw_subreddit: PrawSubreddit = matched_subreddits[0]
-                # If it does not event exist in reddit API, return error response
-                if not hasattr(praw_subreddit, 'id') or not hasattr(praw_subreddit, 'created'):
-                    logger.error(f'{praw_subreddit} does not have "id" or "created" attributes')
-                    return Response(f'"{subreddit_input}" is not a valid subreddit, please try again', status=status.HTTP_400_BAD_REQUEST)
-            except prawcore.NotFound as err:
-                logger.error(f'prawcore.NotFound Exception: {err}')
-                return Response(f'"{subreddit_input}" is not a valid subreddit, please try again', status=status.HTTP_400_BAD_REQUEST)
-
-            # Store the "new" valid subreddit in the DB
-            subreddit: Subreddit = queries.insert_subreddit_data(praw_subreddit)
+        if user.user_subscriptions.filter(subreddit=subreddit).exists():
+            err = 'Already subscribed'
+            logger.error(f'Response(status=400, {err})')
+            return Response(err, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = UserSubscriptionSerializer(data={
             'user': user.id,
             'subreddit': subreddit.subreddit_id,
         })
-        if serializer.is_valid():
-            serializer.save()
-            response = {
-                'created': serializer.data,
-                'subreddit_display_name_prefixed': subreddit.display_name_prefixed
-            }
-            return Response(response, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
-        return Response('Bad request', status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            logger.error(f'Response(status=400, Bad request: {serializer.errors})')
+            return Response('Bad request', status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        response = {
+            'created': serializer.data,
+            'subreddit_display_name_prefixed': subreddit.display_name_prefixed
+        }
+        return Response(response, status=status.HTTP_201_CREATED)
+
 
     def delete(self, request: Request) -> Response:
         """Example DELETE request: /api/users/subscriptions --data {subreddit: bogleheads}"""
@@ -128,11 +112,28 @@ class UserRegister(APIView):
                 email=data['email'],
                 password=make_password(data['password'])
             )
-            serializer = UserSerializer(new_user)
+
+            # Assign the default subscriptions to the new user
+            for subreddit_name in consts.DEFAULT_SUBSCRIPTIONS:
+                try:
+                    subreddit: Subreddit = queries.get_subreddit(subreddit_name, reddit)
+                except ValueError:
+                    logger.info(f'An error occurred with trying to access the default subreddit <{subreddit_name}>')
+                    continue
+                serializer = UserSubscriptionSerializer(data={
+                    'user': new_user.id,
+                    'subreddit': subreddit.subreddit_id,
+                })
+                if not serializer.is_valid():
+                    logger.error(f'serializer is not valid: {serializer.errors}')
+                    continue
+                serializer.save()
+
             return Response({
                 **serializer.data,
                 'access': utils.generate_user_access_token(new_user)
             })
+
 
         except IntegrityError as err:
             # Duplicate username detected

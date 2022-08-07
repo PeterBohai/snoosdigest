@@ -21,10 +21,6 @@ reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)
 
 
-def get_user_subreddit_watchlist() -> list[str]:
-    return ['news', 'personalfinance', 'investing']
-
-
 @cached(cache=TTLCache(maxsize=500, ttl=10))
 def get_subreddit_top_posts(subreddit_name: str, time_filter: str, num_posts: int) -> tuple[str, list[dict]]:
     # Query database first
@@ -63,7 +59,7 @@ class HomePagePostsList(APIView):
         posts_per_subreddit: int = int(request.query_params.get('posts_per_subreddit', 2))
         time_filter: str = request.query_params['time_filter']
         user = request.user
-        subreddits: list[str] = get_user_subscriptions(user)
+        subreddits: list[str] = get_user_subscriptions(user, reddit)
 
         response: dict[str, list[dict]] = {}
         for subreddit in subreddits:

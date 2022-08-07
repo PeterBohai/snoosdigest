@@ -3,10 +3,10 @@ from django.db import models
 
 class Subreddit(models.Model):
     subreddit_id = models.AutoField(primary_key=True)
-    reddit_id = models.CharField(max_length=16)
-    display_name = models.CharField(max_length=128)
-    display_name_prefixed = models.CharField(max_length=128)
-    reddit_url_path = models.CharField(max_length=128)
+    reddit_id = models.CharField(max_length=16, unique=True)
+    display_name = models.CharField(max_length=128, unique=True)
+    display_name_prefixed = models.CharField(max_length=128, unique=True)
+    reddit_url_path = models.CharField(max_length=128, unique=True)
     subscribers = models.PositiveIntegerField(null=True)
     created_date_utc = models.DateField(null=True)
     created_unix_timestamp = models.PositiveBigIntegerField(null=True)
