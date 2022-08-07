@@ -28,7 +28,7 @@ node_modules/
 .pnp.js
 
 # Production
-/build
+frontend/build
 
 # Misc
 npm-debug.log*
