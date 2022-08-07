@@ -197,11 +197,11 @@ function Header() {
     }
 
     return (
-        <Box sx={{mb: 12}}>
+        <Box sx={{mb: 7}}>
             <ThemeProvider theme={theme}>
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <AppBar position='fixed' color='primary' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
+                <Toolbar variant='dense' sx={{mx: '10px'}}>
                     <IconButton onClick={toggleDrawer} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }}>
                         <MenuIcon />
                     </IconButton>
@@ -210,14 +210,14 @@ function Header() {
                             Snoos Digest
                         </Typography>
                     </Link>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
                         {location.pathname === '/login' || userData
                             ? null 
-                            : <Button variant="outlined" color='info' component={RouterLink} to='/login'>Log In</Button>
+                            : <Button sx={{height: '30px'}} variant="outlined" color='info' component={RouterLink} to='/login'>Log In</Button>
                         }
                         {location.pathname === '/signup' || userData
                             ? null 
-                            : <Button variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>
+                            : <Button sx={{height: '30px'}} variant="contained" color='info' component={RouterLink} to='/signup'>Sign Up</Button>
                         }
                         {
                         // When user is logged in, show a profile avatar on the right side of the AppBar
@@ -226,10 +226,10 @@ function Header() {
                             : (
                                 <Box>
                                     <IconButton onClick={handleOpenUserProfileMenu} sx={{ p: 0 }}>
-                                        <Avatar alt={userData['snoosdigest/username']}>{userData['snoosdigest/username'][0].toUpperCase()}</Avatar>
+                                        <Avatar sx={{ width: 30, height: 30 }} alt={userData['snoosdigest/username']}>{userData['snoosdigest/username'][0].toUpperCase()}</Avatar>
                                     </IconButton>
                                     <Menu
-                                        sx={{ mt: '45px' }}
+                                        sx={{ mt: '30px', ml: '3px' }}
                                         id='menu-appbar'
                                         anchorEl={userProfileMenuToggle}
                                         keepMounted
@@ -291,7 +291,7 @@ function Header() {
                 anchor="left"
                 open={open}
             >
-                <Toolbar />
+                <Toolbar variant='dense'/>
                 <Box>
                     <List>
                         <ListItem
