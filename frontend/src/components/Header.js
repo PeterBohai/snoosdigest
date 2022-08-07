@@ -201,7 +201,7 @@ function Header() {
             <ThemeProvider theme={theme}>
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <AppBar position='fixed' color='primary' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar variant='dense'>
+                <Toolbar variant='dense' sx={{mx: '10px'}}>
                     <IconButton onClick={toggleDrawer} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }}>
                         <MenuIcon />
                     </IconButton>
@@ -226,10 +226,10 @@ function Header() {
                             : (
                                 <Box>
                                     <IconButton onClick={handleOpenUserProfileMenu} sx={{ p: 0 }}>
-                                        <Avatar sx={{ width: 32, height: 32 }} alt={userData['snoosdigest/username']}>{userData['snoosdigest/username'][0].toUpperCase()}</Avatar>
+                                        <Avatar sx={{ width: 30, height: 30 }} alt={userData['snoosdigest/username']}>{userData['snoosdigest/username'][0].toUpperCase()}</Avatar>
                                     </IconButton>
                                     <Menu
-                                        sx={{ mt: '45px' }}
+                                        sx={{ mt: '30px', ml: '3px' }}
                                         id='menu-appbar'
                                         anchorEl={userProfileMenuToggle}
                                         keepMounted
