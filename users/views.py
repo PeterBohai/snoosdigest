@@ -103,7 +103,6 @@ class UserSubredditSubscriptions(APIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 class SnoosDigestTokenObtainPairView(TokenObtainPairView):
     serializer_class = SnoosDigestTokenObtainPairSerializer
 
@@ -123,6 +122,8 @@ class UserRegister(APIView):
 
         try:
             new_user = User.objects.create(
+                first_name=data['firstName'],
+                last_name=data['lastName'],
                 username=data['email'],
                 email=data['email'],
                 password=make_password(data['password'])
