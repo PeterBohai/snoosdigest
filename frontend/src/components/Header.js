@@ -41,7 +41,7 @@ import { userActions, updateUserSubscriptions } from '../store/userSlice';
 import AddSubredditDialog from './AddSubredditDialog';
 
 
-const drawerWidth = 260;
+const drawerWidth = 280;
 
 const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open', })(
     ({ theme, open }) => ({
@@ -102,7 +102,7 @@ function Header() {
     const dispatch = useDispatch();
     const userSubscriptions = useSelector(state => state.user.subscriptions);
     const userData = useSelector(state => state.user.userData);
-    const [open, setOpen] = useState(false);
+    const [openSideDrawer, setOpenSideDrawer] = useState(false);
     const [openAddSubreddit, setOpenAddSubreddit] = useState(false);
     const [openDeleteSubredditAlert, setOpenDeleteSubredditAlert] = useState(false);
     const [selectedDeleteSubreddit, setSelectedDeleteSubreddit] = useState('');
@@ -119,17 +119,17 @@ function Header() {
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
 
-    const toggleDrawer = () => {
-        if (!open) {
-            setOpen(true);
-        } else {
-            setOpen(false);
+    const toggleDrawer = () => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+        if (!openSideDrawer) {
             setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: false})
         }
+        setOpenSideDrawer(!openSideDrawer);
     };
 
     const handleSubredditClick = (subreddit_name) => {
-        setOpen(false);
         navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
@@ -202,7 +202,7 @@ function Header() {
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <AppBar position='fixed' color='primary' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar variant='dense' sx={{mx: '10px'}}>
-                    <IconButton onClick={toggleDrawer} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }}>
+                    <IconButton onClick={toggleDrawer()} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }}>
                         <MenuIcon />
                     </IconButton>
                     <Link component={RouterLink} to='/' underline='none' color='inherit' sx={{ flexGrow: 1 }}>
@@ -287,12 +287,15 @@ function Header() {
                         boxSizing: 'border-box',
                     },
                 }}
-                variant="persistent"
+                
                 anchor="left"
-                open={open}
+                open={openSideDrawer}
+                onClose={toggleDrawer()}
             >
                 <Toolbar variant='dense'/>
-                <Box>
+                <Box
+                    role="presentation"
+                >
                     <List>
                         <ListItem
                             secondaryAction={
@@ -331,6 +334,8 @@ function Header() {
                                         textOverflow: 'ellipsis'
                                     }
                                 }}
+                                onKeyDown={toggleDrawer()}
+                                onClick={toggleDrawer()}
                             />
                         </ListItem>
                     ))}
