@@ -376,7 +376,11 @@ function Header() {
                         userData={userData}
                         setOpenSideDrawer={setOpenSideDrawer}
                     />
-                    <AddSubredditDialog openAddSubreddit={openAddSubreddit} setOpenAddSubreddit={setOpenAddSubreddit}/>
+                    <AddSubredditDialog 
+                        openAddSubreddit={openAddSubreddit} 
+                        setOpenAddSubreddit={setOpenAddSubreddit}
+                        setOpenSideDrawer={setOpenSideDrawer}
+                    />
                 </Box>
             </Drawer>
             </ThemeProvider>
