@@ -59,8 +59,9 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open',
     }),
 }));
 
-function DeleteSubredditAlert({ handleDelete, subreddit, setSubreddit, open, setOpen }) {
-    
+function DeleteSubredditAlert({ handleDelete, subreddit, setSubreddit, open, setOpen, userData, setOpenSideDrawer }) {
+    const navigate = useNavigate();
+
     const handleYes = () => {
         handleDelete(subreddit);
         setOpen(false);
@@ -71,6 +72,27 @@ function DeleteSubredditAlert({ handleDelete, subreddit, setSubreddit, open, set
         setOpen(false);
         setSubreddit('');
     };
+
+    const handleLogin = () => {
+        setOpen(false);
+        setOpenSideDrawer(false);
+        navigate('/login');
+    };
+
+    if (!userData) {
+        return <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>{`Delete ${subreddit}?`}</DialogTitle>
+        <DialogContent>
+            <DialogContentText>
+                Only users can delete or add subreddit subscriptions. Please login or signup for an account.
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button color='secondary' onClick={handleLogin}>LOGIN</Button>
+            <Button color='primary' onClick={handleClose}>CANCEL</Button>
+        </DialogActions>
+    </Dialog>
+    }
 
     return <Dialog
         open={open}
@@ -116,15 +138,18 @@ function Header() {
         }
     }, [userData, dispatch]);
 
+    useEffect(() => {
+        if (!openSideDrawer) {
+            setSubheaderYourSubredditState({hover: false, edit: false});
+        }
+      }, [openSideDrawer]);
+
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
 
     const toggleDrawer = () => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
-        }
-        if (!openSideDrawer) {
-            setSubheaderYourSubredditState({...subheaderYourSubredditState, edit: false})
         }
         setOpenSideDrawer(!openSideDrawer);
     };
@@ -171,9 +196,6 @@ function Header() {
     }
 
     const YOUR_SUBREDDIT_EDIT_BUTTON = () => {
-        if (!userData) {
-            return null;
-        }
         if (subheaderYourSubredditState.edit) {
             return <Button 
                 edge="end" 
@@ -351,6 +373,8 @@ function Header() {
                         setSubreddit={setSelectedDeleteSubreddit}
                         open={openDeleteSubredditAlert} 
                         setOpen={setOpenDeleteSubredditAlert} 
+                        userData={userData}
+                        setOpenSideDrawer={setOpenSideDrawer}
                     />
                     <AddSubredditDialog openAddSubreddit={openAddSubreddit} setOpenAddSubreddit={setOpenAddSubreddit}/>
                 </Box>
