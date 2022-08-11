@@ -227,11 +227,21 @@ function Header() {
                     <IconButton onClick={toggleDrawer()} size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 1 }}>
                         <MenuIcon />
                     </IconButton>
-                    <Link component={RouterLink} to='/' underline='none' color='inherit' sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" component="div">
-                            Snoos Digest
-                        </Typography>
-                    </Link>
+                    <Box component='dive' color='inherit' sx={{ flexGrow: 1 }}>
+                         <Link component={RouterLink} to='/' underline='none' color='inherit'>
+                            <Typography 
+                                variant='h5' 
+                                component='span'
+                                sx={{
+                                    letterSpacing: '.2rem',
+                                    color: 'inherit',
+                                }}
+                            >
+                                Snoos Digest
+                            </Typography>
+                        </Link>
+                    </Box>
+                    
                     <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
                         {location.pathname === '/login' || userData
                             ? null 
