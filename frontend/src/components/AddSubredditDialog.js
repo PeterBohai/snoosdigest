@@ -14,7 +14,7 @@ import apiService from '../services/api';
 import { updateUserSubscriptions } from '../store/userSlice';
 
 
-function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
+function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSideDrawer }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [subredditNameInput, setSubredditNameInput] = useState('');
@@ -34,6 +34,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit }) {
 
     const handleLogin = () => {
         setOpenAddSubreddit(false);
+        setOpenSideDrawer(false);
         navigate('/login');
     };
 
