@@ -3,10 +3,12 @@ name: Lint
 on: [push, pull_request]
 
 jobs:
-  lint:
+  black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: psf/black@stable
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run black
+        uses: psf/black@stable
         with:
           options: "--extend-exclude /(|migrations)/ --skip-string-normalization --line-length 100"
