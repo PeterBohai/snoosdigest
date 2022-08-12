@@ -15,7 +15,7 @@ class Subreddit(models.Model):
     class Meta:
         db_table = 'subreddit'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Subreddit [{self.subreddit_id}]: {self.display_name_prefixed}'
 
 

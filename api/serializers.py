@@ -89,7 +89,7 @@ class SubredditPostSerializer(serializers.ModelSerializer):
         model = SubredditPost
         fields = '__all__'
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> SubredditPost:
         """
         Create and return a new `SubredditPost` instance, given the validated data.
         """
