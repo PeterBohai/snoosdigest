@@ -22,33 +22,45 @@ logger = logging.getLogger(__name__)
 
 
 @cached(cache=TTLCache(maxsize=500, ttl=10))
-def get_subreddit_top_posts(subreddit_name: str, time_filter: str, num_posts: int) -> tuple[str, list[dict]]:
+def get_subreddit_top_posts(
+    subreddit_name: str, time_filter: str, num_posts: int
+) -> tuple[str, list[dict]]:
     # Query database first
     posts_up_to_date = True
 
     filter_params = {
         'subreddit__display_name__iexact': subreddit_name,
-        f'top_{time_filter}_order__lte': MAX_NUM_POSTS_PER_SUBREDDIT
+        f'top_{time_filter}_order__lte': MAX_NUM_POSTS_PER_SUBREDDIT,
     }
-    subreddit_posts = SubredditPost.objects.filter(**filter_params).order_by(f'top_{time_filter}_order')
+    subreddit_posts = SubredditPost.objects.filter(**filter_params).order_by(
+        f'top_{time_filter}_order'
+    )
 
     if subreddit_posts and subreddit_posts.count() >= num_posts:
         # Check if all posts were updated within the `max_update_gap` time
         display_name_prefixed = ''
         for post in subreddit_posts:
             display_name_prefixed = post.subreddit.display_name_prefixed
-            if (datetime.now(tz=timezone.utc) - post.data_updated_timestamp_utc) > MAX_SUBREDDIT_UPDATE_GAP:
+            if (
+                datetime.now(tz=timezone.utc) - post.data_updated_timestamp_utc
+            ) > MAX_SUBREDDIT_UPDATE_GAP:
                 posts_up_to_date = False
                 break
         if posts_up_to_date:
             serialized_posts = SubredditPostSerializer(subreddit_posts, many=True).data
-            logger.info(f'<{subreddit_name}> posts are available and up to date in db, returned db results')
+            logger.info(
+                f'<{subreddit_name}> posts are available and up to date in db, returned db results'
+            )
             return display_name_prefixed, serialized_posts[:num_posts]
 
     # Call praw API if not in database or posts data is outdated, then update the database records
-    logger.info(f'<{subreddit_name}> posts are not available or out of date in db, query reddit API and cache to db')
+    logger.info(
+        f'<{subreddit_name}> posts are not available or out of date in db, query reddit API and cache to db'
+    )
     praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_name)
-    serialized_posts = queries.update_or_insert_subreddit_posts(subreddit_posts, praw_subreddit, time_filter)
+    serialized_posts = queries.update_or_insert_subreddit_posts(
+        subreddit_posts, praw_subreddit, time_filter
+    )
 
     return praw_subreddit.display_name_prefixed, serialized_posts[:num_posts]
 
@@ -63,7 +75,9 @@ class HomePagePostsList(APIView):
 
         response: dict[str, list[dict]] = {}
         for subreddit in subreddits:
-            display_name_prefixed, posts = get_subreddit_top_posts(subreddit, time_filter, posts_per_subreddit)
+            display_name_prefixed, posts = get_subreddit_top_posts(
+                subreddit, time_filter, posts_per_subreddit
+            )
             response[display_name_prefixed] = posts
 
         if not subreddits and not response:
@@ -81,7 +95,7 @@ class SubredditTopPostsList(APIView):
 
         response: dict[str, Union[str, list[dict]]] = {
             'subreddit_name': display_name_prefixed,
-            'posts': posts
+            'posts': posts,
         }
 
         return Response(response)

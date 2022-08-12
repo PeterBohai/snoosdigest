@@ -12,9 +12,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 
 from users.models import User, UserSubscription
-from users.serializers import SnoosDigestTokenObtainPairSerializer, UserSerializer, UserSubscriptionSerializer
+from users.serializers import (
+    SnoosDigestTokenObtainPairSerializer,
+    UserSerializer,
+    UserSubscriptionSerializer,
+)
 from users import utils
-
 from api.models import Subreddit
 from api import queries, consts
 
@@ -50,10 +53,12 @@ class UserSubredditSubscriptions(APIView):
             logger.error(f'Response(status=400, {err})')
             return Response(err, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = UserSubscriptionSerializer(data={
-            'user': user.id,
-            'subreddit': subreddit.subreddit_id,
-        })
+        serializer = UserSubscriptionSerializer(
+            data={
+                'user': user.id,
+                'subreddit': subreddit.subreddit_id,
+            }
+        )
         if not serializer.is_valid():
             logger.error(f'Response(status=400, Bad request: {serializer.errors})')
             return Response('Bad request', status=status.HTTP_400_BAD_REQUEST)
@@ -61,30 +66,40 @@ class UserSubredditSubscriptions(APIView):
         serializer.save()
         response = {
             'created': serializer.data,
-            'subreddit_display_name_prefixed': subreddit.display_name_prefixed
+            'subreddit_display_name_prefixed': subreddit.display_name_prefixed,
         }
         return Response(response, status=status.HTTP_201_CREATED)
-
 
     def delete(self, request: Request) -> Response:
         """Example DELETE request: /api/users/subscriptions --data {subreddit: bogleheads}"""
         user: User = request.user
         if user.is_anonymous:
-            return Response('User must be logged in to delete subscriptions', status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                'User must be logged in to delete subscriptions',
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         subreddit_input: str = request.data.get('subreddit', '')
 
         try:
-            user_subscription: UserSubscription = user.user_subscriptions.get(subreddit__display_name__iexact=subreddit_input.lower())
+            user_subscription: UserSubscription = user.user_subscriptions.get(
+                subreddit__display_name__iexact=subreddit_input.lower()
+            )
             user_subscription.delete()
-            return Response(f'<{subreddit_input}> was deleted from user subscriptions',
-                            status=status.HTTP_200_OK)
+            return Response(
+                f'<{subreddit_input}> was deleted from user subscriptions',
+                status=status.HTTP_200_OK,
+            )
         except UserSubscription.DoesNotExist:
-            return Response(f'The requested subscription <{subreddit_input}> does not exist',
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                f'The requested subscription <{subreddit_input}> does not exist',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         except UserSubscription.MultipleObjectsReturned:
-            return Response(f'There are multiple results for <{subreddit_input}> for the user ',
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                f'There are multiple results for <{subreddit_input}> for the user ',
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 class SnoosDigestTokenObtainPairView(TokenObtainPairView):
@@ -110,7 +125,7 @@ class UserRegister(APIView):
                 last_name=data['lastName'],
                 username=data['email'],
                 email=data['email'],
-                password=make_password(data['password'])
+                password=make_password(data['password']),
             )
 
             # Assign the default subscriptions to the new user
@@ -118,28 +133,32 @@ class UserRegister(APIView):
                 try:
                     subreddit: Subreddit = queries.get_subreddit(subreddit_name, reddit)
                 except ValueError:
-                    logger.info(f'An error occurred with trying to access the default subreddit <{subreddit_name}>')
+                    logger.info(
+                        f'An error occurred with trying to access the default subreddit <{subreddit_name}>'
+                    )
                     continue
-                serializer = UserSubscriptionSerializer(data={
-                    'user': new_user.id,
-                    'subreddit': subreddit.subreddit_id,
-                })
+                serializer = UserSubscriptionSerializer(
+                    data={
+                        'user': new_user.id,
+                        'subreddit': subreddit.subreddit_id,
+                    }
+                )
                 if not serializer.is_valid():
                     logger.error(f'serializer is not valid: {serializer.errors}')
                     continue
                 serializer.save()
 
-            return Response({
-                **serializer.data,
-                'access': utils.generate_user_access_token(new_user)
-            })
-
+            return Response(
+                {
+                    'username': new_user.username,
+                    'access': utils.generate_user_access_token(new_user),
+                }
+            )
 
         except IntegrityError as err:
             # Duplicate username detected
             logger.warning(f'django.db.utils.IntegrityError: {err}')
 
-            return Response({
-                'detail': 'Username already exists'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(
+                {'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST
+            )

@@ -15,7 +15,9 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     upvotes = serializers.IntegerField(source='score')
     upvote_ratio = serializers.FloatField(min_value=0.0)
     num_comments = serializers.IntegerField()
-    reddit_url = serializers.URLField(source='shortlink')  # 'shortlink' is always the post's link, 'url' might be image link
+    reddit_url = serializers.URLField(
+        source='shortlink'
+    )  # 'shortlink' is always the post's link, 'url' might be image link
     img_url = serializers.SerializerMethodField()
     video_url = serializers.SerializerMethodField()
     body = serializers.SerializerMethodField()
@@ -69,14 +71,16 @@ class RedditPostSerializer(RedditPostPreviewSerializer):
             if not comment.author:
                 continue
 
-            comments.append({
-                'id': comment.id,
-                'author': comment.author.name,
-                'body':  utils.normalize_text_content(comment.body),
-                'is_submitter': comment.is_submitter,
-                'upvotes': comment.score,
-                'created_utc': comment.created_utc
-            })
+            comments.append(
+                {
+                    'id': comment.id,
+                    'author': comment.author.name,
+                    'body': utils.normalize_text_content(comment.body),
+                    'is_submitter': comment.is_submitter,
+                    'upvotes': comment.score,
+                    'created_utc': comment.created_utc,
+                }
+            )
         return comments
 
 
