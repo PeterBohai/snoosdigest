@@ -65,8 +65,7 @@ ROOT_URLCONF = 'snoosdigest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,7 +91,7 @@ DATABASES = {
         'USER': os.environ.get('DB_USER_DEV'),
         'PASSWORD': os.environ.get('DB_PASSWORD_DEV'),
         'HOST': os.environ.get('DB_HOST_DEV'),
-        'PORT': '5432'
+        'PORT': '5432',
     }
 }
 
@@ -175,9 +174,7 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
 }
 
 SIMPLE_JWT = {
@@ -185,5 +182,4 @@ SIMPLE_JWT = {
 }
 
 # Project global constants
-NAMESPACE = 'snoosdigest'       # Ideally url of production site
-
+NAMESPACE = 'snoosdigest'  # Ideally url of production site

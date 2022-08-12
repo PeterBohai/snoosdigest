@@ -31,14 +31,20 @@ def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
     return new_subreddit
 
 
-def update_or_insert_subreddit_posts(query_result: QuerySet, praw_subreddit: PrawSubreddit, time_filter: str) -> list[dict]:
+def update_or_insert_subreddit_posts(
+    query_result: QuerySet, praw_subreddit: PrawSubreddit, time_filter: str
+) -> list[dict]:
 
-    top_posts: list[PrawSubmission] = list(praw_subreddit.top(time_filter, limit=MAX_NUM_POSTS_PER_SUBREDDIT))
+    top_posts: list[PrawSubmission] = list(
+        praw_subreddit.top(time_filter, limit=MAX_NUM_POSTS_PER_SUBREDDIT)
+    )
 
     try:
         subreddit_data = Subreddit.objects.filter(reddit_id=praw_subreddit.id).get()
     except Subreddit.DoesNotExist:
-        print(f'Subreddit {praw_subreddit.display_name} does not exist in Subreddit table, inserting subreddit...')
+        print(
+            f'<{praw_subreddit.display_name}> does not exist in Subreddit table, inserting subreddit...'
+        )
         subreddit_data = insert_subreddit_data(praw_subreddit)
     except Subreddit.MultipleObjectsReturned:
         print(f'Multiple Subreddit (reddit_id={praw_subreddit.id})rows found in database...')
@@ -53,7 +59,9 @@ def update_or_insert_subreddit_posts(query_result: QuerySet, praw_subreddit: Pra
         if serialized_post.get('created_utc'):
             created_unix_timestamp = int(serialized_post['created_utc'])
             serialized_post['created_unix_timestamp'] = created_unix_timestamp
-            serialized_post['created_timestamp_utc'] = datetime.fromtimestamp(created_unix_timestamp)
+            serialized_post['created_timestamp_utc'] = datetime.fromtimestamp(
+                created_unix_timestamp
+            )
         serialized_post['data_updated_timestamp_utc'] = timezone.now()
 
         praw_serialized_data.append(serialized_post)
@@ -73,13 +81,16 @@ def update_or_insert_subreddit_posts(query_result: QuerySet, praw_subreddit: Pra
 def get_subreddit(subreddit_display_name: str, praw_reddit: PrawReddit) -> Subreddit:
     # Look for the subreddit in the DB
     try:
-        subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=subreddit_display_name.lower())
+        subreddit: Subreddit = Subreddit.objects.get(
+            display_name__iexact=subreddit_display_name.lower()
+        )
 
     except Subreddit.DoesNotExist:
         # If it does not exist in the DB, query reddit API
         try:
-            matched_subreddits: list[PrawSubreddit] = praw_reddit.subreddits.search_by_name(subreddit_display_name.lower(),
-                                                                                       exact=True)
+            matched_subreddits: list[PrawSubreddit] = praw_reddit.subreddits.search_by_name(
+                subreddit_display_name.lower(), exact=True
+            )
             if len(matched_subreddits) != 1:
                 raise ValueError('Multiple potential subreddits found, please be more specific')
 
@@ -87,11 +98,15 @@ def get_subreddit(subreddit_display_name: str, praw_reddit: PrawReddit) -> Subre
             # If it does not event exist in reddit API, return error response
             if not hasattr(praw_subreddit, 'id') or not hasattr(praw_subreddit, 'created'):
                 print(f'{praw_subreddit} does not have "id" or "created" attributes')
-                raise ValueError(f'"{subreddit_display_name}" is not a valid subreddit, please try again')
+                raise ValueError(
+                    f'"{subreddit_display_name}" is not a valid subreddit, please try again'
+                )
 
         except prawcore.NotFound as err:
             print(f'prawcore.NotFound Exception: {err}')
-            raise ValueError(f'"{subreddit_display_name}" is not a valid subreddit, please try again')
+            raise ValueError(
+                f'"{subreddit_display_name}" is not a valid subreddit, please try again'
+            )
 
         # Store the "new" valid subreddit in the DB
         subreddit: Subreddit = insert_subreddit_data(praw_subreddit)
