@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 
 
@@ -8,7 +9,7 @@ from users.models import User, UserSubscription
 
 class SnoosDigestTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
-    def get_token(cls, user):
+    def get_token(cls, user: User) -> RefreshToken:
         token = super().get_token(user)
 
         # Custom private claims

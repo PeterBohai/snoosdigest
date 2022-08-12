@@ -36,9 +36,9 @@ class UserSubredditSubscriptions(APIView):
         """Example POST request: /api/users/subscriptions --data {subreddit: bogleheads}"""
         user: User = request.user
         if user.is_anonymous:
-            err = 'User must be logged in to add subscriptions'
-            logger.error(f'Response(status=400, {err})')
-            return Response(err, status=status.HTTP_401_UNAUTHORIZED)
+            error_msg: str = 'User must be logged in to add subscriptions'
+            logger.error(f'Response(status=400, {error_msg})')
+            return Response(error_msg, status=status.HTTP_401_UNAUTHORIZED)
 
         subreddit_input: str = request.data['subreddit']
 
@@ -49,9 +49,9 @@ class UserSubredditSubscriptions(APIView):
             return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
 
         if user.user_subscriptions.filter(subreddit=subreddit).exists():
-            err = 'Already subscribed'
-            logger.error(f'Response(status=400, {err})')
-            return Response(err, status=status.HTTP_400_BAD_REQUEST)
+            error_msg = 'Already subscribed'
+            logger.error(f'Response(status=400, {error_msg})')
+            return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = UserSubscriptionSerializer(
             data={
@@ -109,7 +109,7 @@ class SnoosDigestTokenObtainPairView(TokenObtainPairView):
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request: Request) -> Response:
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data)

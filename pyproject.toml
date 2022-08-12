@@ -3,12 +3,21 @@ strict = true
 warn_return_any = false
 disallow_subclassing_any = false
 disallow_any_generics = false
+disallow_untyped_decorators = false
+exclude = [
+    "snoosdigest/",
+    "manage.py",
+    "/migrations/"
+]
 
 [[tool.mypy.overrides]]
 module = [
     "django.*",
     "praw.*",
-    "rest_framework.*"
+    "prawcore.*",
+    "rest_framework.*",
+    "cachetools.*",
+    "rest_framework_simplejwt.*"
 ]
 ignore_missing_imports = true
 

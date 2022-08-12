@@ -109,6 +109,6 @@ def get_subreddit(subreddit_display_name: str, praw_reddit: PrawReddit) -> Subre
             )
 
         # Store the "new" valid subreddit in the DB
-        subreddit: Subreddit = insert_subreddit_data(praw_subreddit)
+        subreddit = insert_subreddit_data(praw_subreddit)
 
     return subreddit
