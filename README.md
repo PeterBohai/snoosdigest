@@ -1,6 +1,5 @@
 # Snoos Digest
-<a href="https://github.com/PeterBohai/snoosdigest/actions">
-  <img alt="Actions Status" src="https://github.com/PeterBohai/snoosdigest/workflows/lint.yml/badge.svg"></a>
+[![Lint](https://github.com/PeterBohai/snoosdigest/actions/workflows/lint.yml/badge.svg)](https://github.com/PeterBohai/snoosdigest/actions/workflows/lint.yml)
 <a href="https://github.com/PeterBohai/snoosdigest/blob/main/requirements.txt">
   <img alt="python" src="https://img.shields.io/badge/python-v3.9.6-blue"></a>
 <a href="https://github.com/PeterBohai/snoosdigest/blob/main/requirements.txt">
