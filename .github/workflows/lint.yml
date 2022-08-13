@@ -59,3 +59,4 @@ jobs:
         with:
           dry: True
           prettier_options: --check --config ./frontend/.prettierrc.json --ignore-path ./frontend/.prettierignore
+          file_pattern: "."
