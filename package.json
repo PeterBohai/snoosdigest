@@ -1,9 +1,9 @@
 {
-  "scripts": {
-    "postinstall": "cd frontend && npm install --legacy-peer-deps"
-  },
-  "engines": {
-    "node": "16.x",
-    "npm": "8.x"
-  }
+    "scripts": {
+        "postinstall": "cd frontend && npm install --legacy-peer-deps"
+    },
+    "engines": {
+        "node": "16.x",
+        "npm": "8.x"
+    }
 }
