@@ -55,7 +55,8 @@ def get_subreddit_top_posts(
 
     # Call praw API if not in database or posts data is outdated, then update the database records
     logger.info(
-        f'<{subreddit_name}> posts are not available or out of date in db, query reddit API and cache to db'
+        f'<{subreddit_name}> posts are not available or out of date in db, '
+        f'query reddit API and cache to db'
     )
     praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_name)
     serialized_posts = queries.update_or_insert_subreddit_posts(
