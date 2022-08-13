@@ -57,7 +57,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          working-directory: ./frontend
-      - run: npm install --no-save --force prettier
+      - run: npm install --no-package-lock --no-save prettier
       - name: prettier check
         run: npx prettier --check .
