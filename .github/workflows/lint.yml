@@ -59,4 +59,3 @@ jobs:
         with:
           dry: True
           prettier_options: --check --config ./frontend/.prettierrc --ignore-path ./frontend/.prettierignore
-          working_directory: frontend/
