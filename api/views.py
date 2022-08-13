@@ -1,20 +1,21 @@
-from typing import Union
-from datetime import datetime, timezone
 import logging
+from datetime import datetime, timezone
+from typing import Union
 
-from praw import Reddit
-from praw.models import Subreddit as PrawSubreddit, Submission as PrawSubmission
+from cachetools import TTLCache, cached
 from django.conf import settings
+from praw import Reddit
+from praw.models import Submission as PrawSubmission
+from praw.models import Subreddit as PrawSubreddit
 from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.request import Request
-from cachetools import cached, TTLCache
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from api.serializers import RedditPostSerializer, SubredditPostSerializer
-from api.models import SubredditPost
-from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
 from api import queries
+from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
+from api.models import SubredditPost
+from api.serializers import RedditPostSerializer, SubredditPostSerializer
 from users.utils import get_user_subscriptions
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)

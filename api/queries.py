@@ -1,14 +1,16 @@
 from datetime import date, datetime
-from django.utils import timezone
-from django.db import IntegrityError
-from django.db.models.query import QuerySet
 
 import prawcore
+from django.db import IntegrityError
+from django.db.models.query import QuerySet
+from django.utils import timezone
 from praw import Reddit as PrawReddit
-from praw.models import Subreddit as PrawSubreddit, Submission as PrawSubmission
-from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
-from api.models import Subreddit
+from praw.models import Submission as PrawSubmission
+from praw.models import Subreddit as PrawSubreddit
+
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT
+from api.models import Subreddit
+from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
 
 
 def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
