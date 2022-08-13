@@ -1,25 +1,25 @@
 import logging
 
-from praw import Reddit
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.request import Request
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
+from praw import Reddit
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+from api import consts, queries
+from api.models import Subreddit
+from users import utils
 from users.models import User, UserSubscription
 from users.serializers import (
     SnoosDigestTokenObtainPairSerializer,
     UserSerializer,
     UserSubscriptionSerializer,
 )
-from users import utils
-from api.models import Subreddit
-from api import queries, consts
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)

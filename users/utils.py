@@ -1,7 +1,7 @@
+from cachetools import TTLCache, cached
 from django.conf import settings
-from rest_framework_simplejwt.tokens import RefreshToken
-from cachetools import cached, TTLCache
 from praw import Reddit as PrawReddit
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from api import consts, queries
 from users.models import User

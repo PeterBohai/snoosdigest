@@ -1,8 +1,7 @@
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.conf import settings
-
 
 from users.models import User, UserSubscription
 

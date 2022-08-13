@@ -1,11 +1,11 @@
 from typing import Union
 
-from rest_framework import serializers
 from django.utils import timezone
 from praw.models import Submission
+from rest_framework import serializers
 
-from api.models import SubredditPost
 from api import utils
+from api.models import SubredditPost
 
 
 class RedditPostPreviewSerializer(serializers.Serializer):
