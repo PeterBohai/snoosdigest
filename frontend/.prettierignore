@@ -1,0 +1,8 @@
+# Ignore artifacts
+build
+public
+.vscode
+package-lock.json
+
+# Ignore certain file types
+*.html
