@@ -55,4 +55,5 @@ jobs:
         uses: creyD/prettier_action@v4.2
         with:
           dry: True
+          working_directory: frontend/
           prettier_options: --check
