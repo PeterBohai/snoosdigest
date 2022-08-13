@@ -58,6 +58,6 @@ jobs:
         with:
           node-version: 16
           working-directory: ./frontend
-      - run: npm install --no-save prettier
+      - run: npm install --no-save --force prettier
       - name: prettier check
         run: npx prettier --check .
