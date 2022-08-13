@@ -5,9 +5,7 @@ import Box from '@mui/material/Box';
 function Footer() {
     return (
         <footer>
-            <Box sx={{height: 50}}>
-
-            </Box>
+            <Box sx={{ height: 50 }}></Box>
         </footer>
     );
 }
