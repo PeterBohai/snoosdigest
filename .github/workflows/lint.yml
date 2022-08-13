@@ -55,5 +55,4 @@ jobs:
         uses: creyD/prettier_action@v4.2
         with:
           dry: True
-          working_directory: frontend/
-          prettier_options: --check
+          prettier_options: --check --config ./frontend/.prettierrc --ignore-path ./frontend/.prettierignore
