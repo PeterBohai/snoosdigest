@@ -43,7 +43,8 @@ def update_or_insert_subreddit_posts(
         subreddit_data = Subreddit.objects.filter(reddit_id=praw_subreddit.id).get()
     except Subreddit.DoesNotExist:
         print(
-            f'<{praw_subreddit.display_name}> does not exist in Subreddit table, inserting subreddit...'
+            f'<{praw_subreddit.display_name}> does not exist in Subreddit table, '
+            f'inserting subreddit...'
         )
         subreddit_data = insert_subreddit_data(praw_subreddit)
     except Subreddit.MultipleObjectsReturned:

@@ -134,7 +134,8 @@ class UserRegister(APIView):
                     subreddit: Subreddit = queries.get_subreddit(subreddit_name, reddit)
                 except ValueError:
                     logger.info(
-                        f'An error occurred with trying to access the default subreddit <{subreddit_name}>'
+                        f'An error occurred with trying to access the default subreddit '
+                        f'<{subreddit_name}>'
                     )
                     continue
                 serializer = UserSubscriptionSerializer(
