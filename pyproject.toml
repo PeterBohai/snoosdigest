@@ -29,3 +29,7 @@ force-exclude = '''
   | migrations
 )/
 '''
+
+[tool.isort]
+profile = "black"
+skip = ["migrations"]
