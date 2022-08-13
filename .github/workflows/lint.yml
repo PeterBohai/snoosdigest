@@ -53,10 +53,11 @@ jobs:
         with:
           # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Prettify code
         uses: creyD/prettier_action@v4.2
         with:
           dry: True
           prettier_options: --check --config ./frontend/.prettierrc.json --ignore-path ./frontend/.prettierignore
-          file_pattern: "."
+          only_changed: True
