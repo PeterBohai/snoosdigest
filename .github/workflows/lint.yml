@@ -47,17 +47,16 @@ jobs:
         uses: isort/isort-action@v1.0.0
   prettier:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set up node
+        uses: actions/setup-node@v3
         with:
-          # Make sure the actual branch is checked out when running on pull requests
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Prettify code
-        uses: creyD/prettier_action@v4.2
-        with:
-          dry: True
-          prettier_options: --check --config ./frontend/.prettierrc.json --ignore-path ./frontend/.prettierignore
-          only_changed: True
+          node-version: 16
+      - run: npm install --no-save --legacy-peer-deps --silent prettier
+      - name: prettier check
+        run: npx prettier --check .
