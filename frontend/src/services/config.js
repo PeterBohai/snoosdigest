@@ -14,10 +14,17 @@ const baseTheme = {
         info: {
             main: '#2196f3',
         },
+        discrete: {
+            main: grey[600],
+        },
     },
     typography: {
         button: {
             textTransform: 'none', // Remove button text all caps
+        },
+        h2: {
+            fontSize: '2.3rem',
+            fontWeight: 600,
         },
         h3: {
             fontSize: '2.125rem',
@@ -49,6 +56,23 @@ const muiPostDetailScreenTheme = {
 
 const markdownBaseOptions = {
     overrides: {
+        span: {
+            component: Typography,
+            props: {
+                sx: {
+                    mb: 1.5,
+                },
+            },
+        },
+        p: {
+            component: Typography,
+            props: {
+                component: 'p',
+                sx: {
+                    mb: 1.5,
+                },
+            },
+        },
         h1: {
             component: Typography,
             props: {

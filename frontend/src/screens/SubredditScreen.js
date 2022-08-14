@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+import Divider from '@mui/material/Divider';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import apiService from '../services/api';
@@ -40,8 +41,8 @@ function SubredditScreen() {
                                 {posts.subreddit_name}
                             </Typography>
                         )}
-
-                        <Stack spacing={3}>
+                        <Divider />
+                        <Stack spacing={1}>
                             {(posts.posts.length === 0 ? [...Array(NUM_POSTS)] : posts.posts).map(
                                 (post, index) =>
                                     post ? (
