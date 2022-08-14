@@ -8,6 +8,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+import Divider from '@mui/material/Divider';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import PostPreviewCard from '../components/PostPreviewCard';
@@ -34,7 +35,7 @@ function HomeScreen() {
 
     return (
         <div>
-            <Container>
+            <Container maxWidth="md">
                 <ThemeProvider theme={theme}>
                     {/* If subredditPosts is not loaded, provide empty (2D) Array to map function in order to properly display loading skeletons */}
                     {subredditPosts === null
@@ -47,10 +48,9 @@ function HomeScreen() {
                                   {subreddit ? (
                                       <Typography
                                           gutterBottom
-                                          variant="h4"
-                                          component="h4"
+                                          variant="h3"
+                                          component="h3"
                                           color="primary"
-                                          sx={{ fontWeight: 'bold' }}
                                       >
                                           <Link
                                               component={RouterLink}
@@ -64,8 +64,14 @@ function HomeScreen() {
                                           </Link>
                                       </Typography>
                                   ) : (
-                                      <Skeleton variant="text" width={210} height={64} />
+                                      <Skeleton
+                                          variant="text"
+                                          width={310}
+                                          height={54}
+                                          sx={{ mb: 2 }}
+                                      />
                                   )}
+                                  <Divider />
                                   {
                                       <Stack spacing={3}>
                                           {(posts ? posts : [...Array(2)]).map((post, index) =>
@@ -76,6 +82,7 @@ function HomeScreen() {
                                                       variant="rectangular"
                                                       height={168}
                                                       key={index}
+                                                      sx={{ mt: 2 }}
                                                   />
                                               )
                                           )}

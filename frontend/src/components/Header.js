@@ -39,6 +39,7 @@ import apiService from '../services/api';
 import utilsService from '../services/utils';
 import { userActions, updateUserSubscriptions } from '../store/userSlice';
 import AddSubredditDialog from './AddSubredditDialog';
+import ScrollToUpdate from './ScrollToUpdate';
 
 const drawerWidth = 280;
 
@@ -254,147 +255,158 @@ function Header() {
         <Box sx={{ mb: 7 }}>
             <ThemeProvider theme={theme}>
                 {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
-                <AppBar
-                    position="fixed"
-                    color="primary"
-                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                >
-                    <Toolbar variant="dense" sx={{ mx: '10px' }}>
-                        <IconButton
-                            onClick={toggleDrawer()}
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 1 }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Box component="dive" color="inherit" sx={{ flexGrow: 1 }}>
-                            <Link component={RouterLink} to="/" underline="none" color="inherit">
-                                <Typography
-                                    variant="h5"
-                                    component="span"
-                                    sx={{
-                                        letterSpacing: '.2rem',
-                                        color: 'inherit',
-                                    }}
+                <ScrollToUpdate openSideDrawer={openSideDrawer}>
+                    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                        <Toolbar sx={{ mx: '10px' }}>
+                            <IconButton
+                                onClick={toggleDrawer()}
+                                size="large"
+                                edge="start"
+                                color="inherit"
+                                aria-label="menu"
+                                sx={{ mr: 1 }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Box component="dive" color="inherit" sx={{ flexGrow: 1 }}>
+                                <Link
+                                    component={RouterLink}
+                                    to="/"
+                                    underline="none"
+                                    color="inherit"
                                 >
-                                    Snoos Digest
-                                </Typography>
-                            </Link>
-                        </Box>
+                                    <Typography
+                                        variant="h5"
+                                        component="span"
+                                        sx={{
+                                            letterSpacing: '.1rem',
+                                            color: 'inherit',
+                                        }}
+                                    >
+                                        Snoos Digest
+                                    </Typography>
+                                </Link>
+                            </Box>
 
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            {location.pathname === '/login' || userData ? null : (
-                                <Button
-                                    sx={{ height: '30px' }}
-                                    variant="outlined"
-                                    color="info"
-                                    component={RouterLink}
-                                    to="/login"
-                                >
-                                    Log In
-                                </Button>
-                            )}
-                            {location.pathname === '/signup' || userData ? null : (
-                                <Button
-                                    sx={{ height: '30px' }}
-                                    variant="contained"
-                                    color="info"
-                                    component={RouterLink}
-                                    to="/signup"
-                                >
-                                    Sign Up
-                                </Button>
-                            )}
-                            {
-                                // When user is logged in, show a profile avatar on the right side of the AppBar
-                                !userData ? null : (
-                                    <Box>
-                                        <IconButton
-                                            onClick={handleOpenUserProfileMenu}
-                                            sx={{ p: 0 }}
-                                        >
-                                            <Avatar
-                                                sx={{ width: 30, height: 30 }}
-                                                alt={userData['snoosdigest/username']}
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                {location.pathname === '/login' || userData ? null : (
+                                    <Button
+                                        sx={{ height: '30px' }}
+                                        variant="outlined"
+                                        color="primary"
+                                        component={RouterLink}
+                                        to="/login"
+                                    >
+                                        Log In
+                                    </Button>
+                                )}
+                                {location.pathname === '/signup' || userData ? null : (
+                                    <Button
+                                        sx={{ height: '30px' }}
+                                        variant="contained"
+                                        color="primary"
+                                        component={RouterLink}
+                                        to="/signup"
+                                    >
+                                        Sign Up
+                                    </Button>
+                                )}
+                                {
+                                    // When user is logged in, show a profile avatar on the right side of the AppBar
+                                    !userData ? null : (
+                                        <Box>
+                                            <IconButton
+                                                onClick={handleOpenUserProfileMenu}
+                                                sx={{ p: 0 }}
                                             >
-                                                {userData['snoosdigest/username'][0].toUpperCase()}
-                                            </Avatar>
-                                        </IconButton>
-                                        <Menu
-                                            sx={{ mt: '30px', ml: '3px' }}
-                                            id="menu-appbar"
-                                            anchorEl={userProfileMenuToggle}
-                                            keepMounted
-                                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            open={Boolean(userProfileMenuToggle)}
-                                            onClose={handleCloseUserProfileMenu}
-                                            PaperProps={{
-                                                elevation: 0,
-                                                sx: {
-                                                    overflow: 'visible',
-                                                    filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
-                                                    mt: 1.5,
-                                                    '& .MuiAvatar-root': {
-                                                        width: 32,
-                                                        height: 32,
-                                                        ml: -0.5,
-                                                        mr: 1,
+                                                <Avatar
+                                                    sx={{ width: 30, height: 30 }}
+                                                    alt={userData['snoosdigest/username']}
+                                                >
+                                                    {userData[
+                                                        'snoosdigest/username'
+                                                    ][0].toUpperCase()}
+                                                </Avatar>
+                                            </IconButton>
+                                            <Menu
+                                                sx={{ mt: '30px', ml: '3px' }}
+                                                id="menu-appbar"
+                                                anchorEl={userProfileMenuToggle}
+                                                keepMounted
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                open={Boolean(userProfileMenuToggle)}
+                                                onClose={handleCloseUserProfileMenu}
+                                                PaperProps={{
+                                                    elevation: 0,
+                                                    sx: {
+                                                        overflow: 'visible',
+                                                        filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
+                                                        mt: 1.5,
+                                                        '& .MuiAvatar-root': {
+                                                            width: 32,
+                                                            height: 32,
+                                                            ml: -0.5,
+                                                            mr: 1,
+                                                        },
+                                                        '&:before': {
+                                                            content: '""',
+                                                            display: 'block',
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            right: 14,
+                                                            width: 10,
+                                                            height: 10,
+                                                            bgcolor: 'background.paper',
+                                                            transform:
+                                                                'translateY(-50%) rotate(45deg)',
+                                                            zIndex: 0,
+                                                        },
                                                     },
-                                                    '&:before': {
-                                                        content: '""',
-                                                        display: 'block',
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        right: 14,
-                                                        width: 10,
-                                                        height: 10,
-                                                        bgcolor: 'background.paper',
-                                                        transform: 'translateY(-50%) rotate(45deg)',
-                                                        zIndex: 0,
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            <MenuItem key="logout" onClick={handleLogOut}>
-                                                <ListItemIcon>
-                                                    <Logout fontSize="small" />
-                                                </ListItemIcon>
-                                                Logout
-                                            </MenuItem>
-                                        </Menu>
-                                    </Box>
-                                )
-                            }
-                        </Stack>
-                    </Toolbar>
-                </AppBar>
+                                                }}
+                                            >
+                                                <MenuItem key="logout" onClick={handleLogOut}>
+                                                    <ListItemIcon>
+                                                        <Logout fontSize="small" />
+                                                    </ListItemIcon>
+                                                    Logout
+                                                </MenuItem>
+                                            </Menu>
+                                        </Box>
+                                    )
+                                }
+                            </Stack>
+                        </Toolbar>
+                    </AppBar>
+                </ScrollToUpdate>
 
                 <Drawer
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
+                    BackdropProps={{
+                        sx: {
+                            backgroundColor: 'rgb(0, 0, 0, 0.1)',
+                        },
+                    }}
+                    PaperProps={{
+                        sx: {
                             width: drawerWidth,
-                            boxSizing: 'border-box',
                         },
                     }}
                     anchor="left"
                     open={openSideDrawer}
                     onClose={toggleDrawer()}
                 >
-                    <Toolbar variant="dense" />
+                    <Toolbar />
                     <Box role="presentation">
                         <List>
                             <ListItem

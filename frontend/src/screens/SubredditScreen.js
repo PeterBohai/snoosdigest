@@ -30,19 +30,13 @@ function SubredditScreen() {
 
     return (
         <div>
-            <Container>
+            <Container maxWidth="md">
                 <ThemeProvider theme={theme}>
                     <Box sx={{ pt: 3, pb: 3 }} key={subreddit}>
                         {posts.posts.length === 0 ? (
                             <Skeleton variant="text" width={210} height={64} />
                         ) : (
-                            <Typography
-                                gutterBottom
-                                variant="h4"
-                                component="h4"
-                                color="primary"
-                                sx={{ fontWeight: 'bold' }}
-                            >
+                            <Typography gutterBottom variant="h3" component="h3" color="primary">
                                 {posts.subreddit_name}
                             </Typography>
                         )}
