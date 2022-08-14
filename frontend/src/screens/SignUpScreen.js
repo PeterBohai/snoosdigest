@@ -51,7 +51,7 @@ function SignUpScreen() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'info.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -108,7 +108,7 @@ function SignUpScreen() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            color="secondary"
+                            color="primary"
                         >
                             Sign Up
                         </Button>

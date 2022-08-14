@@ -63,8 +63,8 @@ function PostDetailScreen() {
     };
 
     return (
-        <Container>
-            <Box sx={{ my: botTopPadding, px: sidePadding, whiteSpace: 'pre-line' }}>
+        <Container maxWidth="md">
+            <Box sx={{ pt: 3, my: botTopPadding, px: sidePadding, whiteSpace: 'pre-line' }}>
                 <ThemeProvider theme={theme}>
                     {/* POST SECTION */}
                     {Object.keys(post).length === 0 ? (

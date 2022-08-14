@@ -48,7 +48,7 @@ function LogInScreen() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'info.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -64,7 +64,7 @@ function LogInScreen() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            color="secondary"
+                            color="primary"
                         />
                         <TextField
                             margin="normal"
@@ -75,7 +75,7 @@ function LogInScreen() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            color="secondary"
+                            color="primary"
                         />
 
                         <Button
@@ -83,7 +83,7 @@ function LogInScreen() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            color="secondary"
+                            color="primary"
                         >
                             Log In
                         </Button>

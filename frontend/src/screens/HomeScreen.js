@@ -34,7 +34,7 @@ function HomeScreen() {
 
     return (
         <div>
-            <Container>
+            <Container maxWidth="md">
                 <ThemeProvider theme={theme}>
                     {/* If subredditPosts is not loaded, provide empty (2D) Array to map function in order to properly display loading skeletons */}
                     {subredditPosts === null
