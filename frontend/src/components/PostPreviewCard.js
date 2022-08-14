@@ -5,17 +5,12 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ForwardIcon from '@mui/icons-material/Forward';
-import OutboundIcon from '@mui/icons-material/Outbound';
-import CommentIcon from '@mui/icons-material/Comment';
-import ModeCommentIcon from '@mui/icons-material/ModeComment';
+import Button from '@mui/material/Button';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import utilsService from '../services/utils';
@@ -48,7 +43,7 @@ function PostPreviewCard({ post }) {
     return (
         <Card sx={{ border: 'none', boxShadow: 'none' }}>
             <ThemeProvider theme={theme}>
-                <CardContent sx={{ height: 80, overflow: 'hidden', px: 0 }}>
+                <CardContent sx={{ overflow: 'hidden', px: 0 }}>
                     <Typography variant="h4" fontFamily={'Palatino, Times New Roman, Times, serif'}>
                         <Link
                             component={RouterLink}
@@ -64,11 +59,18 @@ function PostPreviewCard({ post }) {
                             {post.title}
                         </Link>
                     </Typography>
-                    <Typography variant="body2" color="text.primary" fontSize={15}>
+                    <Typography
+                        variant="body2"
+                        color="text.primary"
+                        fontSize={15}
+                        sx={{
+                            mt: 0.5,
+                        }}
+                    >
                         {postContent}
                     </Typography>
                 </CardContent>
-                <CardActions sx={{ p: 2, px: 0, pt: 1 }}>
+                <CardActions sx={{ p: 2, px: 0, pt: 0 }}>
                     <Stack
                         direction="row"
                         alignItems="center"
@@ -94,21 +96,26 @@ function PostPreviewCard({ post }) {
                                 </Typography>
                             </Grid>
                         </Grid>
-                        <Grid container direction="row" alignItems="center">
-                            <Grid item sx={{ mb: -0.5, mr: 0.4 }}>
-                                <CommentIcon color="action" sx={{ fontSize: 16 }} />
-                            </Grid>
-                            <Grid item>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    fontWeight="500"
-                                    fontSize={15}
-                                >
-                                    {utilsService.formatNumber(post.num_comments)} comments
-                                </Typography>
-                            </Grid>
-                        </Grid>
+
+                        <Button
+                            component={RouterLink}
+                            to={`/posts/${post.reddit_id}`}
+                            startIcon={
+                                <ChatBubbleIcon sx={{ transform: 'scale(0.9)', mr: -0.5 }} />
+                            }
+                            color="discrete"
+                            sx={{ ml: 2 }}
+                            size="small"
+                        >
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                fontWeight="500"
+                                fontSize={15}
+                            >
+                                {utilsService.formatNumber(post.num_comments)} comments
+                            </Typography>
+                        </Button>
                     </Stack>
                 </CardActions>
             </ThemeProvider>

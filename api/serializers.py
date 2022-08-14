@@ -79,6 +79,7 @@ class RedditPostSerializer(RedditPostPreviewSerializer):
                     'is_submitter': comment.is_submitter,
                     'upvotes': comment.score,
                     'created_utc': comment.created_utc,
+                    'permalink': f'https://reddit.com{comment.permalink}',
                 }
             )
         return comments

@@ -44,7 +44,7 @@ function HomeScreen() {
                               ? [...Array(3)].map((e) => new Array(2))
                               : Object.entries(subredditPosts)
                           ).map(([subreddit, posts], index) => (
-                              <Box sx={{ pt: 3, pb: 3 }} key={index}>
+                              <Box sx={{ pt: 3, pb: 1 }} key={index}>
                                   {subreddit ? (
                                       <Typography
                                           gutterBottom
@@ -73,7 +73,7 @@ function HomeScreen() {
                                   )}
                                   <Divider />
                                   {
-                                      <Stack spacing={3}>
+                                      <Stack spacing={1}>
                                           {(posts ? posts : [...Array(2)]).map((post, index) =>
                                               post ? (
                                                   <PostPreviewCard post={post} key={index} />

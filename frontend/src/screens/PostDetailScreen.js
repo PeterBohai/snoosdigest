@@ -11,10 +11,10 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import LinkIcon from '@mui/icons-material/Link';
+import LaunchIcon from '@mui/icons-material/Launch';
 import Skeleton from '@mui/material/Skeleton';
+import ForwardIcon from '@mui/icons-material/Forward';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
 import CommentCard from '../components/CommentCard';
@@ -36,7 +36,7 @@ function PostDetailScreen() {
         });
     }, [id]);
 
-    let theme = createTheme(configService.muiPostDetailScreenTheme);
+    let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
 
     const botTopPadding = 8;
@@ -75,10 +75,14 @@ function PostDetailScreen() {
                         </Box>
                     ) : (
                         <Box>
-                            <Typography variant="h3" component="h1">
+                            <Typography
+                                variant="h2"
+                                component="h1"
+                                fontFamily={'Palatino, Times New Roman, Times, serif'}
+                            >
                                 {post.title}
                             </Typography>
-                            <Typography variant="subtitle1" color="text.secondary">
+                            <Typography variant="subtitle1" color="discrete.main">
                                 {utilsService.getRelativeTime(post.created_utc)} by{' '}
                                 {post.author_name}
                             </Typography>
@@ -96,32 +100,28 @@ function PostDetailScreen() {
                                     container
                                     direction="row"
                                     alignItems="center"
-                                    maxWidth={'5.8rem'}
+                                    maxWidth={'5.2rem'}
                                 >
-                                    <Grid item>
-                                        <ChangeHistoryIcon color="action" sx={{ fontSize: 32 }} />
+                                    <Grid item sx={{ ml: -1 }}>
+                                        <ForwardIcon
+                                            color="primary"
+                                            sx={{ transform: 'rotate(-90deg)', fontSize: 26 }}
+                                        />
                                     </Grid>
                                     <Grid item>
-                                        <Typography
-                                            variant="body1"
-                                            color="text.secondary"
-                                            fontWeight="700"
-                                        >
+                                        <Typography variant="body1" fontWeight="bold">
                                             {utilsService.formatNumber(post.upvotes)}
                                         </Typography>
                                     </Grid>
                                 </Grid>
                                 <Grid container direction="row" alignItems="center">
                                     <Grid item sx={{ mb: -0.5, mr: 0.5 }}>
-                                        <ChatBubbleOutlineIcon
-                                            color="secondary"
-                                            sx={{ fontSize: 32 }}
-                                        />
+                                        <ChatBubbleIcon color="action" sx={{ fontSize: 20 }} />
                                     </Grid>
                                     <Grid item>
                                         <Typography
                                             variant="body1"
-                                            color="secondary"
+                                            color="discrete.main"
                                             fontWeight="500"
                                         >
                                             {utilsService.formatNumber(post.num_comments)} Comments
@@ -129,9 +129,9 @@ function PostDetailScreen() {
                                     </Grid>
                                     <Button
                                         href={post.reddit_url}
-                                        startIcon={<LinkIcon />}
+                                        startIcon={<LaunchIcon />}
                                         target="_blank"
-                                        color="secondary"
+                                        color="discrete"
                                         sx={{ ml: 2 }}
                                         size="large"
                                     >
@@ -142,10 +142,10 @@ function PostDetailScreen() {
                         </Box>
                     )}
 
-                    <Typography variant="h6" sx={{ mt: 5 }} fontWeight="bold">
-                        TOP COMMENTS
+                    <Typography variant="h5" sx={{ mt: 5 }} fontWeight="bold">
+                        Top Comments
                     </Typography>
-                    <Divider sx={{ mb: 5 }} />
+                    <Divider sx={{ mb: 2.5 }} />
 
                     {/* COMMENT SECTION */}
                     <Box>
@@ -153,7 +153,10 @@ function PostDetailScreen() {
                             {(postComments.length === 0 ? [...Array(5)] : postComments).map(
                                 (comment, index) =>
                                     comment ? (
-                                        <CommentCard comment={comment} key={index} />
+                                        <>
+                                            <CommentCard comment={comment} key={index} />
+                                            <Divider sx={{ p: 0, mt: '0 !important' }} />
+                                        </>
                                     ) : (
                                         <Skeleton variant="rectangular" height={100} key={index} />
                                     )
