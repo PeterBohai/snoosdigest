@@ -19,6 +19,14 @@ const baseTheme = {
         button: {
             textTransform: 'none', // Remove button text all caps
         },
+        h3: {
+            fontSize: '2.125rem',
+            fontWeight: 400,
+        },
+        h4: {
+            fontSize: '1.6rem',
+            fontWeight: 600,
+        },
     },
 };
 
