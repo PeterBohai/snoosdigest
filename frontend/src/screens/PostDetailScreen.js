@@ -129,7 +129,7 @@ function PostDetailScreen() {
                                     </Grid>
                                     <Button
                                         href={post.reddit_url}
-                                        startIcon={<LaunchIcon />}
+                                        startIcon={<LaunchIcon sx={{ mr: -0.5 }} />}
                                         target="_blank"
                                         color="discrete"
                                         sx={{ ml: 2 }}
