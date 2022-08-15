@@ -113,7 +113,7 @@ function PostPreviewCard({ post }) {
                                 fontWeight="500"
                                 fontSize={15}
                             >
-                                {utilsService.formatNumber(post.num_comments)} comments
+                                {utilsService.formatNumber(post.num_comments)} Comments
                             </Typography>
                         </Button>
                     </Stack>
