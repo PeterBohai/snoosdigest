@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
-import Divider from '@mui/material/Divider';
-import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Skeleton from "@mui/material/Skeleton";
+import Divider from "@mui/material/Divider";
+import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
-import apiService from '../services/api';
-import PostPreviewCard from '../components/PostPreviewCard';
-import configService from '../services/config';
+import apiService from "../services/api";
+import PostPreviewCard from "../components/PostPreviewCard";
+import configService from "../services/config";
 
 const NUM_POSTS = 5;
 
@@ -21,7 +21,7 @@ function SubredditScreen() {
 
     useEffect(() => {
         setPosts({ posts: [] });
-        apiService.getTopPosts(subreddit, 'day', NUM_POSTS).then((res) => {
+        apiService.getTopPosts(subreddit, "day", NUM_POSTS).then((res) => {
             setPosts(res.data);
         });
     }, [subreddit]);

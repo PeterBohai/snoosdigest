@@ -1,8 +1,8 @@
-import moment from 'moment';
+import moment from "moment";
 
 function getRelativeTime(timestamp) {
     if (!timestamp) {
-        return '';
+        return "";
     }
     let dateTime = moment.unix(timestamp).utc();
     return dateTime.fromNow();
@@ -17,7 +17,7 @@ function isValidHttpUrl(string) {
         return false;
     }
 
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    return url.protocol === "http:" || url.protocol === "https:";
 }
 
 function removeSubredditPrefix(subreddit_with_prefix) {

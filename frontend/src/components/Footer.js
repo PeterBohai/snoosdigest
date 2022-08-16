@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
 function Footer() {
     return (

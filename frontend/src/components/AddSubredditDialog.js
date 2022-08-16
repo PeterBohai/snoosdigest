@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-import apiService from '../services/api';
-import { updateUserSubscriptions } from '../store/userSlice';
+import apiService from "../services/api";
+import { updateUserSubscriptions } from "../store/userSlice";
 
 function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSideDrawer }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [subredditNameInput, setSubredditNameInput] = useState('');
-    const [inputErrorText, setInputErrorText] = useState('');
+    const [subredditNameInput, setSubredditNameInput] = useState("");
+    const [inputErrorText, setInputErrorText] = useState("");
     const userData = useSelector((state) => state.user.userData);
 
     const handleSubredditNameInputChange = (event) => {
         setSubredditNameInput(event.target.value);
-        setInputErrorText('');
+        setInputErrorText("");
     };
 
     const handleClose = () => {
         setOpenAddSubreddit(false);
-        setSubredditNameInput('');
-        setInputErrorText('');
+        setSubredditNameInput("");
+        setInputErrorText("");
     };
 
     const handleLogin = () => {
         setOpenAddSubreddit(false);
         setOpenSideDrawer(false);
-        navigate('/login');
+        navigate("/login");
     };
 
     const handleSubmit = () => {
@@ -42,17 +42,17 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
             .postUserSubscriptions(subredditNameInput)
             .then((res) => {
                 console.log(res.data);
-                console.log('dispatch(updateUserSubscriptions());');
+                console.log("dispatch(updateUserSubscriptions());");
                 dispatch(updateUserSubscriptions());
                 setOpenAddSubreddit(false);
-                setSubredditNameInput('');
-                setInputErrorText('');
+                setSubredditNameInput("");
+                setInputErrorText("");
             })
             .catch((err) => {
                 console.log(`Endpoint responded with status code ${err.response.status}`);
                 const errorResponse = err.response;
                 const errorData =
-                    errorResponse >= 500 ? 'Internal server error' : errorResponse.data;
+                    errorResponse >= 500 ? "Internal server error" : errorResponse.data;
                 setInputErrorText(errorData);
             });
     };
@@ -76,7 +76,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
                             variant="standard"
                             value={subredditNameInput}
                             onChange={handleSubredditNameInputChange}
-                            error={inputErrorText !== ''}
+                            error={inputErrorText !== ""}
                             helperText={inputErrorText}
                         />
                     </DialogContent>

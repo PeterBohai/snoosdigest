@@ -1,58 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
-import MenuIcon from '@mui/icons-material/Menu';
-import Link from '@mui/material/Link';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import MuiAppBar from '@mui/material/AppBar';
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Logout from '@mui/icons-material/Logout';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+import MenuIcon from "@mui/icons-material/Menu";
+import Link from "@mui/material/Link";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import MuiAppBar from "@mui/material/AppBar";
+import List from "@mui/material/List";
+import ListSubheader from "@mui/material/ListSubheader";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Logout from "@mui/icons-material/Logout";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
-import configService from '../services/config';
-import apiService from '../services/api';
-import utilsService from '../services/utils';
-import { userActions, updateUserSubscriptions } from '../store/userSlice';
-import AddSubredditDialog from './AddSubredditDialog';
-import ScrollToUpdate from './ScrollToUpdate';
+import configService from "../services/config";
+import apiService from "../services/api";
+import utilsService from "../services/utils";
+import { userActions, updateUserSubscriptions } from "../store/userSlice";
+import AddSubredditDialog from "./AddSubredditDialog";
+import ScrollToUpdate from "./ScrollToUpdate";
 
 const drawerWidth = 280;
 
-const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
+const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== "open" })(
     ({ theme, open }) => ({
-        transition: theme.transitions.create(['margin', 'width'], {
+        transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
         ...(open && {
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: `${drawerWidth}px`,
-            transition: theme.transitions.create(['margin', 'width'], {
+            transition: theme.transitions.create(["margin", "width"], {
                 easing: theme.transitions.easing.easeOut,
                 duration: theme.transitions.duration.enteringScreen,
             }),
@@ -74,18 +74,18 @@ function DeleteSubredditAlert({
     const handleYes = () => {
         handleDelete(subreddit);
         setOpen(false);
-        setSubreddit('');
+        setSubreddit("");
     };
 
     const handleClose = () => {
         setOpen(false);
-        setSubreddit('');
+        setSubreddit("");
     };
 
     const handleLogin = () => {
         setOpen(false);
         setOpenSideDrawer(false);
-        navigate('/login');
+        navigate("/login");
     };
 
     if (!userData) {
@@ -142,7 +142,7 @@ function Header() {
     const [openSideDrawer, setOpenSideDrawer] = useState(false);
     const [openAddSubreddit, setOpenAddSubreddit] = useState(false);
     const [openDeleteSubredditAlert, setOpenDeleteSubredditAlert] = useState(false);
-    const [selectedDeleteSubreddit, setSelectedDeleteSubreddit] = useState('');
+    const [selectedDeleteSubreddit, setSelectedDeleteSubreddit] = useState("");
     const [userProfileMenuToggle, setUserProfileMenuToggle] = useState(null);
     const [subheaderYourSubredditState, setSubheaderYourSubredditState] = useState({
         hover: false,
@@ -151,7 +151,7 @@ function Header() {
 
     useEffect(() => {
         if (userData) {
-            console.log('dispatch(updateUserSubscriptions());');
+            console.log("dispatch(updateUserSubscriptions());");
             dispatch(updateUserSubscriptions());
         }
     }, [userData, dispatch]);
@@ -166,7 +166,7 @@ function Header() {
     theme = responsiveFontSizes(theme);
 
     const toggleDrawer = () => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
             return;
         }
         setOpenSideDrawer(!openSideDrawer);
@@ -191,9 +191,9 @@ function Header() {
 
     const handleLogOut = () => {
         handleCloseUserProfileMenu();
-        localStorage.removeItem('access');
+        localStorage.removeItem("access");
         dispatch(userActions.logout());
-        console.log('dispatch(updateUserSubscriptions());');
+        console.log("dispatch(updateUserSubscriptions());");
         dispatch(updateUserSubscriptions());
     };
 
@@ -201,7 +201,7 @@ function Header() {
         apiService
             .deleteUserSubscriptions(subreddit_prefixed)
             .then((res) => {
-                console.log('dispatch(updateUserSubscriptions());');
+                console.log("dispatch(updateUserSubscriptions());");
                 dispatch(updateUserSubscriptions());
             })
             .catch((err) => {
@@ -257,7 +257,7 @@ function Header() {
                 {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
                 <ScrollToUpdate openSideDrawer={openSideDrawer}>
                     <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                        <Toolbar sx={{ mx: '10px' }}>
+                        <Toolbar sx={{ mx: "10px" }}>
                             <IconButton
                                 onClick={toggleDrawer()}
                                 size="large"
@@ -279,8 +279,8 @@ function Header() {
                                         variant="h5"
                                         component="span"
                                         sx={{
-                                            letterSpacing: '.1rem',
-                                            color: 'inherit',
+                                            letterSpacing: ".1rem",
+                                            color: "inherit",
                                         }}
                                     >
                                         Snoos Digest
@@ -294,9 +294,9 @@ function Header() {
                                 justifyContent="center"
                                 alignItems="center"
                             >
-                                {location.pathname === '/login' || userData ? null : (
+                                {location.pathname === "/login" || userData ? null : (
                                     <Button
-                                        sx={{ height: '30px' }}
+                                        sx={{ height: "30px" }}
                                         variant="outlined"
                                         color="primary"
                                         component={RouterLink}
@@ -305,9 +305,9 @@ function Header() {
                                         Log In
                                     </Button>
                                 )}
-                                {location.pathname === '/signup' || userData ? null : (
+                                {location.pathname === "/signup" || userData ? null : (
                                     <Button
-                                        sx={{ height: '30px' }}
+                                        sx={{ height: "30px" }}
                                         variant="contained"
                                         color="primary"
                                         component={RouterLink}
@@ -326,51 +326,51 @@ function Header() {
                                             >
                                                 <Avatar
                                                     sx={{ width: 30, height: 30 }}
-                                                    alt={userData['snoosdigest/username']}
+                                                    alt={userData["snoosdigest/username"]}
                                                 >
                                                     {userData[
-                                                        'snoosdigest/username'
+                                                        "snoosdigest/username"
                                                     ][0].toUpperCase()}
                                                 </Avatar>
                                             </IconButton>
                                             <Menu
-                                                sx={{ mt: '30px', ml: '3px' }}
+                                                sx={{ mt: "30px", ml: "3px" }}
                                                 id="menu-appbar"
                                                 anchorEl={userProfileMenuToggle}
                                                 keepMounted
                                                 anchorOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right',
+                                                    vertical: "top",
+                                                    horizontal: "right",
                                                 }}
                                                 transformOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right',
+                                                    vertical: "top",
+                                                    horizontal: "right",
                                                 }}
                                                 open={Boolean(userProfileMenuToggle)}
                                                 onClose={handleCloseUserProfileMenu}
                                                 PaperProps={{
                                                     elevation: 0,
                                                     sx: {
-                                                        overflow: 'visible',
-                                                        filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
+                                                        overflow: "visible",
+                                                        filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
                                                         mt: 1.5,
-                                                        '& .MuiAvatar-root': {
+                                                        "& .MuiAvatar-root": {
                                                             width: 32,
                                                             height: 32,
                                                             ml: -0.5,
                                                             mr: 1,
                                                         },
-                                                        '&:before': {
+                                                        "&:before": {
                                                             content: '""',
-                                                            display: 'block',
-                                                            position: 'absolute',
+                                                            display: "block",
+                                                            position: "absolute",
                                                             top: 0,
                                                             right: 14,
                                                             width: 10,
                                                             height: 10,
-                                                            bgcolor: 'background.paper',
+                                                            bgcolor: "background.paper",
                                                             transform:
-                                                                'translateY(-50%) rotate(45deg)',
+                                                                "translateY(-50%) rotate(45deg)",
                                                             zIndex: 0,
                                                         },
                                                     },
@@ -394,7 +394,7 @@ function Header() {
                 <Drawer
                     BackdropProps={{
                         sx: {
-                            backgroundColor: 'rgb(0, 0, 0, 0.1)',
+                            backgroundColor: "rgb(0, 0, 0, 0.1)",
                         },
                     }}
                     PaperProps={{
@@ -434,7 +434,7 @@ function Header() {
                                 <ListItem
                                     button={!subheaderYourSubredditState.edit}
                                     key={subreddit_name}
-                                    sx={{ maxWidth: '100%' }}
+                                    sx={{ maxWidth: "100%" }}
                                     onClick={
                                         subheaderYourSubredditState.edit
                                             ? null
@@ -453,16 +453,16 @@ function Header() {
                                         ) : null
                                     }
                                 >
-                                    <ListItemIcon sx={{ minWidth: '36px' }}>
+                                    <ListItemIcon sx={{ minWidth: "36px" }}>
                                         <ArrowCircleRightIcon color="primary" />
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={subreddit_name}
                                         primaryTypographyProps={{
                                             style: {
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
                                             },
                                         }}
                                         onKeyDown={toggleDrawer()}
@@ -476,7 +476,7 @@ function Header() {
                             size="small"
                             color="primary"
                             aria-label="add subreddit"
-                            sx={{ position: 'absolute', bottom: 20, right: 20 }}
+                            sx={{ position: "absolute", bottom: 20, right: 20 }}
                             onClick={handleAddSubredditClick}
                         >
                             <AddIcon />

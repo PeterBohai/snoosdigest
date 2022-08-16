@@ -1,16 +1,16 @@
-import React from 'react';
-import Markdown from 'markdown-to-jsx';
+import React from "react";
+import Markdown from "markdown-to-jsx";
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import ForwardIcon from '@mui/icons-material/Forward';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ForwardIcon from "@mui/icons-material/Forward";
 
-import utilsService from '../services/utils';
-import configService from '../services/config';
+import utilsService from "../services/utils";
+import configService from "../services/config";
 
 function CommentCard({ comment }) {
     const commentBody = (comment) => {
@@ -18,8 +18,8 @@ function CommentCard({ comment }) {
     };
 
     return (
-        <Card variant="outlined" sx={{ borderColor: 'transparent' }}>
-            <CardContent sx={{ p: 0, pb: '0.5rem !important' }}>
+        <Card variant="outlined" sx={{ borderColor: "transparent" }}>
+            <CardContent sx={{ p: 0, pb: "0.5rem !important" }}>
                 <Box sx={{}}>
                     <Typography variant="body2" component="div" color="text" fontWeight="bold">
                         {comment.author}
@@ -29,7 +29,7 @@ function CommentCard({ comment }) {
                             sx={{ ml: 0.5 }}
                             display="inline"
                         >
-                            {' · ' + utilsService.getRelativeTime(comment.created_utc)}
+                            {" · " + utilsService.getRelativeTime(comment.created_utc)}
                         </Typography>
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 1.5 }}>
@@ -41,7 +41,7 @@ function CommentCard({ comment }) {
                     <Grid item sx={{ ml: -0.4, mt: 0.1 }}>
                         <ForwardIcon
                             color="action"
-                            sx={{ transform: 'rotate(-90deg)', fontSize: 19 }}
+                            sx={{ transform: "rotate(-90deg)", fontSize: 19 }}
                         />
                     </Grid>
                     <Grid item width={32}>
@@ -53,7 +53,7 @@ function CommentCard({ comment }) {
                         href={comment.permalink}
                         target="_blank"
                         color="discrete"
-                        sx={{ ml: 2, mt: -0.07, fontWeight: 'bold' }}
+                        sx={{ ml: 2, mt: -0.07, fontWeight: "bold" }}
                     >
                         Reddit
                     </Button>
