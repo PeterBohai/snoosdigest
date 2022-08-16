@@ -1,10 +1,10 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
-import apiService from '../services/api';
+import apiService from "../services/api";
 
-const baseUrl = '/api';
+const baseUrl = "/api";
 
 function setUserData(jwtAccessToken) {
     try {
@@ -19,23 +19,23 @@ function setUserData(jwtAccessToken) {
 const userInitialState = {
     userLoginPending: false,
     userError: null,
-    userData: setUserData(localStorage.getItem('access')),
+    userData: setUserData(localStorage.getItem("access")),
     subscriptions: [],
 };
 
-export const attemptUserLogin = createAsyncThunk('user/attemptLogin', async (loginDetails) => {
+export const attemptUserLogin = createAsyncThunk("user/attemptLogin", async (loginDetails) => {
     const response = await axios.post(`${baseUrl}/users/login`, {
         username: loginDetails.email,
         password: loginDetails.password,
     });
     const responseBody = response.data;
     console.log(responseBody);
-    localStorage.setItem('access', responseBody.access);
+    localStorage.setItem("access", responseBody.access);
     return responseBody;
 });
 
 export const attemptUserRegistration = createAsyncThunk(
-    'user/attemptRegister',
+    "user/attemptRegister",
     async (registerDetails) => {
         const response = await axios.post(`${baseUrl}/users/register`, {
             firstName: registerDetails.firstName,
@@ -45,12 +45,12 @@ export const attemptUserRegistration = createAsyncThunk(
         });
         const responseBody = response.data;
         console.log(responseBody);
-        localStorage.setItem('access', responseBody.access);
+        localStorage.setItem("access", responseBody.access);
         return responseBody;
     }
 );
 
-export const updateUserSubscriptions = createAsyncThunk('user/updateSubscriptions', async () => {
+export const updateUserSubscriptions = createAsyncThunk("user/updateSubscriptions", async () => {
     const response = await apiService.getUserSubscriptions();
     const responseBody = response.data;
     console.log(responseBody);
@@ -58,7 +58,7 @@ export const updateUserSubscriptions = createAsyncThunk('user/updateSubscription
 });
 
 const userSlice = createSlice({
-    name: 'user',
+    name: "user",
     initialState: userInitialState,
     reducers: {
         logout: (state) => {
@@ -76,7 +76,7 @@ const userSlice = createSlice({
                     state.userData = setUserData(action.payload.access);
                 } catch {
                     state.userData = null;
-                    state.userError = 'InvalidTokenError';
+                    state.userError = "InvalidTokenError";
                 }
             })
             .addCase(attemptUserLogin.rejected, (state, action) => {
@@ -99,7 +99,7 @@ const userSlice = createSlice({
                     state.userData = setUserData(action.payload.access);
                 } catch {
                     state.userData = null;
-                    state.userError = 'InvalidTokenError';
+                    state.userError = "InvalidTokenError";
                 }
             })
             .addCase(attemptUserRegistration.rejected, (state, action) => {

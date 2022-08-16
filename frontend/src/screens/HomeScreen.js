@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
-import Divider from '@mui/material/Divider';
-import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Skeleton from "@mui/material/Skeleton";
+import Divider from "@mui/material/Divider";
+import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
-import PostPreviewCard from '../components/PostPreviewCard';
-import apiService from '../services/api';
-import configService from '../services/config';
-import utilsService from '../services/utils';
+import PostPreviewCard from "../components/PostPreviewCard";
+import apiService from "../services/api";
+import configService from "../services/config";
+import utilsService from "../services/utils";
 
 function HomeScreen() {
     const [subredditPosts, setSubredditPosts] = useState({});
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
     useEffect(() => {
-        apiService.getHomePagePosts('day').then((res) => {
+        apiService.getHomePagePosts("day").then((res) => {
             console.log(res);
             setSubredditPosts(res.data);
             if (res.status === 204) {

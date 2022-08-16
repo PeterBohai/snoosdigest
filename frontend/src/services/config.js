@@ -1,18 +1,18 @@
-import { Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Typography, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 // Base Theme designed with https://bareynol.github.io/mui-theme-creator/
 const baseTheme = {
     palette: {
-        type: 'light',
+        type: "light",
         primary: {
-            main: '#1565c0',
+            main: "#1565c0",
         },
         secondary: {
-            main: '#f50057',
+            main: "#f50057",
         },
         info: {
-            main: '#2196f3',
+            main: "#2196f3",
         },
         discrete: {
             main: grey[600],
@@ -20,18 +20,18 @@ const baseTheme = {
     },
     typography: {
         button: {
-            textTransform: 'none', // Remove button text all caps
+            textTransform: "none", // Remove button text all caps
         },
         h2: {
-            fontSize: '2.3rem',
+            fontSize: "2.3rem",
             fontWeight: 600,
         },
         h3: {
-            fontSize: '2.125rem',
+            fontSize: "2.125rem",
             fontWeight: 400,
         },
         h4: {
-            fontSize: '1.6rem',
+            fontSize: "1.6rem",
             fontWeight: 600,
         },
     },
@@ -40,10 +40,10 @@ const baseTheme = {
 const muiPostDetailScreenTheme = {
     typography: {
         body1: {
-            fontSize: '1.2rem',
+            fontSize: "1.2rem",
         },
         h3: {
-            fontSize: '2.3rem',
+            fontSize: "2.3rem",
             fontWeight: 500,
         },
     },
@@ -67,7 +67,7 @@ const markdownBaseOptions = {
         p: {
             component: Typography,
             props: {
-                component: 'p',
+                component: "p",
                 sx: {
                     mb: 1.5,
                 },
@@ -76,28 +76,28 @@ const markdownBaseOptions = {
         h1: {
             component: Typography,
             props: {
-                variant: 'h4',
-                component: 'h2',
+                variant: "h4",
+                component: "h2",
             },
         },
         h2: {
             component: Typography,
             props: {
-                variant: 'h5',
-                component: 'h3',
+                variant: "h5",
+                component: "h3",
             },
         },
         h3: {
             component: Typography,
             props: {
-                variant: 'h6',
-                component: 'h4',
+                variant: "h6",
+                component: "h4",
             },
         },
         table: {
             component: Table,
             props: {
-                size: 'small',
+                size: "small",
             },
         },
         thead: {
@@ -110,7 +110,7 @@ const markdownBaseOptions = {
             component: TableCell,
             props: {
                 style: {},
-                align: 'left',
+                align: "left",
             },
         },
         tbody: {
@@ -120,12 +120,12 @@ const markdownBaseOptions = {
             component: TableCell,
             props: {
                 style: {},
-                align: 'left',
+                align: "left",
             },
         },
         blockquote: {
             props: {
-                className: 'markdown',
+                className: "markdown",
             },
         },
     },

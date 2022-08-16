@@ -1,10 +1,10 @@
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
 
-import store from '../store/index';
-import { userActions } from '../store/userSlice';
+import store from "../store/index";
+import { userActions } from "../store/userSlice";
 
 function verifyAccessToken() {
-    const accessToken = localStorage.getItem('access');
+    const accessToken = localStorage.getItem("access");
     try {
         const decodedToken = jwt_decode(accessToken);
         const currentDate = new Date();
@@ -12,14 +12,14 @@ function verifyAccessToken() {
         // Token is expired
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
             store.dispatch(userActions.logout());
-            localStorage.removeItem('access');
-            console.log('Token has expired, user logged out');
+            localStorage.removeItem("access");
+            console.log("Token has expired, user logged out");
         }
     } catch {
         // If accessToken is null, then user is not logged in yet. Otherwise, the token is invalid - log out user
         if (accessToken !== null) {
             store.dispatch(userActions.logout());
-            localStorage.removeItem('access');
+            localStorage.removeItem("access");
         }
     }
 }

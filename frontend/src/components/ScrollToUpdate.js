@@ -1,5 +1,5 @@
-import React from 'react';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
+import React from "react";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 
 function ScrollToUpdate(props) {
     const {
@@ -14,12 +14,12 @@ function ScrollToUpdate(props) {
         ...other
     } = {
         threshold: 10,
-        bgColorBefore: 'white',
-        bgColorAfter: 'white',
-        textColorBefore: 'black',
-        textColorAfter: 'black',
-        fadeIn: '0.2s ease-in',
-        fadeOut: '0.2s ease-out',
+        bgColorBefore: "white",
+        bgColorAfter: "white",
+        textColorBefore: "black",
+        textColorAfter: "black",
+        fadeIn: "0.2s ease-in",
+        fadeOut: "0.2s ease-out",
         ...props,
     };
 
@@ -31,7 +31,7 @@ function ScrollToUpdate(props) {
 
     return React.cloneElement(children, {
         style: {
-            boxShadow: trigger || props.openSideDrawer ? '1px 1px 8px #888888' : 'none',
+            boxShadow: trigger || props.openSideDrawer ? "1px 1px 8px #888888" : "none",
             backgroundColor: trigger ? bgColorAfter : bgColorBefore,
             color: trigger ? textColorAfter : textColorBefore,
             transition: trigger ? fadeIn : fadeOut,

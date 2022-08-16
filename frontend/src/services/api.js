@@ -1,7 +1,7 @@
-import axios from 'axios';
-import store from '../store/index';
+import axios from "axios";
+import store from "../store/index";
 
-const baseUrl = '/api';
+const baseUrl = "/api";
 
 function getTopPosts(subreddit, timeFilter, numPosts) {
     return axios.get(`${baseUrl}/subreddits/${subreddit}/top-posts`, {
