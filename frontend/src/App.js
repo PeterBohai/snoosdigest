@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -17,6 +17,7 @@ import { updateUserSubscriptions } from "./store/userSlice";
 
 function App() {
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         authService.verifyAccessToken();
@@ -25,7 +26,7 @@ function App() {
     }, [dispatch]);
 
     return (
-        <Router>
+        <>
             <Header />
             <main>
                 <Routes>
@@ -50,8 +51,8 @@ function App() {
                     <Route path="/posts/:id" element={<PostDetailScreen />} />
                 </Routes>
             </main>
-            <Footer />
-        </Router>
+            {!["/login", "/signup"].includes(location.pathname) && <Footer />}
+        </>
     );
 }
 
