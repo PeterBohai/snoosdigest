@@ -73,14 +73,14 @@ function HomeScreen() {
                                   )}
                                   <Divider />
                                   {
-                                      <Stack spacing={1}>
+                                      <Stack spacing={posts ? 1 : 4}>
                                           {(posts ? posts : [...Array(2)]).map((post, index) =>
                                               post ? (
                                                   <PostPreviewCard post={post} key={index} />
                                               ) : (
                                                   <Skeleton
-                                                      variant="rectangular"
-                                                      height={168}
+                                                      variant="rounded"
+                                                      height={130}
                                                       key={index}
                                                       sx={{ mt: 2 }}
                                                   />
