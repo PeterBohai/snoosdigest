@@ -35,6 +35,21 @@ const baseTheme = {
             fontWeight: 600,
         },
     },
+    components: {
+        MuiSkeleton: {
+            defaultProps: {
+                animation: "wave",
+            },
+            styleOverrides: {
+                root: {
+                    backgroundColor: grey[50],
+                },
+                rounded: {
+                    borderRadius: 7,
+                },
+            },
+        },
+    },
 };
 
 const muiPostDetailScreenTheme = {

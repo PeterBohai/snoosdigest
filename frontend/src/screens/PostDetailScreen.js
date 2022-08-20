@@ -69,9 +69,9 @@ function PostDetailScreen() {
                     {/* POST SECTION */}
                     {Object.keys(post).length === 0 ? (
                         <Box>
-                            <Skeleton variant="text" width={"80%"} height={80} />
-                            <Skeleton variant="rectangular" height={200} />
-                            <Skeleton variant="text" width={"40%"} height={60} />
+                            <Skeleton variant="text" width={"80%"} height={100} />
+                            <Skeleton variant="rounded" height={200} sx={{ mt: 2 }} />
+                            <Skeleton variant="text" width={"40%"} height={60} sx={{ mt: 3 }} />
                         </Box>
                     ) : (
                         <Box>
@@ -158,7 +158,7 @@ function PostDetailScreen() {
                                             <Divider sx={{ p: 0, mt: "0 !important" }} />
                                         </>
                                     ) : (
-                                        <Skeleton variant="rectangular" height={100} key={index} />
+                                        <Skeleton variant="rounded" height={100} key={index} />
                                     )
                             )}
                         </Stack>
