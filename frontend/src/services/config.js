@@ -42,7 +42,7 @@ const baseTheme = {
             },
             styleOverrides: {
                 root: {
-                    backgroundColor: grey[100],
+                    backgroundColor: grey[50],
                 },
                 rounded: {
                     borderRadius: 7,
