@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
 from praw import Reddit
 from rest_framework import status
@@ -120,12 +119,12 @@ class UserRegister(APIView):
         data = request.data
 
         try:
-            new_user = User.objects.create(
+            new_user = User.objects.create_user(
                 first_name=data['firstName'],
                 last_name=data['lastName'],
                 username=data['email'],
                 email=data['email'],
-                password=make_password(data['password']),
+                password=data['password'],
             )
 
             # Assign the default subscriptions to the new user
