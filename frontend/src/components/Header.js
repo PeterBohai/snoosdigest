@@ -173,14 +173,17 @@ function Header() {
     };
 
     const handleSubredditClick = (subreddit_name) => {
+        setOpenSideDrawer(false);
         navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
     const handleOpenUserProfileMenu = (event) => {
+        setOpenSideDrawer(false);
         setUserProfileMenuToggle(event.currentTarget);
     };
 
     const handleCloseUserProfileMenu = () => {
+        setOpenSideDrawer(false);
         setUserProfileMenuToggle(null);
     };
 
@@ -274,6 +277,7 @@ function Header() {
                                     to="/"
                                     underline="none"
                                     color="inherit"
+                                    onClick={() => setOpenSideDrawer(false)}
                                 >
                                     <Typography
                                         variant="h5"
@@ -301,6 +305,7 @@ function Header() {
                                         color="primary"
                                         component={RouterLink}
                                         to="/login"
+                                        onClick={() => setOpenSideDrawer(false)}
                                     >
                                         Log In
                                     </Button>
@@ -312,6 +317,7 @@ function Header() {
                                         color="primary"
                                         component={RouterLink}
                                         to="/signup"
+                                        onClick={() => setOpenSideDrawer(false)}
                                     >
                                         Sign Up
                                     </Button>
