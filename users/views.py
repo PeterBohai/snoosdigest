@@ -101,7 +101,7 @@ class UserSubredditSubscriptions(APIView):
             )
 
 
-class SnoosDigestTokenObtainPairView(TokenObtainPairView):
+class UserLogin(TokenObtainPairView):
     serializer_class = SnoosDigestTokenObtainPairSerializer
 
 
@@ -162,3 +162,33 @@ class UserRegister(APIView):
             return Response(
                 {'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class UserUpdatePassword(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        """Example POST request: /api/users/update-password
+        --data {
+            old_password: "currentpass",
+            new_password: "myseceretpass1!",
+            new_password_confirmation: "myseceretpass1!"
+        }
+        """
+        user: User = request.user
+
+        if not user.check_password(request.data['old_password']):
+            return Response(
+                'Old password is incorrect',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if request.data['new_password'] != request.data['new_password_confirmation']:
+            return Response(
+                'Confirmation password did not match the new password',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.set_password(request.data['new_password'])
+        user.save()
+        return Response('Password has been updated successfully')
