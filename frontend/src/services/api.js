@@ -68,6 +68,17 @@ function deleteUserSubscriptions(subreddit_name_prefixed) {
     return axios.delete(`${baseUrl}/users/subscriptions`, { ...requestConfig, data: postData });
 }
 
+function postUpdateUserPassword(updatePasswordData) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    const requestConfig = {};
+    if (userData) {
+        // Send JWT access token through the Authorization header for server to authenticate and identify the user
+        requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
+    }
+    return axios.post(`${baseUrl}/users/update-password`, updatePasswordData, requestConfig);
+}
+
 const exportedFunctions = {
     getTopPosts,
     getPost,
@@ -75,6 +86,7 @@ const exportedFunctions = {
     getUserSubscriptions,
     postUserSubscriptions,
     deleteUserSubscriptions,
+    postUpdateUserPassword,
 };
 
 export default exportedFunctions;

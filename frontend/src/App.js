@@ -10,7 +10,9 @@ import HomeScreen from "./screens/HomeScreen";
 import SubredditScreen from "./screens/SubredditScreen";
 import LogInScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import ProfileSettingsScreen from "./screens/ProfileSettingsScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
+import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
 
 import authService from "./services/auth";
 import { updateUserSubscriptions } from "./store/userSlice";
@@ -45,6 +47,14 @@ function App() {
                             <PublicOnlyRoute>
                                 <SignUpScreen />
                             </PublicOnlyRoute>
+                        }
+                    />
+                    <Route
+                        path="/settings/profile"
+                        element={
+                            <PrivateOnlyRoute>
+                                <ProfileSettingsScreen />
+                            </PrivateOnlyRoute>
                         }
                     />
                     <Route path="/subreddits/:subreddit" element={<SubredditScreen />} />

@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
 from django.db.utils import IntegrityError
 from praw import Reddit
 from rest_framework import status
@@ -102,7 +101,7 @@ class UserSubredditSubscriptions(APIView):
             )
 
 
-class SnoosDigestTokenObtainPairView(TokenObtainPairView):
+class UserLogin(TokenObtainPairView):
     serializer_class = SnoosDigestTokenObtainPairSerializer
 
 
@@ -120,12 +119,12 @@ class UserRegister(APIView):
         data = request.data
 
         try:
-            new_user = User.objects.create(
+            new_user = User.objects.create_user(
                 first_name=data['firstName'],
                 last_name=data['lastName'],
                 username=data['email'],
                 email=data['email'],
-                password=make_password(data['password']),
+                password=data['password'],
             )
 
             # Assign the default subscriptions to the new user
@@ -163,3 +162,33 @@ class UserRegister(APIView):
             return Response(
                 {'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class UserUpdatePassword(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        """Example POST request: /api/users/update-password
+        --data {
+            oldPassword: "currentpass",
+            newPassword: "myseceretpass1!",
+            newPasswordConfirmation: "myseceretpass1!"
+        }
+        """
+        user: User = request.user
+
+        if not user.check_password(request.data['oldPassword']):
+            return Response(
+                {'oldPassword': 'Old password is incorrect'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if request.data['newPassword'] != request.data['newPasswordConfirmation']:
+            return Response(
+                {'newPasswordConfirmation': 'Confirmation password did not match the new password'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.set_password(request.data['newPassword'])
+        user.save()
+        return Response('Password has been updated successfully')
