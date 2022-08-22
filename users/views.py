@@ -170,25 +170,25 @@ class UserUpdatePassword(APIView):
     def post(self, request: Request) -> Response:
         """Example POST request: /api/users/update-password
         --data {
-            old_password: "currentpass",
-            new_password: "myseceretpass1!",
-            new_password_confirmation: "myseceretpass1!"
+            oldPassword: "currentpass",
+            newPassword: "myseceretpass1!",
+            newPasswordConfirmation: "myseceretpass1!"
         }
         """
         user: User = request.user
 
-        if not user.check_password(request.data['old_password']):
+        if not user.check_password(request.data['oldPassword']):
             return Response(
-                'Old password is incorrect',
+                {'oldPassword': 'Old password is incorrect'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if request.data['new_password'] != request.data['new_password_confirmation']:
+        if request.data['newPassword'] != request.data['newPasswordConfirmation']:
             return Response(
-                'Confirmation password did not match the new password',
+                {'newPasswordConfirmation': 'Confirmation password did not match the new password'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        user.set_password(request.data['new_password'])
+        user.set_password(request.data['newPassword'])
         user.save()
         return Response('Password has been updated successfully')
