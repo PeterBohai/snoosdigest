@@ -32,6 +32,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
@@ -387,6 +388,17 @@ function Header() {
                                                         <Logout fontSize="small" />
                                                     </ListItemIcon>
                                                     Logout
+                                                </MenuItem>
+                                                <MenuItem
+                                                    key="settings"
+                                                    component={RouterLink}
+                                                    to="/settings/profile"
+                                                    onClick={handleCloseUserProfileMenu}
+                                                >
+                                                    <ListItemIcon>
+                                                        <SettingsIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    Profile settings
                                                 </MenuItem>
                                             </Menu>
                                         </Box>
