@@ -40,7 +40,7 @@ function SlideTransition(props) {
 
 function ProfileSettingsScreen() {
     const userData = useSelector((state) => state.user.userData);
-    const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(true);
+    const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(false);
     const [updatePasswordValues, setUpdatePasswordValues] = useState({
         oldPassword: "",
         newPassword: "",
