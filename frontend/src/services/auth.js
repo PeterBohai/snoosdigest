@@ -4,9 +4,12 @@ import store from "../store/index";
 import { userActions } from "../store/userSlice";
 
 function verifyAccessToken() {
-    let userLocalData;
+    let userLocalData = localStorage.getItem("user");
+    if (!userLocalData) {
+        return;
+    }
     try {
-        userLocalData = JSON.parse(localStorage.getItem("user"));
+        userLocalData = JSON.parse();
     } catch {
         return;
     }
