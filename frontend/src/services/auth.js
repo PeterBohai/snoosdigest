@@ -4,7 +4,13 @@ import store from "../store/index";
 import { userActions } from "../store/userSlice";
 
 function verifyAccessToken() {
-    const accessToken = localStorage.getItem("access");
+    let userLocalData;
+    try {
+        userLocalData = JSON.parse(localStorage.getItem("user"));
+    } catch {
+        return;
+    }
+    const accessToken = userLocalData.access;
     try {
         const decodedToken = jwt_decode(accessToken);
         const currentDate = new Date();

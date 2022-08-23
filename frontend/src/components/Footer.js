@@ -44,12 +44,12 @@ function Footer() {
                         </Typography>
                         <Divider sx={{ my: 3, bgcolor: "grey.50" }} />
                         <Grid container>
-                            <Grid xs={6} sm={6}>
+                            <Grid item xs={6}>
                                 <Typography component="p" variant="body2" color="text.secondary">
                                     © {new Date().getFullYear()} SnoosDigest
                                 </Typography>
                             </Grid>
-                            <Grid xs={6} sm={6} display="flex" justifyContent="end">
+                            <Grid item xs={6} display="flex" justifyContent="end">
                                 <Stack direction="row" spacing={2}>
                                     <Link
                                         href="https://github.com/PeterBohai"

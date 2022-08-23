@@ -6,20 +6,31 @@ import apiService from "../services/api";
 
 const baseUrl = "/api";
 
-function setUserData(jwtAccessToken) {
+function setUserData(userData) {
+    if (!userData) {
+        return null;
+    }
+
+    const jwtAccessToken = userData.access;
     try {
-        const userData = jwt_decode(jwtAccessToken);
-        userData.access = jwtAccessToken;
-        return userData;
+        const userTokenData = jwt_decode(jwtAccessToken);
+        return { ...userData, ...userTokenData, access: jwtAccessToken };
     } catch {
         return null;
     }
 }
 
+let localUserData;
+try {
+    localUserData = JSON.parse(localStorage.getItem("user"));
+} catch {
+    localUserData = null;
+}
+
 const userInitialState = {
     userLoginPending: false,
     userError: null,
-    userData: setUserData(localStorage.getItem("access")),
+    userData: setUserData(localUserData),
     subscriptions: [],
 };
 
@@ -29,9 +40,15 @@ export const attemptUserLogin = createAsyncThunk("user/attemptLogin", async (log
         password: loginDetails.password,
     });
     const responseBody = response.data;
-    console.log(responseBody);
-    localStorage.setItem("access", responseBody.access);
-    return responseBody;
+
+    const profileResponse = await apiService.getUserProfile(responseBody.access);
+    const profileResponseBody = profileResponse.data;
+
+    const userData = { ...responseBody, ...profileResponseBody };
+    console.log(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    return userData;
 });
 
 export const attemptUserRegistration = createAsyncThunk(
@@ -44,9 +61,15 @@ export const attemptUserRegistration = createAsyncThunk(
             password: registerDetails.password,
         });
         const responseBody = response.data;
-        console.log(responseBody);
-        localStorage.setItem("access", responseBody.access);
-        return responseBody;
+
+        const profileResponse = await apiService.getUserProfile(responseBody.access);
+        const profileResponseBody = profileResponse.data;
+
+        const userData = { ...responseBody, ...profileResponseBody };
+        console.log(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        return userData;
     }
 );
 
@@ -64,6 +87,9 @@ const userSlice = createSlice({
         logout: (state) => {
             state.userData = null;
         },
+        updateUserData: (state, action) => {
+            state.userData = { ...state.userData, ...action.payload };
+        },
     },
     extraReducers(builder) {
         builder
@@ -73,7 +99,7 @@ const userSlice = createSlice({
             .addCase(attemptUserLogin.fulfilled, (state, action) => {
                 state.userLoginPending = false;
                 try {
-                    state.userData = setUserData(action.payload.access);
+                    state.userData = setUserData(action.payload);
                 } catch {
                     state.userData = null;
                     state.userError = "InvalidTokenError";
@@ -96,7 +122,7 @@ const userSlice = createSlice({
             .addCase(attemptUserRegistration.fulfilled, (state, action) => {
                 state.userLoginPending = false;
                 try {
-                    state.userData = setUserData(action.payload.access);
+                    state.userData = setUserData(action.payload);
                 } catch {
                     state.userData = null;
                     state.userError = "InvalidTokenError";

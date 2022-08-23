@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 
@@ -18,6 +18,8 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/s
 
 import configService from "../services/config";
 import apiService from "../services/api";
+import store from "../store/index";
+import { userActions } from "../store/userSlice";
 
 let theme = createTheme(configService.baseTheme);
 theme = responsiveFontSizes(theme);
@@ -38,9 +40,45 @@ function SlideTransition(props) {
     return <Slide {...props} direction="down" />;
 }
 
+function SettingsAlert({ open, alertMessage, setOpen }) {
+    const handleCloseAlert = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpen(false);
+    };
+    return (
+        <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleCloseAlert}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            TransitionComponent={SlideTransition}
+        >
+            <Alert
+                onClose={handleCloseAlert}
+                severity="success"
+                sx={{ width: "100%" }}
+                variant="filled"
+            >
+                {alertMessage}
+            </Alert>
+        </Snackbar>
+    );
+}
+
+function updateUserData(newUserData) {
+    let userLocalData = JSON.parse(localStorage.getItem("user"));
+    userLocalData = { ...userLocalData, ...newUserData };
+    localStorage.setItem("user", JSON.stringify(userLocalData));
+    console.log("store.dispatch(userActions.updateUserData(newUserData));");
+    store.dispatch(userActions.updateUserData(newUserData));
+}
+
 function ProfileSettingsScreen() {
     const userData = useSelector((state) => state.user.userData);
     const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(false);
+    const [updateProfileSuccess, setUpdateProfileSuccess] = useState(false);
     const [updatePasswordValues, setUpdatePasswordValues] = useState({
         oldPassword: "",
         newPassword: "",
@@ -51,6 +89,35 @@ function ProfileSettingsScreen() {
         newPassword: "",
         newPasswordConfirmation: "",
     });
+    const [profileValues, setProfileValues] = useState({
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+    });
+
+    const handleUpdatePasswordChange = (prop) => (event) => {
+        setUpdatePasswordValues({ ...updatePasswordValues, [prop]: event.target.value });
+    };
+
+    const handleProfileChange = (prop) => (event) => {
+        setProfileValues({ ...profileValues, [prop]: event.target.value });
+    };
+
+    const handleProfileSubmit = (event) => {
+        event.preventDefault();
+        const profileFormData = new FormData(event.currentTarget);
+        const requestData = Object.fromEntries(profileFormData.entries());
+        apiService
+            .putUserProfile(requestData)
+            .then((res) => {
+                console.log("Profile was updated:", res.data);
+                updateUserData(res.data);
+                setUpdateProfileSuccess(true);
+            })
+            .catch((err) => {
+                console.log(err);
+                setUpdateProfileSuccess(false);
+            });
+    };
 
     const handleChangePassword = (event) => {
         event.preventDefault();
@@ -84,17 +151,6 @@ function ProfileSettingsScreen() {
             });
     };
 
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setUpdatePasswordSuccess(false);
-    };
-
-    const handleUpdatePasswordChange = (prop) => (event) => {
-        setUpdatePasswordValues({ ...updatePasswordValues, [prop]: event.target.value });
-    };
-
     return (
         <ThemeProvider theme={theme}>
             <Container maxWidth="lg" sx={{ pt: 3, minHeight: "100vh" }}>
@@ -102,54 +158,60 @@ function ProfileSettingsScreen() {
                 <Typography variant="h5">Profile Settings</Typography>
                 <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
 
-                <Box sx={{ width: "100%" }}>
-                    <Grid container rowSpacing={1.5} columnSpacing={2} alignItems="center">
-                        <Grid item xs={12}>
-                            <InputLabel
-                                htmlFor="user-email"
-                                sx={{ color: "black", fontWeight: "bold" }}
-                            >
-                                Email address
-                            </InputLabel>
-                            <SettingsTextField
-                                id="user-email"
-                                disabled
-                                variant="outlined"
-                                value={userData["snoosdigest/username"]}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputLabel
-                                htmlFor="first-name"
-                                sx={{ color: "black", fontWeight: "bold" }}
-                            >
-                                First Name
-                            </InputLabel>
-                            <SettingsTextField
-                                disabled
-                                id="first-name"
-                                variant="outlined"
-                                value="Peter"
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InputLabel
-                                htmlFor="last-name"
-                                sx={{ color: "black", fontWeight: "bold" }}
-                            >
-                                Last Name
-                            </InputLabel>
-                            <SettingsTextField
-                                disabled
-                                id="last-name"
-                                variant="outlined"
-                                value="Hu"
-                            />
-                        </Grid>
-                    </Grid>
+                <InputLabel htmlFor="user-email" sx={{ color: "black", fontWeight: "bold" }}>
+                    Email address
+                </InputLabel>
+                <SettingsTextField
+                    margin="normal"
+                    id="user-email"
+                    disabled
+                    variant="outlined"
+                    value={userData["snoosdigest/username"]}
+                />
+                <Box
+                    sx={{ width: "100%" }}
+                    component="form"
+                    onSubmit={handleProfileSubmit}
+                    noValidate
+                >
+                    <InputLabel htmlFor="first-name" sx={{ color: "black", fontWeight: "bold" }}>
+                        First Name
+                    </InputLabel>
+                    <SettingsTextField
+                        margin="normal"
+                        id="first-name"
+                        name="first_name"
+                        variant="outlined"
+                        value={profileValues.first_name}
+                        onChange={handleProfileChange("first_name")}
+                        inputProps={{ maxLength: 150 }}
+                    />
+
+                    <InputLabel htmlFor="last-name" sx={{ color: "black", fontWeight: "bold" }}>
+                        Last Name
+                    </InputLabel>
+                    <SettingsTextField
+                        margin="normal"
+                        id="last-name"
+                        name="last_name"
+                        variant="outlined"
+                        value={profileValues.last_name}
+                        onChange={handleProfileChange("last_name")}
+                        inputProps={{ maxLength: 150 }}
+                    />
+                    <br />
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disableElevation
+                        color="primary"
+                        sx={{ mt: 2, height: "30px" }}
+                    >
+                        Update profile
+                    </Button>
                 </Box>
 
-                <Typography variant="h5" mt={3}>
+                <Typography variant="h5" mt={8}>
                     Change Password
                 </Typography>
                 <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
@@ -200,29 +262,23 @@ function ProfileSettingsScreen() {
                     <br />
                     <Button
                         type="submit"
-                        variant="contained"
+                        variant="outlined"
                         disableElevation
-                        color="primary"
+                        color="secondary"
                         sx={{ mt: 2, height: "30px" }}
                     >
                         Update password
                     </Button>
-                    <Snackbar
+                    <SettingsAlert
                         open={updatePasswordSuccess}
-                        autoHideDuration={7000}
-                        onClose={handleCloseAlert}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                        TransitionComponent={SlideTransition}
-                    >
-                        <Alert
-                            onClose={handleCloseAlert}
-                            severity="success"
-                            sx={{ width: "100%" }}
-                            variant="filled"
-                        >
-                            Password was updated successfully
-                        </Alert>
-                    </Snackbar>
+                        setOpen={setUpdatePasswordSuccess}
+                        alertMessage="Password was updated successfully"
+                    />
+                    <SettingsAlert
+                        open={updateProfileSuccess}
+                        setOpen={setUpdateProfileSuccess}
+                        alertMessage="Profile was updated successfully"
+                    />
                 </Box>
             </Container>
         </ThemeProvider>
