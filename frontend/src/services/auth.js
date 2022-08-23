@@ -9,7 +9,7 @@ function verifyAccessToken() {
         return;
     }
     try {
-        userLocalData = JSON.parse();
+        userLocalData = JSON.parse(userLocalData);
     } catch {
         return;
     }
