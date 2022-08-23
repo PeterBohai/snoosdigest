@@ -18,6 +18,8 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/s
 
 import configService from "../services/config";
 import apiService from "../services/api";
+import store from "../store/index";
+import { userActions } from "../store/userSlice";
 
 let theme = createTheme(configService.baseTheme);
 theme = responsiveFontSizes(theme);
@@ -38,9 +40,45 @@ function SlideTransition(props) {
     return <Slide {...props} direction="down" />;
 }
 
+function SettingsAlert({ open, alertMessage, setOpen }) {
+    const handleCloseAlert = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpen(false);
+    };
+    return (
+        <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleCloseAlert}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            TransitionComponent={SlideTransition}
+        >
+            <Alert
+                onClose={handleCloseAlert}
+                severity="success"
+                sx={{ width: "100%" }}
+                variant="filled"
+            >
+                {alertMessage}
+            </Alert>
+        </Snackbar>
+    );
+}
+
+function updateUserData(newUserData) {
+    let userLocalData = JSON.parse(localStorage.getItem("user"));
+    userLocalData = { ...userLocalData, ...newUserData };
+    localStorage.setItem("user", JSON.stringify(userLocalData));
+    console.log("store.dispatch(userActions.updateUserData(newUserData));");
+    store.dispatch(userActions.updateUserData(newUserData));
+}
+
 function ProfileSettingsScreen() {
     const userData = useSelector((state) => state.user.userData);
     const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(false);
+    const [updateProfileSuccess, setUpdateProfileSuccess] = useState(false);
     const [updatePasswordValues, setUpdatePasswordValues] = useState({
         oldPassword: "",
         newPassword: "",
@@ -56,13 +94,6 @@ function ProfileSettingsScreen() {
         last_name: userData.last_name,
     });
 
-    const handleCloseAlert = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setUpdatePasswordSuccess(false);
-    };
-
     const handleUpdatePasswordChange = (prop) => (event) => {
         setUpdatePasswordValues({ ...updatePasswordValues, [prop]: event.target.value });
     };
@@ -73,7 +104,19 @@ function ProfileSettingsScreen() {
 
     const handleProfileSubmit = (event) => {
         event.preventDefault();
-        console.log("handleProfileSubmit");
+        const profileFormData = new FormData(event.currentTarget);
+        const requestData = Object.fromEntries(profileFormData.entries());
+        apiService
+            .putUserProfile(requestData)
+            .then((res) => {
+                console.log("Profile was updated:", res.data);
+                updateUserData(res.data);
+                setUpdateProfileSuccess(true);
+            })
+            .catch((err) => {
+                console.log(err);
+                setUpdateProfileSuccess(false);
+            });
     };
 
     const handleChangePassword = (event) => {
@@ -137,6 +180,7 @@ function ProfileSettingsScreen() {
                     <SettingsTextField
                         margin="normal"
                         id="first-name"
+                        name="first_name"
                         variant="outlined"
                         value={profileValues.first_name}
                         onChange={handleProfileChange("first_name")}
@@ -149,6 +193,7 @@ function ProfileSettingsScreen() {
                     <SettingsTextField
                         margin="normal"
                         id="last-name"
+                        name="last_name"
                         variant="outlined"
                         value={profileValues.last_name}
                         onChange={handleProfileChange("last_name")}
@@ -224,22 +269,16 @@ function ProfileSettingsScreen() {
                     >
                         Update password
                     </Button>
-                    <Snackbar
+                    <SettingsAlert
                         open={updatePasswordSuccess}
-                        autoHideDuration={7000}
-                        onClose={handleCloseAlert}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                        TransitionComponent={SlideTransition}
-                    >
-                        <Alert
-                            onClose={handleCloseAlert}
-                            severity="success"
-                            sx={{ width: "100%" }}
-                            variant="filled"
-                        >
-                            Password was updated successfully
-                        </Alert>
-                    </Snackbar>
+                        setOpen={setUpdatePasswordSuccess}
+                        alertMessage="Password was updated successfully"
+                    />
+                    <SettingsAlert
+                        open={updateProfileSuccess}
+                        setOpen={setUpdateProfileSuccess}
+                        alertMessage="Profile was updated successfully"
+                    />
                 </Box>
             </Container>
         </ThemeProvider>

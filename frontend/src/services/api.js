@@ -95,6 +95,17 @@ function getUserProfile(access_token) {
     return axios.get(`${baseUrl}/users/profile`, requestConfig);
 }
 
+function putUserProfile(profileData) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    const requestConfig = {};
+    if (userData) {
+        // Send JWT access token through the Authorization header for server to authenticate and identify the user
+        requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
+    }
+    return axios.put(`${baseUrl}/users/profile`, profileData, requestConfig);
+}
+
 const exportedFunctions = {
     getTopPosts,
     getPost,
@@ -104,6 +115,7 @@ const exportedFunctions = {
     deleteUserSubscriptions,
     postUpdateUserPassword,
     getUserProfile,
+    putUserProfile,
 };
 
 export default exportedFunctions;

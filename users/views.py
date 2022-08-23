@@ -113,6 +113,23 @@ class UserProfile(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+    def put(self, request: Request) -> Response:
+        """Example PUT request: /api/users/profile
+        --data {first_name: "John", first_name: "Doe"}
+        """
+        user = request.user
+        serializer = UserSerializer(
+            user,
+            data={
+                'username': user.username,
+                **request.data,
+            },
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserRegister(APIView):
     def post(self, request: Request) -> Response:
