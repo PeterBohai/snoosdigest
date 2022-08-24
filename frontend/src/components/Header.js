@@ -199,6 +199,7 @@ function Header() {
         dispatch(userActions.logout());
         console.log("dispatch(updateUserSubscriptions());");
         dispatch(updateUserSubscriptions());
+        navigate("/");
     };
 
     const handleDeleteSubreddit = (subreddit_prefixed) => {
