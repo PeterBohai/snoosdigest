@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -14,26 +15,36 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
-import { attemptUserLogin, updateUserSubscriptions } from "../store/userSlice";
+import { attemptUserLogin } from "../store/userSlice";
 
 let theme = createTheme(configService.baseTheme);
 theme = responsiveFontSizes(theme);
 
 function LogInScreen() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const loginCredentials = {
             email: data.get("email"),
             password: data.get("password"),
         };
-        dispatch(attemptUserLogin(loginCredentials));
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+
+        try {
+            await dispatch(attemptUserLogin(loginCredentials)).unwrap();
+            console.log("User was logged in successfully");
+            const returnToPath = searchParams.get("return_to");
+            if (returnToPath) {
+                navigate(returnToPath, { replace: true });
+            } else {
+                navigate("/", { replace: true });
+            }
+        } catch (rejectedValueOrSerializedError) {
+            console.error("Log in dispatch failed: ", rejectedValueOrSerializedError);
+        }
     };
 
     return (

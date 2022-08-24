@@ -193,13 +193,22 @@ function Header() {
         setSubheaderYourSubredditState({ ...subheaderYourSubredditState, edit: false });
     };
 
-    const handleLogOut = () => {
+    const handleLogOut = async () => {
         handleCloseUserProfileMenu();
-        localStorage.removeItem("access");
+        localStorage.removeItem("user");
         dispatch(userActions.logout());
-        console.log("dispatch(updateUserSubscriptions());");
-        dispatch(updateUserSubscriptions());
-        navigate("/");
+
+        try {
+            console.log("dispatch(updateUserSubscriptions());");
+            await dispatch(updateUserSubscriptions()).unwrap();
+            console.log("User logged out successfully");
+            navigate("/", { replace: true });
+        } catch (rejectedValueOrSerializedError) {
+            console.error(
+                "Update user subscription dispatch failed: ",
+                rejectedValueOrSerializedError
+            );
+        }
     };
 
     const handleDeleteSubreddit = (subreddit_prefixed) => {
