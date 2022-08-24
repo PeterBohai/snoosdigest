@@ -195,6 +195,7 @@ function Header() {
 
     const handleLogOut = async () => {
         handleCloseUserProfileMenu();
+        navigate("/", { replace: true });
         localStorage.removeItem("user");
         dispatch(userActions.logout());
 
@@ -202,7 +203,6 @@ function Header() {
             console.log("dispatch(updateUserSubscriptions());");
             await dispatch(updateUserSubscriptions()).unwrap();
             console.log("User logged out successfully");
-            navigate("/", { replace: true });
         } catch (rejectedValueOrSerializedError) {
             console.error(
                 "Update user subscription dispatch failed: ",
