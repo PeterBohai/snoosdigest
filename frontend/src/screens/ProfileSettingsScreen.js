@@ -168,12 +168,7 @@ function ProfileSettingsScreen() {
                     variant="outlined"
                     value={userData["snoosdigest/username"]}
                 />
-                <Box
-                    sx={{ width: "100%" }}
-                    component="form"
-                    onSubmit={handleProfileSubmit}
-                    noValidate
-                >
+                <Box sx={{ width: "100%" }} component="form" onSubmit={handleProfileSubmit}>
                     <InputLabel htmlFor="first-name" sx={{ color: "black", fontWeight: "bold" }}>
                         First Name
                     </InputLabel>
@@ -216,9 +211,9 @@ function ProfileSettingsScreen() {
                 </Typography>
                 <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
 
-                <Box component="form" onSubmit={handleChangePassword} noValidate sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
                     <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        Old password
+                        Old password *
                     </InputLabel>
                     <SettingsTextField
                         margin="normal"
@@ -232,7 +227,7 @@ function ProfileSettingsScreen() {
                         helperText={updatePasswordErrors.oldPassword}
                     />
                     <InputLabel htmlFor="new-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        New password
+                        New password *
                     </InputLabel>
                     <SettingsTextField
                         margin="normal"
@@ -246,7 +241,7 @@ function ProfileSettingsScreen() {
                         helperText={updatePasswordErrors.newPassword}
                     />
                     <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        Confirm new password
+                        Confirm new password *
                     </InputLabel>
                     <SettingsTextField
                         margin="normal"

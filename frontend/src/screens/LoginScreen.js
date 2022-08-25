@@ -8,6 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -65,26 +66,47 @@ function LogInScreen() {
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+                        <InputLabel
+                            htmlFor="username"
+                            sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                        >
+                            Email
+                        </InputLabel>
                         <TextField
-                            margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
+                            placeholder
+                            id="username"
                             name="email"
-                            autoComplete="email"
+                            autoComplete="username"
                             autoFocus
                             color="primary"
+                            sx={{ mb: 3 }}
                         />
+
+                        <Grid container>
+                            <Grid item xs>
+                                <InputLabel
+                                    htmlFor="current-password"
+                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                >
+                                    Password
+                                </InputLabel>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2" underline="none">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                        </Grid>
                         <TextField
-                            margin="normal"
                             required
                             fullWidth
+                            placeholder
                             name="password"
-                            label="Password"
                             type="password"
-                            id="password"
+                            id="current-password"
                             autoComplete="current-password"
                             color="primary"
                         />
@@ -98,18 +120,9 @@ function LogInScreen() {
                         >
                             Log In
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="/signup" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        <Link href="/signup" variant="body2">
+                            Don't have an account? Sign Up
+                        </Link>
                     </Box>
                 </Box>
             </Container>

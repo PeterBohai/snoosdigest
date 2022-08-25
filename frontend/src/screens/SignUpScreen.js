@@ -7,6 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -57,47 +58,69 @@ function SignUpScreen() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
+                                <InputLabel
+                                    htmlFor="firstName"
+                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                >
+                                    First Name *
+                                </InputLabel>
                                 <TextField
                                     autoComplete="given-name"
                                     name="firstName"
                                     required
                                     fullWidth
                                     id="firstName"
-                                    label="First Name"
                                     autoFocus
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
+                                <InputLabel
+                                    htmlFor="lastName"
+                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                >
+                                    Last Name *
+                                </InputLabel>
                                 <TextField
                                     required
                                     fullWidth
                                     id="lastName"
-                                    label="Last Name"
                                     name="lastName"
                                     autoComplete="family-name"
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <InputLabel
+                                    htmlFor="username"
+                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                >
+                                    Email *
+                                </InputLabel>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="email"
-                                    label="Email Address"
+                                    placeholder
+                                    id="username"
                                     name="email"
-                                    autoComplete="email"
+                                    autoComplete="username"
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <InputLabel
+                                    htmlFor="new-password"
+                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                >
+                                    Password *
+                                </InputLabel>
                                 <TextField
                                     required
                                     fullWidth
+                                    placeholder
                                     name="password"
-                                    label="Password"
                                     type="password"
-                                    id="password"
+                                    id="new-password"
                                     autoComplete="new-password"
                                 />
                             </Grid>
@@ -112,13 +135,9 @@ function SignUpScreen() {
                         >
                             Sign Up
                         </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="/login" variant="body2">
-                                    Already have an account? Log in
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        <Link href="/login" variant="body2">
+                            Have an account? Log in
+                        </Link>
                     </Box>
                 </Box>
             </Container>
