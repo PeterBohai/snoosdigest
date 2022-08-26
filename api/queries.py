@@ -40,6 +40,8 @@ def update_or_insert_subreddit_posts(
     top_posts: list[PrawSubmission] = list(
         praw_subreddit.top(time_filter, limit=MAX_NUM_POSTS_PER_SUBREDDIT)
     )
+    if len(top_posts) < MAX_NUM_POSTS_PER_SUBREDDIT:
+        top_posts = list(praw_subreddit.hot(limit=MAX_NUM_POSTS_PER_SUBREDDIT))
 
     try:
         subreddit_data = Subreddit.objects.filter(reddit_id=praw_subreddit.id).get()
