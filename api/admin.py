@@ -16,4 +16,13 @@ class SubredditAdmin(admin.ModelAdmin):
 
 @admin.register(SubredditPost)
 class SubredditPostAdmin(admin.ModelAdmin):
-    list_display = ('subreddit_post_id', 'subreddit', 'reddit_id', 'author_name', 'title')
+    list_display = (
+        'subreddit_post_id',
+        'subreddit',
+        'reddit_id',
+        'top_day_order',
+        'author_name',
+        'title',
+        'data_updated_timestamp_utc',
+        'update_source',
+    )

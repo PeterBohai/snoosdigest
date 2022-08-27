@@ -11,6 +11,7 @@ class Subreddit(models.Model):
     created_date_utc = models.DateField(null=True)
     created_unix_timestamp = models.PositiveBigIntegerField(null=True)
     data_updated_timestamp_utc = models.DateTimeField()
+    update_source = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
         db_table = 'subreddit'
@@ -42,6 +43,13 @@ class SubredditPost(models.Model):
     created_timestamp_utc = models.DateTimeField()
     created_unix_timestamp = models.PositiveBigIntegerField()
     data_updated_timestamp_utc = models.DateTimeField()
+    update_source = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
         db_table = 'subreddit_post'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['subreddit', 'reddit_id', 'top_day_order'],
+                name='Unique subreddit day posts',
+            )
+        ]
