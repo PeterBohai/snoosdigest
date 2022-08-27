@@ -8,14 +8,19 @@ from praw import Reddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api import queries
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
-from api.models import SubredditPost
-from api.serializers import RedditPostSerializer, SubredditPostSerializer
+from api.models import Subreddit, SubredditPost
+from api.serializers import (
+    RedditPostSerializer,
+    SubredditPostSerializer,
+    SubredditSerializer,
+)
 from users.utils import get_user_subscriptions
 
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
@@ -113,3 +118,13 @@ class RedditPostDetail(APIView):
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
         return Response(serialized_post.data)
+
+
+class SubredditList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        # Example GET request: /api/subreddits/
+        subreddits = Subreddit.objects.all().values('display_name')
+        serializer = SubredditSerializer(subreddits, many=True)
+        return Response(serializer.data)

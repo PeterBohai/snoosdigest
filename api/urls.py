@@ -9,6 +9,7 @@ urlpatterns = [
         views.SubredditTopPostsList.as_view(),
         name='subreddit_posts_top',
     ),
+    path('subreddits', views.SubredditList.as_view(), name='subreddits'),
     path('posts/homepage', views.HomePagePostsList.as_view(), name='home_page_posts'),
     path('posts/<str:post_id>', views.RedditPostDetail.as_view(), name='reddit_post_detail'),
 ]
