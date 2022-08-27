@@ -106,6 +106,17 @@ function putUserProfile(profileData) {
     return axios.put(`${baseUrl}/users/profile`, profileData, requestConfig);
 }
 
+function getSubredditOptions() {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    const requestConfig = {};
+    if (userData) {
+        // Send JWT access token through the Authorization header for server to authenticate and identify the user
+        requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
+    }
+    return axios.get(`${baseUrl}/subreddits`, requestConfig);
+}
+
 const exportedFunctions = {
     getTopPosts,
     getPost,
@@ -116,6 +127,7 @@ const exportedFunctions = {
     postUpdateUserPassword,
     getUserProfile,
     putUserProfile,
+    getSubredditOptions,
 };
 
 export default exportedFunctions;

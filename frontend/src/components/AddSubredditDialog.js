@@ -14,6 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import apiService from "../services/api";
 import configService from "../services/config";
 import { updateUserSubscriptions } from "../store/userSlice";
+import AutoComplete from "./AutoComplete";
 
 function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSideDrawer }) {
     const dispatch = useDispatch();
@@ -23,8 +24,8 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
     const userData = useSelector((state) => state.user.userData);
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
-    const handleSubredditNameInputChange = (event) => {
-        setSubredditNameInput(event.target.value);
+    const handleSubredditNameInputChange = (value) => {
+        setSubredditNameInput(value);
         setInputErrorText("");
     };
 
@@ -95,14 +96,8 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
                             To add a new subreddit to follow, please enter the subreddit's name
                             below.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
+                        <AutoComplete
                             id="subreddit-name"
-                            label="Subreddit Name"
-                            fullWidth
-                            variant="standard"
-                            value={subredditNameInput}
                             onChange={handleSubredditNameInputChange}
                             error={inputErrorText !== ""}
                             helperText={inputErrorText}

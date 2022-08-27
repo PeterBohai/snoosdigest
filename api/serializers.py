@@ -5,7 +5,7 @@ from praw.models import Submission
 from rest_framework import serializers
 
 from api import utils
-from api.models import SubredditPost
+from api.models import Subreddit, SubredditPost
 
 
 class RedditPostPreviewSerializer(serializers.Serializer):
@@ -96,3 +96,11 @@ class SubredditPostSerializer(serializers.ModelSerializer):
         """
         validated_data['data_updated_timestamp_utc'] = timezone.now()
         return SubredditPost.objects.create(**validated_data)
+
+
+class SubredditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subreddit
+        fields = [
+            'display_name',
+        ]
