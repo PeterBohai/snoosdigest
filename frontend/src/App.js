@@ -13,6 +13,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import ProfileSettingsScreen from "./screens/ProfileSettingsScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 import authService from "./services/auth";
 import { updateUserSubscriptions } from "./store/userSlice";
@@ -31,6 +32,7 @@ function App() {
         <>
             <Header />
             <main>
+                <ScrollToTop />
                 <Routes>
                     <Route path="/" element={<HomeScreen />} />
                     <Route
