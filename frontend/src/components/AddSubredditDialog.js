@@ -9,8 +9,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import EditIcon from "@mui/icons-material/Edit";
 
 import apiService from "../services/api";
+import configService from "../services/config";
 import { updateUserSubscriptions } from "../store/userSlice";
 
 function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSideDrawer }) {
@@ -19,6 +21,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
     const [subredditNameInput, setSubredditNameInput] = useState("");
     const [inputErrorText, setInputErrorText] = useState("");
     const userData = useSelector((state) => state.user.userData);
+    const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
     const handleSubredditNameInputChange = (event) => {
         setSubredditNameInput(event.target.value);
@@ -56,6 +59,31 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
                 setInputErrorText(errorData);
             });
     };
+
+    if (userSubscriptions.length >= configService.MAX_SUBSCRIPTIONS_NUM_PER_USER) {
+        return (
+            <Dialog open={openAddSubreddit} onClose={handleClose}>
+                <DialogTitle>Add a Subreddit</DialogTitle>
+                <DialogContent>
+                    <DialogContentText textAlign="left">
+                        SnoosDigest users should not subscribe to more than{" "}
+                        <strong>10 subreddits</strong>.
+                        <br />
+                        Adding more will make things hard to digest!
+                        <br />
+                        <br />
+                        Try the <EditIcon sx={{ fontSize: 18, pr: 0.5 }} /> icon beside YOUR
+                        SUBREDDITS to remove a subreddit.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: "center" }}>
+                    <Button color="primary" onClick={handleClose}>
+                        OKAY
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     return (
         <div>
