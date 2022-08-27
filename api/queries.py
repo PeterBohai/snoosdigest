@@ -12,6 +12,8 @@ from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT
 from api.models import Subreddit
 from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
 
+UPDATE_SOURCE = 'django-snoosdigest'
+
 
 def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
     created_unix_timestamp = int(subreddit.created_utc)
@@ -25,6 +27,7 @@ def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
             created_date_utc=date.fromtimestamp(created_unix_timestamp),
             created_unix_timestamp=created_unix_timestamp,
             data_updated_timestamp_utc=timezone.now(),
+            update_source=UPDATE_SOURCE,
         )
         new_subreddit.save()
     except IntegrityError as err:
@@ -68,6 +71,7 @@ def update_or_insert_subreddit_posts(
                 created_unix_timestamp
             )
         serialized_post['data_updated_timestamp_utc'] = timezone.now()
+        serialized_post['update_source'] = UPDATE_SOURCE
 
         praw_serialized_data.append(serialized_post)
 
