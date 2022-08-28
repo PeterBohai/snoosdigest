@@ -10,8 +10,9 @@ class Subreddit(models.Model):
     subscribers = models.PositiveIntegerField(null=True)
     created_date_utc = models.DateField(null=True)
     created_unix_timestamp = models.PositiveBigIntegerField(null=True)
-    data_updated_timestamp_utc = models.DateTimeField()
+    data_updated_timestamp_utc = models.DateTimeField(null=True, blank=True)
     update_source = models.CharField(max_length=32, null=True, blank=True)
+    inserted_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'subreddit'

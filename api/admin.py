@@ -12,6 +12,7 @@ class SubredditAdmin(admin.ModelAdmin):
         'subscribers',
         'data_updated_timestamp_utc',
         'update_source',
+        'inserted_at',
     )
 
 
