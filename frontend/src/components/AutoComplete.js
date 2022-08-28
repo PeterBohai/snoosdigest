@@ -57,7 +57,14 @@ function AutoComplete({ id, onChange, error, helperText }) {
                 />
             )}
             renderOption={(props, option, { inputValue }) => {
-                const matches = match(option.display_name, inputValue);
+                const matches = [];
+                const inputValueIndex = option.display_name
+                    .toLowerCase()
+                    .indexOf(inputValue.toLowerCase());
+                if (inputValueIndex !== -1) {
+                    matches.push([inputValueIndex, inputValueIndex + inputValue.length]);
+                }
+
                 const parts = parse(option.display_name, matches);
 
                 return (
