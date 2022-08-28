@@ -121,3 +121,10 @@ def get_subreddit(subreddit_display_name: str, praw_reddit: PrawReddit) -> Subre
         subreddit = insert_subreddit_data(praw_subreddit)
 
     return subreddit
+
+
+def update_subreddit_last_viewed(display_name: str) -> None:
+    print(f'Updating <{display_name}> last_viewed_timestamp')
+    subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=display_name)
+    subreddit.last_viewed_timestamp = timezone.now()
+    subreddit.save()

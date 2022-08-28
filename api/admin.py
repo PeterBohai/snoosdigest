@@ -11,6 +11,7 @@ class SubredditAdmin(admin.ModelAdmin):
         'display_name',
         'subscribers',
         'data_updated_timestamp_utc',
+        'last_viewed_timestamp',
         'update_source',
         'inserted_at',
     )

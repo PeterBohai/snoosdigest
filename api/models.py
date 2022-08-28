@@ -13,6 +13,7 @@ class Subreddit(models.Model):
     data_updated_timestamp_utc = models.DateTimeField(null=True, blank=True)
     update_source = models.CharField(max_length=32, null=True, blank=True)
     inserted_at = models.DateTimeField(auto_now_add=True)
+    last_viewed_timestamp = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = 'subreddit'

@@ -86,6 +86,7 @@ class HomePagePostsList(APIView):
                 subreddit, time_filter, posts_per_subreddit
             )
             response[display_name_prefixed] = posts
+            queries.update_subreddit_last_viewed(subreddit)
 
         if not subreddits and not response:
             return Response(response, status=status.HTTP_204_NO_CONTENT)
