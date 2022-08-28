@@ -26,7 +26,9 @@ logger = logging.getLogger(__name__)
 
 class UserSubredditSubscriptions(APIView):
     def get(self, request: Request) -> Response:
-        """Example GET request: /api/users/subscriptions"""
+        """Example GET request: /api/users/subscriptions
+        If the Authorization token sent is incorrect, a 401 unauthorized Response is sent back.
+        """
         user = request.user
         user_subscriptions: list[str] = utils.get_user_subscriptions(user, reddit)
         return Response([f'r/{sub_name}' for sub_name in user_subscriptions])
@@ -129,6 +131,13 @@ class UserProfile(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request) -> Response:
+        """Example DELETE request: /api/users/profile"""
+        user = request.user
+        user.delete()
+        print(f'DELETED user <{user.email}>')
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserRegister(APIView):
