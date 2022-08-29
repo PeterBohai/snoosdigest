@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
@@ -13,6 +14,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Slide from "@mui/material/Slide";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
@@ -75,7 +81,10 @@ function updateUserData(newUserData) {
 }
 
 function ProfileSettingsScreen() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const userData = useSelector((state) => state.user.userData);
+    const [openDeleteAccountDialog, setOpenDeleteAccountDialog] = useState(false);
     const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(false);
     const [updateProfileSuccess, setUpdateProfileSuccess] = useState(false);
     const [updatePasswordValues, setUpdatePasswordValues] = useState({
@@ -148,6 +157,24 @@ function ProfileSettingsScreen() {
                     ...errorData,
                 });
             });
+    };
+
+    const handleDeleteAccount = () => {
+        apiService
+            .deleteUserProfile()
+            .then((res) => {
+                console.log("Profile was deleted", res.data);
+                navigate("/", { replace: true });
+                localStorage.removeItem("user");
+                dispatch(userActions.logout());
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.error("An error occurred while deleting your account", err.response.data);
+            });
+    };
+    const handleCloseDeleteAccountDialog = () => {
+        setOpenDeleteAccountDialog(false);
     };
 
     return (
@@ -256,9 +283,9 @@ function ProfileSettingsScreen() {
                     <br />
                     <Button
                         type="submit"
-                        variant="outlined"
+                        variant="contained"
                         disableElevation
-                        color="secondary"
+                        color="primary"
                         sx={{ mt: 2, height: "30px" }}
                     >
                         Update password
@@ -273,6 +300,58 @@ function ProfileSettingsScreen() {
                         setOpen={setUpdateProfileSuccess}
                         alertMessage="Profile was updated successfully"
                     />
+                </Box>
+
+                <Typography variant="h5" mt={8} fontWeight="bold" color="secondary">
+                    Delete Account
+                </Typography>
+                <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
+
+                <Box sx={{ mt: 1 }}>
+                    <Typography variant="body1">
+                        Once you delete your account, <strong>there is no going back</strong>. All
+                        your current data will be permanently deleted.
+                        <br />
+                        Please be certain.
+                    </Typography>
+                    <br />
+                    <Button
+                        variant="contained"
+                        disableElevation
+                        color="secondary"
+                        sx={{ height: "30px" }}
+                        onClick={() => setOpenDeleteAccountDialog(true)}
+                    >
+                        <strong>Delete your account</strong>
+                    </Button>
+                    <Dialog
+                        open={openDeleteAccountDialog}
+                        onClose={handleCloseDeleteAccountDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            Are you sure you want to DELETE your account?
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                <Typography color="secondary">
+                                    All your current data will be permanently deleted.
+                                </Typography>
+                                <Typography>
+                                    Once your account is deleted you will be logged out.
+                                </Typography>
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseDeleteAccountDialog} autoFocus>
+                                CANCEL
+                            </Button>
+                            <Button onClick={handleDeleteAccount} color="secondary">
+                                DELETE ACCOUNT
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Box>
             </Container>
         </ThemeProvider>
