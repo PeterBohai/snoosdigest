@@ -286,7 +286,7 @@ function Header() {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Box component="dive" color="inherit" sx={{ flexGrow: 1 }}>
+                            <Box component="div" color="inherit" sx={{ flexGrow: 1 }}>
                                 <Link
                                     component={RouterLink}
                                     to="/"
