@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 import Box from "@mui/material/Box";
@@ -15,20 +15,32 @@ import PostPreviewCard from "../components/PostPreviewCard";
 import apiService from "../services/api";
 import configService from "../services/config";
 import utilsService from "../services/utils";
+import { userActions } from "../store/userSlice";
 
 function HomeScreen() {
     const [subredditPosts, setSubredditPosts] = useState({});
+    const dispatch = useDispatch();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
     useEffect(() => {
-        apiService.getHomePagePosts("day").then((res) => {
-            console.log(res);
-            setSubredditPosts(res.data);
-            if (res.status === 204) {
-                setSubredditPosts(null);
-            }
-        });
-    }, [userSubscriptions]);
+        apiService
+            .getHomePagePosts("day")
+            .then((res) => {
+                console.log(res);
+                setSubredditPosts(res.data);
+                if (res.status === 204) {
+                    setSubredditPosts(null);
+                }
+            })
+            .catch((err) => {
+                console.error("ERROR getting home page posts", err.response.data);
+                if (err.response.data.code === "user_not_found") {
+                    localStorage.removeItem("user");
+                    dispatch(userActions.logout());
+                    window.location.reload();
+                }
+            });
+    }, [userSubscriptions, dispatch]);
 
     let theme = createTheme(configService.baseTheme);
     theme = responsiveFontSizes(theme);
