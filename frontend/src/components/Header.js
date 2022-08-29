@@ -151,9 +151,23 @@ function Header() {
     });
 
     useEffect(() => {
+        const updateSubscriptions = async () => {
+            try {
+                await dispatch(updateUserSubscriptions()).unwrap();
+            } catch (err) {
+                if (err.code === "user_not_found") {
+                    // User was deleted at some point but still logged in. Log them out.
+                    navigate("/", { replace: true });
+                    localStorage.removeItem("user");
+                    dispatch(userActions.logout());
+                    window.location.reload();
+                }
+            }
+        };
+
         if (userData) {
             console.log("dispatch(updateUserSubscriptions());");
-            dispatch(updateUserSubscriptions());
+            updateSubscriptions();
         }
     }, [userData, dispatch]);
 
@@ -198,17 +212,7 @@ function Header() {
         navigate("/", { replace: true });
         localStorage.removeItem("user");
         dispatch(userActions.logout());
-
-        try {
-            console.log("dispatch(updateUserSubscriptions());");
-            await dispatch(updateUserSubscriptions()).unwrap();
-            console.log("User logged out successfully");
-        } catch (rejectedValueOrSerializedError) {
-            console.error(
-                "Update user subscription dispatch failed: ",
-                rejectedValueOrSerializedError
-            );
-        }
+        window.location.reload();
     };
 
     const handleDeleteSubreddit = (subreddit_prefixed) => {
@@ -282,7 +286,7 @@ function Header() {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Box component="dive" color="inherit" sx={{ flexGrow: 1 }}>
+                            <Box component="div" color="inherit" sx={{ flexGrow: 1 }}>
                                 <Link
                                     component={RouterLink}
                                     to="/"

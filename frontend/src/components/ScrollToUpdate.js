@@ -1,7 +1,7 @@
 import React from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 
-function ScrollToUpdate(props) {
+function ScrollToUpdate({ openSideDrawer, ...restProps }) {
     const {
         threshold,
         bgColorBefore,
@@ -20,18 +20,18 @@ function ScrollToUpdate(props) {
         textColorAfter: "black",
         fadeIn: "0.2s ease-in",
         fadeOut: "0.2s ease-out",
-        ...props,
+        ...restProps,
     };
 
     const trigger = useScrollTrigger({
         disableHysteresis: true,
         threshold: threshold,
-        target: props.window ? window() : undefined,
+        target: restProps.window ? window() : undefined,
     });
 
     return React.cloneElement(children, {
         style: {
-            boxShadow: trigger || props.openSideDrawer ? "1px 1px 8px #888888" : "none",
+            boxShadow: trigger || openSideDrawer ? "1px 1px 8px #888888" : "none",
             backgroundColor: trigger ? bgColorAfter : bgColorBefore,
             color: trigger ? textColorAfter : textColorBefore,
             transition: trigger ? fadeIn : fadeOut,

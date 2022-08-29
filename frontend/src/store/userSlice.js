@@ -73,12 +73,29 @@ export const attemptUserRegistration = createAsyncThunk(
     }
 );
 
-export const updateUserSubscriptions = createAsyncThunk("user/updateSubscriptions", async () => {
-    const response = await apiService.getUserSubscriptions();
-    const responseBody = response.data;
-    console.log(responseBody);
-    return responseBody;
-});
+export const updateUserSubscriptions = createAsyncThunk(
+    "user/updateSubscriptions",
+    async (arg, { rejectWithValue }) => {
+        try {
+            const response = await apiService.getUserSubscriptions();
+            if (response.status === 401) {
+                console.error(`Response status 401: ${response.data}`);
+                return rejectWithValue(response.data);
+            }
+            const responseBody = response.data;
+            console.log(responseBody);
+            return responseBody;
+        } catch (err) {
+            console.error(
+                `Caught error in updateUserSubscriptions dispatch function: ${err.response.data}`
+            );
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
 
 const userSlice = createSlice({
     name: "user",
