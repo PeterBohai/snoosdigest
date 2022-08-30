@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -25,6 +25,7 @@ function LogInScreen() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [formErrorText, setFormErrorText] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -44,7 +45,7 @@ function LogInScreen() {
                 navigate("/", { replace: true });
             }
         } catch (rejectedValueOrSerializedError) {
-            console.error("Log in dispatch failed: ", rejectedValueOrSerializedError);
+            setFormErrorText(rejectedValueOrSerializedError.detail);
         }
     };
 
@@ -76,13 +77,13 @@ function LogInScreen() {
                         <TextField
                             required
                             fullWidth
-                            placeholder
                             id="username"
                             name="email"
                             autoComplete="username"
                             autoFocus
                             color="primary"
                             sx={{ mb: 3 }}
+                            onChange={() => setFormErrorText("")}
                         />
 
                         <Grid container>
@@ -103,12 +104,14 @@ function LogInScreen() {
                         <TextField
                             required
                             fullWidth
-                            placeholder
                             name="password"
                             type="password"
                             id="current-password"
                             autoComplete="current-password"
                             color="primary"
+                            error={formErrorText !== ""}
+                            helperText={formErrorText}
+                            onChange={() => setFormErrorText("")}
                         />
 
                         <Button
