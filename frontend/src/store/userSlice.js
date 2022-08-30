@@ -66,14 +66,24 @@ export const attemptUserLogin = createAsyncThunk(
 
 export const attemptUserRegistration = createAsyncThunk(
     "user/attemptRegister",
-    async (registerDetails) => {
-        const response = await axios.post(`${baseUrl}/users/register`, {
-            firstName: registerDetails.firstName,
-            lastName: registerDetails.lastName,
-            email: registerDetails.email,
-            password: registerDetails.password,
-        });
-        const responseBody = response.data;
+    async (registerDetails, { rejectWithValue }) => {
+        let responseBody = {};
+
+        try {
+            const response = await axios.post(`${baseUrl}/users/register`, {
+                firstName: registerDetails.firstName,
+                lastName: registerDetails.lastName,
+                email: registerDetails.email,
+                password: registerDetails.password,
+            });
+            responseBody = response.data;
+        } catch (err) {
+            console.error("Error in attemptUserRegistration dispatch function", err.response.data);
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
 
         const profileResponse = await apiService.getUserProfile(responseBody.access);
         const profileResponseBody = profileResponse.data;
