@@ -32,11 +32,16 @@ function formatNumber(num) {
     return num;
 }
 
+function validatePasswordConditions(password) {
+    return /[A-Za-z0-9]/.test(password) && /[^A-Za-z0-9]/.test(password) && password.length >= 8;
+}
+
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
     removeSubredditPrefix,
     formatNumber,
+    validatePasswordConditions,
 };
 
 export default exportedFunctions;

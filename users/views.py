@@ -186,7 +186,8 @@ class UserRegister(APIView):
             logger.warning(f'django.db.utils.IntegrityError: {err}')
 
             return Response(
-                {'detail': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST
+                {'detail': 'An account with that email already exists'},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 

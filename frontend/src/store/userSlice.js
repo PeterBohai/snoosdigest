@@ -34,33 +34,56 @@ const userInitialState = {
     subscriptions: [],
 };
 
-export const attemptUserLogin = createAsyncThunk("user/attemptLogin", async (loginDetails) => {
-    const response = await axios.post(`${baseUrl}/users/login`, {
-        username: loginDetails.email,
-        password: loginDetails.password,
-    });
-    const responseBody = response.data;
+export const attemptUserLogin = createAsyncThunk(
+    "user/attemptLogin",
+    async (loginDetails, { rejectWithValue }) => {
+        let responseBody = {};
 
-    const profileResponse = await apiService.getUserProfile(responseBody.access);
-    const profileResponseBody = profileResponse.data;
+        try {
+            const response = await axios.post(`${baseUrl}/users/login`, {
+                username: loginDetails.email,
+                password: loginDetails.password,
+            });
+            responseBody = response.data;
+        } catch (err) {
+            console.error("Error in attemptUserLogin dispatch function", err.response.data);
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
 
-    const userData = { ...responseBody, ...profileResponseBody };
-    console.log(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+        const profileResponse = await apiService.getUserProfile(responseBody.access);
+        const profileResponseBody = profileResponse.data;
 
-    return userData;
-});
+        const userData = { ...responseBody, ...profileResponseBody };
+        console.log(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        return userData;
+    }
+);
 
 export const attemptUserRegistration = createAsyncThunk(
     "user/attemptRegister",
-    async (registerDetails) => {
-        const response = await axios.post(`${baseUrl}/users/register`, {
-            firstName: registerDetails.firstName,
-            lastName: registerDetails.lastName,
-            email: registerDetails.email,
-            password: registerDetails.password,
-        });
-        const responseBody = response.data;
+    async (registerDetails, { rejectWithValue }) => {
+        let responseBody = {};
+
+        try {
+            const response = await axios.post(`${baseUrl}/users/register`, {
+                firstName: registerDetails.firstName,
+                lastName: registerDetails.lastName,
+                email: registerDetails.email,
+                password: registerDetails.password,
+            });
+            responseBody = response.data;
+        } catch (err) {
+            console.error("Error in attemptUserRegistration dispatch function", err.response.data);
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
 
         const profileResponse = await apiService.getUserProfile(responseBody.access);
         const profileResponseBody = profileResponse.data;

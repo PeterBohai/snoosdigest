@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import Avatar from "@mui/material/Avatar";
@@ -15,17 +15,30 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
+import utilsService from "../services/utils";
 import { attemptUserRegistration } from "../store/userSlice";
 
 let theme = createTheme(configService.baseTheme);
 theme = responsiveFontSizes(theme);
 
+const passwordConditionsText =
+    "Password must be 8 or more characters and contain and least one special character";
+
 function SignUpScreen() {
     const dispatch = useDispatch();
+    const [emailErrorText, setEmailErrorText] = useState("");
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordValue, setPasswordValue] = useState("");
+    const [passwordHelperText, setPasswordHelperText] = useState("");
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        if (!utilsService.validatePasswordConditions(data.get("password"))) {
+            setPasswordHelperText(passwordConditionsText);
+            setPasswordError(true);
+            return;
+        }
         const registrationCredentials = {
             firstName: data.get("firstName"),
             lastName: data.get("lastName"),
@@ -37,7 +50,21 @@ function SignUpScreen() {
             lastName: data.get("lastName"),
             email: data.get("email"),
         });
-        dispatch(attemptUserRegistration(registrationCredentials));
+        try {
+            await dispatch(attemptUserRegistration(registrationCredentials)).unwrap();
+        } catch (rejectedValueOrSerializedError) {
+            setEmailErrorText(rejectedValueOrSerializedError.detail);
+        }
+    };
+
+    const handlePasswordInputChange = (event) => {
+        setPasswordValue(event.target.value);
+        if (!utilsService.validatePasswordConditions(event.target.value)) {
+            setPasswordHelperText(passwordConditionsText);
+        } else {
+            setPasswordHelperText("");
+            setPasswordError(false);
+        }
     };
 
     return (
@@ -101,10 +128,12 @@ function SignUpScreen() {
                                 <TextField
                                     required
                                     fullWidth
-                                    placeholder
                                     id="username"
                                     name="email"
                                     autoComplete="username"
+                                    error={emailErrorText !== ""}
+                                    helperText={emailErrorText}
+                                    onChange={(event) => setEmailErrorText("")}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -117,11 +146,14 @@ function SignUpScreen() {
                                 <TextField
                                     required
                                     fullWidth
-                                    placeholder
                                     name="password"
                                     type="password"
                                     id="new-password"
                                     autoComplete="new-password"
+                                    helperText={passwordHelperText}
+                                    value={passwordValue}
+                                    onChange={handlePasswordInputChange}
+                                    error={passwordHelperText !== "" && passwordError}
                                 />
                             </Grid>
                         </Grid>
