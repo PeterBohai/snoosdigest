@@ -12,6 +12,10 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
@@ -30,6 +34,7 @@ function SignUpScreen() {
     const [passwordError, setPasswordError] = useState(false);
     const [passwordValue, setPasswordValue] = useState("");
     const [passwordHelperText, setPasswordHelperText] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -147,13 +152,36 @@ function SignUpScreen() {
                                     required
                                     fullWidth
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     id="new-password"
                                     autoComplete="new-password"
                                     helperText={passwordHelperText}
                                     value={passwordValue}
                                     onChange={handlePasswordInputChange}
                                     error={passwordHelperText !== "" && passwordError}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    onMouseDown={(event) => {
+                                                        event.preventDefault();
+                                                    }}
+                                                    onMouseUp={(event) => {
+                                                        event.preventDefault();
+                                                    }}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? (
+                                                        <VisibilityOff />
+                                                    ) : (
+                                                        <Visibility />
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
                             </Grid>
                         </Grid>
