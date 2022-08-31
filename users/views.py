@@ -216,6 +216,12 @@ class UserUpdatePassword(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        if request.data['oldPassword'] == request.data['newPassword']:
+            return Response(
+                {'newPassword': 'New password cannot be the same as the old password'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user.set_password(request.data['newPassword'])
         user.save()
         return Response('Password has been updated successfully')

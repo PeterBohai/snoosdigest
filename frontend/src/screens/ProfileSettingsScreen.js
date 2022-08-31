@@ -22,6 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
+import utilsService from "../services/utils";
 import apiService from "../services/api";
 import store from "../store/index";
 import { userActions } from "../store/userSlice";
@@ -80,6 +81,9 @@ function updateUserData(newUserData) {
     store.dispatch(userActions.updateUserData(newUserData));
 }
 
+const passwordConditionsText =
+    "Password must be 8 or more characters and contain and least one special character";
+
 function ProfileSettingsScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -101,9 +105,22 @@ function ProfileSettingsScreen() {
         first_name: userData.first_name,
         last_name: userData.last_name,
     });
+    const [newPasswordError, setNewPasswordError] = useState(false);
 
     const handleUpdatePasswordChange = (prop) => (event) => {
-        setUpdatePasswordValues({ ...updatePasswordValues, [prop]: event.target.value });
+        const value = event.target.value;
+        setUpdatePasswordValues({ ...updatePasswordValues, [prop]: value });
+
+        if (
+            prop === "newPassword" &&
+            value !== "" &&
+            !utilsService.validatePasswordConditions(value)
+        ) {
+            setUpdatePasswordErrors({ ...updatePasswordErrors, [prop]: passwordConditionsText });
+        } else {
+            setUpdatePasswordErrors({ ...updatePasswordErrors, [prop]: "" });
+            setNewPasswordError(false);
+        }
     };
 
     const handleProfileChange = (prop) => (event) => {
@@ -130,6 +147,25 @@ function ProfileSettingsScreen() {
     const handleChangePassword = (event) => {
         event.preventDefault();
         const changePasswordFormData = new FormData(event.currentTarget);
+
+        if (!utilsService.validatePasswordConditions(changePasswordFormData.get("newPassword"))) {
+            setUpdatePasswordErrors({
+                ...updatePasswordErrors,
+                newPassword: passwordConditionsText,
+            });
+            setNewPasswordError(true);
+            return;
+        }
+        if (
+            changePasswordFormData.get("newPassword") !==
+            changePasswordFormData.get("newPasswordConfirmation")
+        ) {
+            setUpdatePasswordErrors({
+                ...updatePasswordErrors,
+                newPasswordConfirmation: "Confirmation password did not match the new password",
+            });
+            return;
+        }
         apiService
             .postUpdateUserPassword(changePasswordFormData)
             .then((res) => {
@@ -156,6 +192,9 @@ function ProfileSettingsScreen() {
                     newPasswordConfirmation: "",
                     ...errorData,
                 });
+                if (errorData.newPassword) {
+                    setNewPasswordError(true);
+                }
             });
     };
 
@@ -263,7 +302,7 @@ function ProfileSettingsScreen() {
                         type="password"
                         value={updatePasswordValues.newPassword}
                         onChange={handleUpdatePasswordChange("newPassword")}
-                        error={updatePasswordErrors.newPassword !== ""}
+                        error={updatePasswordErrors.newPassword !== "" && newPasswordError}
                         helperText={updatePasswordErrors.newPassword}
                     />
                     <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
