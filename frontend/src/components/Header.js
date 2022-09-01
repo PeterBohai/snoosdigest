@@ -20,6 +20,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Logout from "@mui/icons-material/Logout";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
@@ -32,7 +33,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from "@mui/icons-material/Person";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
@@ -400,23 +403,53 @@ function Header() {
                                                     },
                                                 }}
                                             >
-                                                <MenuItem key="logout" onClick={handleLogOut}>
-                                                    <ListItemIcon>
-                                                        <Logout fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Logout
-                                                </MenuItem>
-                                                <MenuItem
-                                                    key="settings"
-                                                    component={RouterLink}
-                                                    to="/settings/profile"
-                                                    onClick={handleCloseUserProfileMenu}
+                                                <MenuList
+                                                    dense
+                                                    sx={{
+                                                        py: 0,
+                                                        "& .MuiListItemIcon-root": {
+                                                            minWidth: "30px !important",
+                                                            color: "common.black",
+                                                        },
+                                                    }}
                                                 >
-                                                    <ListItemIcon>
-                                                        <SettingsIcon fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Profile settings
-                                                </MenuItem>
+                                                    <ListItem
+                                                        key="welcome"
+                                                        sx={{ fontSize: "14px" }}
+                                                    >
+                                                        <ListItemIcon>
+                                                            <PersonIcon
+                                                                fontSize="small"
+                                                                color="primary"
+                                                            />
+                                                        </ListItemIcon>
+                                                        <Typography variant="inherit">
+                                                            <strong>Welcome</strong>
+                                                            <br />
+                                                            {utilsService.getUserWelcomeName(
+                                                                userData
+                                                            )}
+                                                        </Typography>
+                                                    </ListItem>
+                                                    <Divider sx={{ my: 1 }} />
+                                                    <MenuItem key="logout" onClick={handleLogOut}>
+                                                        <ListItemIcon>
+                                                            <Logout fontSize="small" />
+                                                        </ListItemIcon>
+                                                        Logout
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        key="settings"
+                                                        component={RouterLink}
+                                                        to="/settings/profile"
+                                                        onClick={handleCloseUserProfileMenu}
+                                                    >
+                                                        <ListItemIcon>
+                                                            <SettingsIcon fontSize="small" />
+                                                        </ListItemIcon>
+                                                        Profile settings
+                                                    </MenuItem>
+                                                </MenuList>
                                             </Menu>
                                         </Box>
                                     )

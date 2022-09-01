@@ -50,6 +50,19 @@ function getUserLetteredAvatar(userData) {
     return result.toUpperCase();
 }
 
+function getUserWelcomeName(userData) {
+    if (!userData.first_name || !userData.last_name) {
+        return userData["snoosdigest/username"].split("@")[0];
+    }
+    if (userData.first_name) {
+        return userData.first_name;
+    }
+    if (userData.last_name) {
+        return userData.first_name;
+    }
+    return "No Name :(";
+}
+
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
@@ -57,6 +70,7 @@ const exportedFunctions = {
     formatNumber,
     validatePasswordConditions,
     getUserLetteredAvatar,
+    getUserWelcomeName,
 };
 
 export default exportedFunctions;
