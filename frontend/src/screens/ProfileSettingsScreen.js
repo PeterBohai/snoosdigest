@@ -19,6 +19,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
@@ -38,7 +42,10 @@ const SettingsTextField = styled(TextField)(({ theme }) => ({
     },
     "& .MuiInputBase-input": {
         backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
-        padding: "5px 14px",
+        padding: "7px 14px",
+    },
+    "& .MuiOutlinedInput-root": {
+        backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
     },
 }));
 
@@ -106,6 +113,9 @@ function ProfileSettingsScreen() {
         last_name: userData.last_name,
     });
     const [newPasswordError, setNewPasswordError] = useState(false);
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleUpdatePasswordChange = (prop) => (event) => {
         const value = event.target.value;
@@ -285,11 +295,34 @@ function ProfileSettingsScreen() {
                         required
                         id="old-password"
                         name="oldPassword"
-                        type="password"
+                        type={showOldPassword ? "text" : "password"}
                         value={updatePasswordValues.oldPassword}
                         onChange={handleUpdatePasswordChange("oldPassword")}
                         error={updatePasswordErrors.oldPassword !== ""}
                         helperText={updatePasswordErrors.oldPassword}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowOldPassword(!showOldPassword)}
+                                        onMouseDown={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        onMouseUp={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        edge="end"
+                                    >
+                                        {showOldPassword ? (
+                                            <VisibilityOff fontSize="small" />
+                                        ) : (
+                                            <Visibility fontSize="small" />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <InputLabel htmlFor="new-password" sx={{ color: "black", fontWeight: "bold" }}>
                         New password *
@@ -299,11 +332,34 @@ function ProfileSettingsScreen() {
                         required
                         id="new-password"
                         name="newPassword"
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         value={updatePasswordValues.newPassword}
                         onChange={handleUpdatePasswordChange("newPassword")}
                         error={updatePasswordErrors.newPassword !== "" && newPasswordError}
                         helperText={updatePasswordErrors.newPassword}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        onMouseDown={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        onMouseUp={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        edge="end"
+                                    >
+                                        {showNewPassword ? (
+                                            <VisibilityOff fontSize="small" />
+                                        ) : (
+                                            <Visibility fontSize="small" />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
                         Confirm new password *
@@ -313,11 +369,34 @@ function ProfileSettingsScreen() {
                         required
                         id="new-password-confirm"
                         name="newPasswordConfirmation"
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         value={updatePasswordValues.newPasswordConfirmation}
                         onChange={handleUpdatePasswordChange("newPasswordConfirmation")}
                         error={updatePasswordErrors.newPasswordConfirmation !== ""}
                         helperText={updatePasswordErrors.newPasswordConfirmation}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        onMouseDown={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        onMouseUp={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        edge="end"
+                                    >
+                                        {showConfirmPassword ? (
+                                            <VisibilityOff fontSize="small" />
+                                        ) : (
+                                            <Visibility fontSize="small" />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <br />
                     <Button
