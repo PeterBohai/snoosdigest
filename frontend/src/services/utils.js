@@ -36,12 +36,27 @@ function validatePasswordConditions(password) {
     return /[A-Za-z0-9]/.test(password) && /[^A-Za-z0-9]/.test(password) && password.length >= 8;
 }
 
+function getUserLetteredAvatar(userData) {
+    if (!userData.first_name || !userData.last_name) {
+        return userData["snoosdigest/username"][0].toUpperCase();
+    }
+    let result = "";
+    if (userData.first_name) {
+        result += userData.first_name[0];
+    }
+    if (userData.last_name) {
+        result += userData.last_name[0];
+    }
+    return result.toUpperCase();
+}
+
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
     removeSubredditPrefix,
     formatNumber,
     validatePasswordConditions,
+    getUserLetteredAvatar,
 };
 
 export default exportedFunctions;

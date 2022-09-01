@@ -346,16 +346,19 @@ function Header() {
                                                 sx={{ p: 0 }}
                                             >
                                                 <Avatar
-                                                    sx={{ width: 30, height: 30 }}
+                                                    sx={{
+                                                        margin: "5px",
+                                                        width: 36,
+                                                        height: 36,
+                                                        bgcolor: "primary.main",
+                                                    }}
                                                     alt={userData["snoosdigest/username"]}
                                                 >
-                                                    {userData[
-                                                        "snoosdigest/username"
-                                                    ][0].toUpperCase()}
+                                                    {utilsService.getUserLetteredAvatar(userData)}
                                                 </Avatar>
                                             </IconButton>
                                             <Menu
-                                                sx={{ mt: "30px", ml: "3px" }}
+                                                sx={{ mt: "36px", ml: "-3px" }}
                                                 id="menu-appbar"
                                                 anchorEl={userProfileMenuToggle}
                                                 keepMounted
