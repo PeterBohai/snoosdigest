@@ -305,7 +305,7 @@ function Header() {
                                             color: "inherit",
                                         }}
                                     >
-                                        Snoos Digest
+                                        SnoosDigest
                                     </Typography>
                                 </Link>
                             </Box>
@@ -381,6 +381,7 @@ function Header() {
                                                         overflow: "visible",
                                                         filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
                                                         mt: 1.5,
+                                                        minWidth: 200,
                                                         "& .MuiAvatar-root": {
                                                             width: 32,
                                                             height: 32,

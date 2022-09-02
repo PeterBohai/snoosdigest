@@ -126,6 +126,8 @@ class SubredditList(APIView):
 
     def get(self, request: Request) -> Response:
         # Example GET request: /api/subreddits/
-        subreddits = Subreddit.objects.all().values('display_name')
+        user = request.user
+        user_subs = user.user_subscriptions.values_list('subreddit', flat=True)
+        subreddits = Subreddit.objects.exclude(subreddit_id__in=user_subs).values('display_name')
         serializer = SubredditSerializer(subreddits, many=True)
         return Response(serializer.data)

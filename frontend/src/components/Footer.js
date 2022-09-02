@@ -40,7 +40,7 @@ function Footer() {
                                 color: "black",
                             }}
                         >
-                            Snoos Digest
+                            SnoosDigest
                         </Typography>
                         <Divider sx={{ my: 3, bgcolor: "grey.50" }} />
                         <Grid container>
