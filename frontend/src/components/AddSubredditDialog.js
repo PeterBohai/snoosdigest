@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -41,7 +42,8 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
         navigate("/login");
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
+        event.preventDefault();
         apiService
             .postUserSubscriptions(subredditNameInput)
             .then((res) => {
@@ -87,30 +89,32 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
     }
 
     return (
-        <div>
+        <Box>
             {userData ? (
                 <Dialog open={openAddSubreddit} onClose={handleClose}>
                     <DialogTitle>Add a Subreddit</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            To add a new subreddit to follow, please enter the subreddit's name
-                            below.
-                        </DialogContentText>
-                        <AutoComplete
-                            id="subreddit-name"
-                            onChange={handleSubredditNameInputChange}
-                            error={inputErrorText !== ""}
-                            helperText={inputErrorText}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button color="secondary" onClick={handleSubmit}>
-                            ADD
-                        </Button>
-                        <Button color="primary" onClick={handleClose}>
-                            CANCEL
-                        </Button>
-                    </DialogActions>
+                    <Box component="form" onSubmit={handleSubmit}>
+                        <DialogContent sx={{ pt: 0 }}>
+                            <DialogContentText>
+                                To add a new subreddit to follow, please enter the subreddit's name
+                                below.
+                            </DialogContentText>
+                            <AutoComplete
+                                id="subreddit-name"
+                                onChange={handleSubredditNameInputChange}
+                                error={inputErrorText !== ""}
+                                helperText={inputErrorText}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="secondary" type="submit">
+                                ADD
+                            </Button>
+                            <Button color="primary" onClick={handleClose}>
+                                CANCEL
+                            </Button>
+                        </DialogActions>
+                    </Box>
                 </Dialog>
             ) : (
                 <Dialog open={openAddSubreddit} onClose={handleClose}>
@@ -131,7 +135,7 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
                     </DialogActions>
                 </Dialog>
             )}
-        </div>
+        </Box>
     );
 }
 
