@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 
 admin_url: str = 'admin/'
 
-if os.environ['DJANGO_SETTINGS_MODULE'] == 'snoosdigest.settings.dev':
+if os.environ['DJANGO_SETTINGS_MODULE'] == 'snoosdigest.settings.production':
     admin_url = os.environ['PROD_ADMIN_URL']
 
 urlpatterns = [
