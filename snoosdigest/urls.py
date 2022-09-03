@@ -19,8 +19,13 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
+admin_url: str = 'admin/'
+
+if os.environ['DJANGO_SETTINGS_MODULE'] == 'snoosdigest.settings.dev':
+    admin_url = os.environ['PROD_ADMIN_URL']
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(admin_url, admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/', include('api.urls')),
 ]
