@@ -47,7 +47,16 @@ function HomeScreen() {
 
     return (
         <div>
-            <Container maxWidth="md">
+            <Container
+                sx={{
+                    [theme.breakpoints.down("lg")]: {
+                        maxWidth: "sm",
+                    },
+                    [theme.breakpoints.up("lg")]: {
+                        maxWidth: "md",
+                    },
+                }}
+            >
                 <ThemeProvider theme={theme}>
                     {/* If subredditPosts is not loaded, provide empty (2D) Array to map function in order to properly display loading skeletons */}
                     {subredditPosts === null

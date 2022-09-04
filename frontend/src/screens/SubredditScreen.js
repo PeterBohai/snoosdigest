@@ -31,7 +31,16 @@ function SubredditScreen() {
 
     return (
         <div>
-            <Container maxWidth="md">
+            <Container
+                sx={{
+                    [theme.breakpoints.down("lg")]: {
+                        maxWidth: "sm",
+                    },
+                    [theme.breakpoints.up("lg")]: {
+                        maxWidth: "md",
+                    },
+                }}
+            >
                 <ThemeProvider theme={theme}>
                     <Box sx={{ pt: 3, pb: 3 }} key={subreddit}>
                         {posts.posts.length === 0 ? (

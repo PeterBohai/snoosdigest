@@ -228,7 +228,18 @@ function ProfileSettingsScreen() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container maxWidth="lg" sx={{ pt: 3, minHeight: "100vh" }}>
+            <Container
+                sx={{
+                    [theme.breakpoints.down("md")]: {
+                        maxWidth: "sm",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                        maxWidth: "md",
+                    },
+                    pt: 3,
+                    minHeight: "100vh",
+                }}
+            >
                 <CssBaseline />
                 <Typography variant="h5">Profile Settings</Typography>
                 <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />

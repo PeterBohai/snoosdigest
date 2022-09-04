@@ -63,7 +63,16 @@ function PostDetailScreen() {
     };
 
     return (
-        <Container maxWidth="md">
+        <Container
+            sx={{
+                [theme.breakpoints.down("md")]: {
+                    maxWidth: "sm",
+                },
+                [theme.breakpoints.up("md")]: {
+                    maxWidth: "md",
+                },
+            }}
+        >
             <Box sx={{ pt: 3, my: botTopPadding, px: sidePadding, whiteSpace: "pre-line" }}>
                 <ThemeProvider theme={theme}>
                     {/* POST SECTION */}
