@@ -23,7 +23,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 import configService from "../services/config";
 import utilsService from "../services/utils";
@@ -31,8 +31,7 @@ import apiService from "../services/api";
 import store from "../store/index";
 import { userActions } from "../store/userSlice";
 
-let theme = createTheme(configService.baseTheme);
-theme = responsiveFontSizes(theme);
+const theme = createTheme(configService.baseTheme("light"));
 
 const SettingsTextField = styled(TextField)(({ theme }) => ({
     "label + &": {
@@ -227,263 +226,261 @@ function ProfileSettingsScreen() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container
-                sx={{
-                    [theme.breakpoints.down("md")]: {
-                        maxWidth: "sm",
-                    },
-                    [theme.breakpoints.up("md")]: {
-                        maxWidth: "md",
-                    },
-                    pt: 3,
-                    minHeight: "100vh",
-                }}
-            >
-                <CssBaseline />
-                <Typography variant="h5">Profile Settings</Typography>
-                <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
+        <Container
+            sx={{
+                [theme.breakpoints.down("md")]: {
+                    maxWidth: "sm",
+                },
+                [theme.breakpoints.up("md")]: {
+                    maxWidth: "md",
+                },
+                pt: 3,
+                minHeight: "100vh",
+            }}
+        >
+            <CssBaseline />
+            <Typography variant="h5">Profile Settings</Typography>
+            <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
 
-                <InputLabel htmlFor="user-email" sx={{ color: "black", fontWeight: "bold" }}>
-                    Email address
+            <InputLabel htmlFor="user-email" sx={{ color: "black", fontWeight: "bold" }}>
+                Email address
+            </InputLabel>
+            <SettingsTextField
+                margin="normal"
+                id="user-email"
+                disabled
+                variant="outlined"
+                value={userData["snoosdigest/username"]}
+            />
+            <Box sx={{ width: "100%" }} component="form" onSubmit={handleProfileSubmit}>
+                <InputLabel htmlFor="first-name" sx={{ color: "black", fontWeight: "bold" }}>
+                    First Name
                 </InputLabel>
                 <SettingsTextField
                     margin="normal"
-                    id="user-email"
-                    disabled
+                    id="first-name"
+                    name="first_name"
                     variant="outlined"
-                    value={userData["snoosdigest/username"]}
+                    value={profileValues.first_name}
+                    onChange={handleProfileChange("first_name")}
+                    inputProps={{ maxLength: 150 }}
                 />
-                <Box sx={{ width: "100%" }} component="form" onSubmit={handleProfileSubmit}>
-                    <InputLabel htmlFor="first-name" sx={{ color: "black", fontWeight: "bold" }}>
-                        First Name
-                    </InputLabel>
-                    <SettingsTextField
-                        margin="normal"
-                        id="first-name"
-                        name="first_name"
-                        variant="outlined"
-                        value={profileValues.first_name}
-                        onChange={handleProfileChange("first_name")}
-                        inputProps={{ maxLength: 150 }}
-                    />
 
-                    <InputLabel htmlFor="last-name" sx={{ color: "black", fontWeight: "bold" }}>
-                        Last Name
-                    </InputLabel>
-                    <SettingsTextField
-                        margin="normal"
-                        id="last-name"
-                        name="last_name"
-                        variant="outlined"
-                        value={profileValues.last_name}
-                        onChange={handleProfileChange("last_name")}
-                        inputProps={{ maxLength: 150 }}
-                    />
+                <InputLabel htmlFor="last-name" sx={{ color: "black", fontWeight: "bold" }}>
+                    Last Name
+                </InputLabel>
+                <SettingsTextField
+                    margin="normal"
+                    id="last-name"
+                    name="last_name"
+                    variant="outlined"
+                    value={profileValues.last_name}
+                    onChange={handleProfileChange("last_name")}
+                    inputProps={{ maxLength: 150 }}
+                />
+                <br />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disableElevation
+                    color="primary"
+                    sx={{ mt: 2, height: "30px" }}
+                >
+                    Update profile
+                </Button>
+            </Box>
+
+            <Typography variant="h5" mt={8}>
+                Change Password
+            </Typography>
+            <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
+
+            <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
+                <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
+                    Old password *
+                </InputLabel>
+                <SettingsTextField
+                    margin="normal"
+                    required
+                    id="old-password"
+                    name="oldPassword"
+                    type={showOldPassword ? "text" : "password"}
+                    value={updatePasswordValues.oldPassword}
+                    onChange={handleUpdatePasswordChange("oldPassword")}
+                    error={updatePasswordErrors.oldPassword !== ""}
+                    helperText={updatePasswordErrors.oldPassword}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowOldPassword(!showOldPassword)}
+                                    onMouseDown={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    onMouseUp={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    edge="end"
+                                >
+                                    {showOldPassword ? (
+                                        <VisibilityOff fontSize="small" />
+                                    ) : (
+                                        <Visibility fontSize="small" />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <InputLabel htmlFor="new-password" sx={{ color: "black", fontWeight: "bold" }}>
+                    New password *
+                </InputLabel>
+                <SettingsTextField
+                    margin="normal"
+                    required
+                    id="new-password"
+                    name="newPassword"
+                    type={showNewPassword ? "text" : "password"}
+                    value={updatePasswordValues.newPassword}
+                    onChange={handleUpdatePasswordChange("newPassword")}
+                    error={updatePasswordErrors.newPassword !== "" && newPasswordError}
+                    helperText={updatePasswordErrors.newPassword}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowNewPassword(!showNewPassword)}
+                                    onMouseDown={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    onMouseUp={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    edge="end"
+                                >
+                                    {showNewPassword ? (
+                                        <VisibilityOff fontSize="small" />
+                                    ) : (
+                                        <Visibility fontSize="small" />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
+                    Confirm new password *
+                </InputLabel>
+                <SettingsTextField
+                    margin="normal"
+                    required
+                    id="new-password-confirm"
+                    name="newPasswordConfirmation"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={updatePasswordValues.newPasswordConfirmation}
+                    onChange={handleUpdatePasswordChange("newPasswordConfirmation")}
+                    error={updatePasswordErrors.newPasswordConfirmation !== ""}
+                    helperText={updatePasswordErrors.newPasswordConfirmation}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    onMouseDown={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    onMouseUp={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                    edge="end"
+                                >
+                                    {showConfirmPassword ? (
+                                        <VisibilityOff fontSize="small" />
+                                    ) : (
+                                        <Visibility fontSize="small" />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <br />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disableElevation
+                    color="primary"
+                    sx={{ mt: 2, height: "30px" }}
+                >
+                    Update password
+                </Button>
+                <SettingsAlert
+                    open={updatePasswordSuccess}
+                    setOpen={setUpdatePasswordSuccess}
+                    alertMessage="Password was updated successfully"
+                />
+                <SettingsAlert
+                    open={updateProfileSuccess}
+                    setOpen={setUpdateProfileSuccess}
+                    alertMessage="Profile was updated successfully"
+                />
+            </Box>
+
+            <Typography variant="h5" mt={8} fontWeight="bold" color="secondary">
+                Delete Account
+            </Typography>
+            <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
+
+            <Box sx={{ mt: 1 }}>
+                <Typography variant="body1">
+                    Once you delete your account, <strong>there is no going back</strong>. All your
+                    current data will be permanently deleted.
                     <br />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disableElevation
-                        color="primary"
-                        sx={{ mt: 2, height: "30px" }}
-                    >
-                        Update profile
-                    </Button>
-                </Box>
-
-                <Typography variant="h5" mt={8}>
-                    Change Password
+                    Please be certain.
                 </Typography>
-                <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
-
-                <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
-                    <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        Old password *
-                    </InputLabel>
-                    <SettingsTextField
-                        margin="normal"
-                        required
-                        id="old-password"
-                        name="oldPassword"
-                        type={showOldPassword ? "text" : "password"}
-                        value={updatePasswordValues.oldPassword}
-                        onChange={handleUpdatePasswordChange("oldPassword")}
-                        error={updatePasswordErrors.oldPassword !== ""}
-                        helperText={updatePasswordErrors.oldPassword}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowOldPassword(!showOldPassword)}
-                                        onMouseDown={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        onMouseUp={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        edge="end"
-                                    >
-                                        {showOldPassword ? (
-                                            <VisibilityOff fontSize="small" />
-                                        ) : (
-                                            <Visibility fontSize="small" />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <InputLabel htmlFor="new-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        New password *
-                    </InputLabel>
-                    <SettingsTextField
-                        margin="normal"
-                        required
-                        id="new-password"
-                        name="newPassword"
-                        type={showNewPassword ? "text" : "password"}
-                        value={updatePasswordValues.newPassword}
-                        onChange={handleUpdatePasswordChange("newPassword")}
-                        error={updatePasswordErrors.newPassword !== "" && newPasswordError}
-                        helperText={updatePasswordErrors.newPassword}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowNewPassword(!showNewPassword)}
-                                        onMouseDown={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        onMouseUp={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        edge="end"
-                                    >
-                                        {showNewPassword ? (
-                                            <VisibilityOff fontSize="small" />
-                                        ) : (
-                                            <Visibility fontSize="small" />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
-                        Confirm new password *
-                    </InputLabel>
-                    <SettingsTextField
-                        margin="normal"
-                        required
-                        id="new-password-confirm"
-                        name="newPasswordConfirmation"
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={updatePasswordValues.newPasswordConfirmation}
-                        onChange={handleUpdatePasswordChange("newPasswordConfirmation")}
-                        error={updatePasswordErrors.newPasswordConfirmation !== ""}
-                        helperText={updatePasswordErrors.newPasswordConfirmation}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        onMouseDown={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        onMouseUp={(event) => {
-                                            event.preventDefault();
-                                        }}
-                                        edge="end"
-                                    >
-                                        {showConfirmPassword ? (
-                                            <VisibilityOff fontSize="small" />
-                                        ) : (
-                                            <Visibility fontSize="small" />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <br />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disableElevation
-                        color="primary"
-                        sx={{ mt: 2, height: "30px" }}
-                    >
-                        Update password
-                    </Button>
-                    <SettingsAlert
-                        open={updatePasswordSuccess}
-                        setOpen={setUpdatePasswordSuccess}
-                        alertMessage="Password was updated successfully"
-                    />
-                    <SettingsAlert
-                        open={updateProfileSuccess}
-                        setOpen={setUpdateProfileSuccess}
-                        alertMessage="Profile was updated successfully"
-                    />
-                </Box>
-
-                <Typography variant="h5" mt={8} fontWeight="bold" color="secondary">
-                    Delete Account
-                </Typography>
-                <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
-
-                <Box sx={{ mt: 1 }}>
-                    <Typography variant="body1">
-                        Once you delete your account, <strong>there is no going back</strong>. All
-                        your current data will be permanently deleted.
-                        <br />
-                        Please be certain.
-                    </Typography>
-                    <br />
-                    <Button
-                        variant="contained"
-                        disableElevation
-                        color="secondary"
-                        sx={{ height: "30px" }}
-                        onClick={() => setOpenDeleteAccountDialog(true)}
-                    >
-                        <strong>Delete your account</strong>
-                    </Button>
-                    <Dialog
-                        open={openDeleteAccountDialog}
-                        onClose={handleCloseDeleteAccountDialog}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            Are you sure you want to DELETE your account?
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                <Typography color="secondary">
-                                    All your current data will be permanently deleted.
-                                </Typography>
-                                <Typography>
-                                    Once your account is deleted you will be logged out.
-                                </Typography>
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseDeleteAccountDialog} autoFocus>
-                                CANCEL
-                            </Button>
-                            <Button onClick={handleDeleteAccount} color="secondary">
-                                DELETE ACCOUNT
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </Box>
-            </Container>
-        </ThemeProvider>
+                <br />
+                <Button
+                    variant="contained"
+                    disableElevation
+                    color="secondary"
+                    sx={{ height: "30px" }}
+                    onClick={() => setOpenDeleteAccountDialog(true)}
+                >
+                    <strong>Delete your account</strong>
+                </Button>
+                <Dialog
+                    open={openDeleteAccountDialog}
+                    onClose={handleCloseDeleteAccountDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        Are you sure you want to DELETE your account?
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            <Typography color="secondary">
+                                All your current data will be permanently deleted.
+                            </Typography>
+                            <Typography>
+                                Once your account is deleted you will be logged out.
+                            </Typography>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDeleteAccountDialog} autoFocus>
+                            CANCEL
+                        </Button>
+                        <Button onClick={handleDeleteAccount} color="secondary">
+                            DELETE ACCOUNT
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+        </Container>
     );
 }
 

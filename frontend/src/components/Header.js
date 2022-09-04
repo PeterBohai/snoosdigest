@@ -36,7 +36,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
 import configService from "../services/config";
 import apiService from "../services/api";
@@ -180,9 +179,6 @@ function Header() {
         }
     }, [openSideDrawer]);
 
-    let theme = createTheme(configService.baseTheme);
-    theme = responsiveFontSizes(theme);
-
     const toggleDrawer = () => (event) => {
         if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
             return;
@@ -274,300 +270,292 @@ function Header() {
 
     return (
         <Box sx={{ mb: 7 }}>
-            <ThemeProvider theme={theme}>
-                {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
-                <ScrollToUpdate openSideDrawer={openSideDrawer}>
-                    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                        <Toolbar sx={{ mx: "10px" }}>
-                            <IconButton
-                                onClick={toggleDrawer()}
-                                size="large"
-                                edge="start"
+            {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
+            <ScrollToUpdate openSideDrawer={openSideDrawer}>
+                <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <Toolbar sx={{ mx: "10px" }}>
+                        <IconButton
+                            onClick={toggleDrawer()}
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 1 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Box component="div" color="inherit" sx={{ flexGrow: 1 }}>
+                            <Link
+                                component={RouterLink}
+                                to="/"
+                                underline="none"
                                 color="inherit"
-                                aria-label="menu"
-                                sx={{ mr: 1 }}
+                                onClick={() => setOpenSideDrawer(false)}
                             >
-                                <MenuIcon />
-                            </IconButton>
-                            <Box component="div" color="inherit" sx={{ flexGrow: 1 }}>
-                                <Link
+                                <Typography
+                                    variant="h5"
+                                    component="span"
+                                    sx={{
+                                        letterSpacing: ".1rem",
+                                        color: "inherit",
+                                    }}
+                                >
+                                    SnoosDigest
+                                </Typography>
+                            </Link>
+                        </Box>
+
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            {location.pathname === "/login" || userData ? null : (
+                                <Button
+                                    sx={{ height: "30px" }}
+                                    variant="outlined"
+                                    color="primary"
                                     component={RouterLink}
-                                    to="/"
-                                    underline="none"
-                                    color="inherit"
+                                    to="/login"
                                     onClick={() => setOpenSideDrawer(false)}
                                 >
-                                    <Typography
-                                        variant="h5"
-                                        component="span"
-                                        sx={{
-                                            letterSpacing: ".1rem",
-                                            color: "inherit",
-                                        }}
-                                    >
-                                        SnoosDigest
-                                    </Typography>
-                                </Link>
-                            </Box>
-
-                            <Stack
-                                direction="row"
-                                spacing={1}
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                {location.pathname === "/login" || userData ? null : (
-                                    <Button
-                                        sx={{ height: "30px" }}
-                                        variant="outlined"
-                                        color="primary"
-                                        component={RouterLink}
-                                        to="/login"
-                                        onClick={() => setOpenSideDrawer(false)}
-                                    >
-                                        Log In
-                                    </Button>
-                                )}
-                                {location.pathname === "/signup" || userData ? null : (
-                                    <Button
-                                        sx={{ height: "30px" }}
-                                        variant="contained"
-                                        color="primary"
-                                        component={RouterLink}
-                                        to="/signup"
-                                        onClick={() => setOpenSideDrawer(false)}
-                                    >
-                                        Sign Up
-                                    </Button>
-                                )}
-                                {
-                                    // When user is logged in, show a profile avatar on the right side of the AppBar
-                                    !userData ? null : (
-                                        <Box>
-                                            <IconButton
-                                                onClick={handleOpenUserProfileMenu}
-                                                sx={{ p: 0 }}
+                                    Log In
+                                </Button>
+                            )}
+                            {location.pathname === "/signup" || userData ? null : (
+                                <Button
+                                    sx={{ height: "30px" }}
+                                    variant="contained"
+                                    color="primary"
+                                    component={RouterLink}
+                                    to="/signup"
+                                    onClick={() => setOpenSideDrawer(false)}
+                                >
+                                    Sign Up
+                                </Button>
+                            )}
+                            {
+                                // When user is logged in, show a profile avatar on the right side of the AppBar
+                                !userData ? null : (
+                                    <Box>
+                                        <IconButton
+                                            onClick={handleOpenUserProfileMenu}
+                                            sx={{ p: 0 }}
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    margin: "5px",
+                                                    width: 36,
+                                                    height: 36,
+                                                    bgcolor: "primary.main",
+                                                }}
+                                                alt={userData["snoosdigest/username"]}
                                             >
-                                                <Avatar
-                                                    sx={{
-                                                        margin: "5px",
-                                                        width: 36,
-                                                        height: 36,
-                                                        bgcolor: "primary.main",
-                                                    }}
-                                                    alt={userData["snoosdigest/username"]}
-                                                >
-                                                    {utilsService.getUserLetteredAvatar(userData)}
-                                                </Avatar>
-                                            </IconButton>
-                                            <Menu
-                                                sx={{ mt: "36px", ml: "-3px" }}
-                                                id="menu-appbar"
-                                                anchorEl={userProfileMenuToggle}
-                                                keepMounted
-                                                anchorOrigin={{
-                                                    vertical: "top",
-                                                    horizontal: "right",
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: "top",
-                                                    horizontal: "right",
-                                                }}
-                                                open={Boolean(userProfileMenuToggle)}
-                                                onClose={handleCloseUserProfileMenu}
-                                                PaperProps={{
-                                                    elevation: 0,
-                                                    sx: {
-                                                        overflow: "visible",
-                                                        filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
-                                                        mt: 1.5,
-                                                        minWidth: 200,
-                                                        "& .MuiAvatar-root": {
-                                                            width: 32,
-                                                            height: 32,
-                                                            ml: -0.5,
-                                                            mr: 1,
-                                                        },
-                                                        "&:before": {
-                                                            content: '""',
-                                                            display: "block",
-                                                            position: "absolute",
-                                                            top: 0,
-                                                            right: 14,
-                                                            width: 10,
-                                                            height: 10,
-                                                            bgcolor: "background.paper",
-                                                            transform:
-                                                                "translateY(-50%) rotate(45deg)",
-                                                            zIndex: 0,
-                                                        },
+                                                {utilsService.getUserLetteredAvatar(userData)}
+                                            </Avatar>
+                                        </IconButton>
+                                        <Menu
+                                            sx={{ mt: "36px", ml: "-3px" }}
+                                            id="menu-appbar"
+                                            anchorEl={userProfileMenuToggle}
+                                            keepMounted
+                                            anchorOrigin={{
+                                                vertical: "top",
+                                                horizontal: "right",
+                                            }}
+                                            transformOrigin={{
+                                                vertical: "top",
+                                                horizontal: "right",
+                                            }}
+                                            open={Boolean(userProfileMenuToggle)}
+                                            onClose={handleCloseUserProfileMenu}
+                                            PaperProps={{
+                                                elevation: 0,
+                                                sx: {
+                                                    overflow: "visible",
+                                                    filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
+                                                    mt: 1.5,
+                                                    minWidth: 200,
+                                                    "& .MuiAvatar-root": {
+                                                        width: 32,
+                                                        height: 32,
+                                                        ml: -0.5,
+                                                        mr: 1,
+                                                    },
+                                                    "&:before": {
+                                                        content: '""',
+                                                        display: "block",
+                                                        position: "absolute",
+                                                        top: 0,
+                                                        right: 14,
+                                                        width: 10,
+                                                        height: 10,
+                                                        bgcolor: "background.paper",
+                                                        transform: "translateY(-50%) rotate(45deg)",
+                                                        zIndex: 0,
+                                                    },
+                                                },
+                                            }}
+                                        >
+                                            <MenuList
+                                                dense
+                                                sx={{
+                                                    py: 0,
+                                                    "& .MuiListItemIcon-root": {
+                                                        minWidth: "30px !important",
+                                                        color: "common.black",
                                                     },
                                                 }}
                                             >
-                                                <MenuList
-                                                    dense
-                                                    sx={{
-                                                        py: 0,
-                                                        "& .MuiListItemIcon-root": {
-                                                            minWidth: "30px !important",
-                                                            color: "common.black",
-                                                        },
-                                                    }}
+                                                <ListItem key="welcome" sx={{ fontSize: "14px" }}>
+                                                    <ListItemIcon>
+                                                        <PersonIcon
+                                                            fontSize="small"
+                                                            color="primary"
+                                                        />
+                                                    </ListItemIcon>
+                                                    <Typography variant="inherit">
+                                                        <strong>Welcome</strong>
+                                                        <br />
+                                                        {utilsService.getUserWelcomeName(userData)}
+                                                    </Typography>
+                                                </ListItem>
+                                                <Divider sx={{ my: 1 }} />
+                                                <MenuItem key="logout" onClick={handleLogOut}>
+                                                    <ListItemIcon>
+                                                        <Logout fontSize="small" />
+                                                    </ListItemIcon>
+                                                    Logout
+                                                </MenuItem>
+                                                <MenuItem
+                                                    key="settings"
+                                                    component={RouterLink}
+                                                    to="/settings/profile"
+                                                    onClick={handleCloseUserProfileMenu}
                                                 >
-                                                    <ListItem
-                                                        key="welcome"
-                                                        sx={{ fontSize: "14px" }}
-                                                    >
-                                                        <ListItemIcon>
-                                                            <PersonIcon
-                                                                fontSize="small"
-                                                                color="primary"
-                                                            />
-                                                        </ListItemIcon>
-                                                        <Typography variant="inherit">
-                                                            <strong>Welcome</strong>
-                                                            <br />
-                                                            {utilsService.getUserWelcomeName(
-                                                                userData
-                                                            )}
-                                                        </Typography>
-                                                    </ListItem>
-                                                    <Divider sx={{ my: 1 }} />
-                                                    <MenuItem key="logout" onClick={handleLogOut}>
-                                                        <ListItemIcon>
-                                                            <Logout fontSize="small" />
-                                                        </ListItemIcon>
-                                                        Logout
-                                                    </MenuItem>
-                                                    <MenuItem
-                                                        key="settings"
-                                                        component={RouterLink}
-                                                        to="/settings/profile"
-                                                        onClick={handleCloseUserProfileMenu}
-                                                    >
-                                                        <ListItemIcon>
-                                                            <SettingsIcon fontSize="small" />
-                                                        </ListItemIcon>
-                                                        Profile settings
-                                                    </MenuItem>
-                                                </MenuList>
-                                            </Menu>
-                                        </Box>
-                                    )
-                                }
-                            </Stack>
-                        </Toolbar>
-                    </AppBar>
-                </ScrollToUpdate>
+                                                    <ListItemIcon>
+                                                        <SettingsIcon fontSize="small" />
+                                                    </ListItemIcon>
+                                                    Profile settings
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </Box>
+                                )
+                            }
+                        </Stack>
+                    </Toolbar>
+                </AppBar>
+            </ScrollToUpdate>
 
-                <Drawer
-                    BackdropProps={{
-                        sx: {
-                            backgroundColor: "rgb(0, 0, 0, 0.1)",
-                        },
-                    }}
-                    PaperProps={{
-                        sx: {
-                            width: drawerWidth,
-                        },
-                    }}
-                    anchor="left"
-                    open={openSideDrawer}
-                    onClose={toggleDrawer()}
-                >
-                    <Toolbar />
-                    <Box role="presentation">
-                        <List>
+            <Drawer
+                BackdropProps={{
+                    sx: {
+                        backgroundColor: "rgb(0, 0, 0, 0.1)",
+                    },
+                }}
+                PaperProps={{
+                    sx: {
+                        width: drawerWidth,
+                    },
+                }}
+                anchor="left"
+                open={openSideDrawer}
+                onClose={toggleDrawer()}
+            >
+                <Toolbar />
+                <Box role="presentation">
+                    <List>
+                        <ListItem
+                            secondaryAction={<YOUR_SUBREDDIT_EDIT_BUTTON />}
+                            sx={{ pl: 0, pb: 0, pt: 0 }}
+                            onMouseEnter={() =>
+                                setSubheaderYourSubredditState({
+                                    ...subheaderYourSubredditState,
+                                    hover: true,
+                                })
+                            }
+                            onMouseLeave={() =>
+                                setSubheaderYourSubredditState({
+                                    ...subheaderYourSubredditState,
+                                    hover: false,
+                                })
+                            }
+                        >
+                            <ListSubheader component="div" id="your-subreddits-subheader">
+                                YOUR SUBREDDITS
+                            </ListSubheader>
+                        </ListItem>
+
+                        {userSubscriptions.map((subreddit_name, index) => (
                             <ListItem
-                                secondaryAction={<YOUR_SUBREDDIT_EDIT_BUTTON />}
-                                sx={{ pl: 0, pb: 0, pt: 0 }}
-                                onMouseEnter={() =>
-                                    setSubheaderYourSubredditState({
-                                        ...subheaderYourSubredditState,
-                                        hover: true,
-                                    })
+                                button={!subheaderYourSubredditState.edit}
+                                key={subreddit_name}
+                                sx={{ maxWidth: "100%" }}
+                                onClick={
+                                    subheaderYourSubredditState.edit
+                                        ? null
+                                        : () => handleSubredditClick(subreddit_name)
                                 }
-                                onMouseLeave={() =>
-                                    setSubheaderYourSubredditState({
-                                        ...subheaderYourSubredditState,
-                                        hover: false,
-                                    })
+                                secondaryAction={
+                                    subheaderYourSubredditState.edit ? (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() =>
+                                                handleDeleteSubredditClick(subreddit_name)
+                                            }
+                                        >
+                                            <DeleteIcon sx={{ fontSize: 20 }} />
+                                        </IconButton>
+                                    ) : null
                                 }
                             >
-                                <ListSubheader component="div" id="your-subreddits-subheader">
-                                    YOUR SUBREDDITS
-                                </ListSubheader>
+                                <ListItemIcon sx={{ minWidth: "36px" }}>
+                                    <ArrowCircleRightIcon color="primary" />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={subreddit_name}
+                                    primaryTypographyProps={{
+                                        style: {
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        },
+                                    }}
+                                    onKeyDown={toggleDrawer()}
+                                    onClick={toggleDrawer()}
+                                />
                             </ListItem>
+                        ))}
+                    </List>
 
-                            {userSubscriptions.map((subreddit_name, index) => (
-                                <ListItem
-                                    button={!subheaderYourSubredditState.edit}
-                                    key={subreddit_name}
-                                    sx={{ maxWidth: "100%" }}
-                                    onClick={
-                                        subheaderYourSubredditState.edit
-                                            ? null
-                                            : () => handleSubredditClick(subreddit_name)
-                                    }
-                                    secondaryAction={
-                                        subheaderYourSubredditState.edit ? (
-                                            <IconButton
-                                                aria-label="delete"
-                                                onClick={() =>
-                                                    handleDeleteSubredditClick(subreddit_name)
-                                                }
-                                            >
-                                                <DeleteIcon sx={{ fontSize: 20 }} />
-                                            </IconButton>
-                                        ) : null
-                                    }
-                                >
-                                    <ListItemIcon sx={{ minWidth: "36px" }}>
-                                        <ArrowCircleRightIcon color="primary" />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={subreddit_name}
-                                        primaryTypographyProps={{
-                                            style: {
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            },
-                                        }}
-                                        onKeyDown={toggleDrawer()}
-                                        onClick={toggleDrawer()}
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
+                    <Fab
+                        size="small"
+                        color="primary"
+                        aria-label="add subreddit"
+                        sx={{ position: "absolute", bottom: 20, right: 20 }}
+                        onClick={handleAddSubredditClick}
+                    >
+                        <AddIcon />
+                    </Fab>
 
-                        <Fab
-                            size="small"
-                            color="primary"
-                            aria-label="add subreddit"
-                            sx={{ position: "absolute", bottom: 20, right: 20 }}
-                            onClick={handleAddSubredditClick}
-                        >
-                            <AddIcon />
-                        </Fab>
-
-                        <DeleteSubredditAlert
-                            handleDelete={handleDeleteSubreddit}
-                            subreddit={selectedDeleteSubreddit}
-                            setSubreddit={setSelectedDeleteSubreddit}
-                            open={openDeleteSubredditAlert}
-                            setOpen={setOpenDeleteSubredditAlert}
-                            userData={userData}
-                            setOpenSideDrawer={setOpenSideDrawer}
-                        />
-                        <AddSubredditDialog
-                            openAddSubreddit={openAddSubreddit}
-                            setOpenAddSubreddit={setOpenAddSubreddit}
-                            setOpenSideDrawer={setOpenSideDrawer}
-                        />
-                    </Box>
-                </Drawer>
-            </ThemeProvider>
+                    <DeleteSubredditAlert
+                        handleDelete={handleDeleteSubreddit}
+                        subreddit={selectedDeleteSubreddit}
+                        setSubreddit={setSelectedDeleteSubreddit}
+                        open={openDeleteSubredditAlert}
+                        setOpen={setOpenDeleteSubredditAlert}
+                        userData={userData}
+                        setOpenSideDrawer={setOpenSideDrawer}
+                    />
+                    <AddSubredditDialog
+                        openAddSubreddit={openAddSubreddit}
+                        setOpenAddSubreddit={setOpenAddSubreddit}
+                        setOpenSideDrawer={setOpenSideDrawer}
+                    />
+                </Box>
+            </Drawer>
         </Box>
     );
 }

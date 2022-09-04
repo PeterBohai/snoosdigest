@@ -15,12 +15,14 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import Skeleton from "@mui/material/Skeleton";
 import ForwardIcon from "@mui/icons-material/Forward";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
 import utilsService from "../services/utils";
 import configService from "../services/config";
+
+const theme = createTheme(configService.baseTheme("light"));
 
 function PostDetailScreen() {
     const [post, setPost] = useState({});
@@ -35,9 +37,6 @@ function PostDetailScreen() {
             setPostComments(postData.comments);
         });
     }, [id]);
-
-    let theme = createTheme(configService.baseTheme);
-    theme = responsiveFontSizes(theme);
 
     const botTopPadding = 8;
     const sidePadding = 5;
@@ -73,106 +72,98 @@ function PostDetailScreen() {
                 },
             }}
         >
-            <Box sx={{ pt: 3, my: botTopPadding, px: sidePadding, whiteSpace: "pre-line" }}>
-                <ThemeProvider theme={theme}>
-                    {/* POST SECTION */}
-                    {Object.keys(post).length === 0 ? (
-                        <Box>
-                            <Skeleton variant="text" width={"80%"} height={100} />
-                            <Skeleton variant="rounded" height={200} sx={{ mt: 2 }} />
-                            <Skeleton variant="text" width={"40%"} height={60} sx={{ mt: 3 }} />
-                        </Box>
-                    ) : (
-                        <Box>
-                            <Typography
-                                variant="h2"
-                                component="h1"
-                                fontFamily={"Palatino, Times New Roman, Times, serif"}
-                            >
-                                {post.title}
-                            </Typography>
-                            <Typography variant="subtitle1" color="discrete.main">
-                                {utilsService.getRelativeTime(post.created_utc)} by{" "}
-                                {post.author_name}
-                            </Typography>
-
-                            <Typography variant="body1" component="p" sx={{ my: 3 }}>
-                                {postContent(post)}
-                            </Typography>
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="flex-start"
-                                spacing={2}
-                            >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    alignItems="center"
-                                    maxWidth={"5.2rem"}
-                                >
-                                    <Grid item sx={{ ml: -1 }}>
-                                        <ForwardIcon
-                                            color="primary"
-                                            sx={{ transform: "rotate(-90deg)", fontSize: 26 }}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography variant="body1" fontWeight="bold">
-                                            {utilsService.formatNumber(post.upvotes)}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction="row" alignItems="center">
-                                    <Grid item sx={{ mb: -0.5, mr: 0.5 }}>
-                                        <ChatBubbleIcon color="action" sx={{ fontSize: 20 }} />
-                                    </Grid>
-                                    <Grid item>
-                                        <Typography
-                                            variant="body1"
-                                            color="discrete.main"
-                                            fontWeight="500"
-                                        >
-                                            {utilsService.formatNumber(post.num_comments)} Comments
-                                        </Typography>
-                                    </Grid>
-                                    <Button
-                                        href={post.reddit_url}
-                                        startIcon={<LaunchIcon sx={{ mr: -0.5 }} />}
-                                        target="_blank"
-                                        color="discrete"
-                                        sx={{ ml: 2 }}
-                                        size="large"
-                                    >
-                                        Reddit
-                                    </Button>
-                                </Grid>
-                            </Stack>
-                        </Box>
-                    )}
-
-                    <Typography variant="h5" sx={{ mt: 5 }} fontWeight="bold">
-                        Top Comments
-                    </Typography>
-                    <Divider sx={{ mb: 2.5 }} />
-
-                    {/* COMMENT SECTION */}
+            <Box sx={{ pt: 0, my: botTopPadding, px: sidePadding, whiteSpace: "pre-line" }}>
+                {/* POST SECTION */}
+                {Object.keys(post).length === 0 ? (
                     <Box>
-                        <Stack spacing={2}>
-                            {(postComments.length === 0 ? [...Array(5)] : postComments).map(
-                                (comment, index) =>
-                                    comment ? (
-                                        <>
-                                            <CommentCard comment={comment} key={index} />
-                                            <Divider sx={{ p: 0, mt: "0 !important" }} />
-                                        </>
-                                    ) : (
-                                        <Skeleton variant="rounded" height={100} key={index} />
-                                    )
-                            )}
+                        <Skeleton variant="text" width={"80%"} height={100} />
+                        <Skeleton variant="rounded" height={200} sx={{ mt: 2 }} />
+                        <Skeleton variant="text" width={"40%"} height={60} sx={{ mt: 3 }} />
+                    </Box>
+                ) : (
+                    <Box>
+                        <Typography
+                            variant="h2"
+                            component="h1"
+                            fontFamily={"Palatino, Times New Roman, Times, serif"}
+                        >
+                            {post.title}
+                        </Typography>
+                        <Typography variant="subtitle1" color="discrete.main">
+                            {utilsService.getRelativeTime(post.created_utc)} by {post.author_name}
+                        </Typography>
+
+                        <Typography variant="body1" component="p" sx={{ my: 3 }}>
+                            {postContent(post)}
+                        </Typography>
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="flex-start"
+                            spacing={2}
+                        >
+                            <Grid container direction="row" alignItems="center" maxWidth={"5.2rem"}>
+                                <Grid item sx={{ ml: -1 }}>
+                                    <ForwardIcon
+                                        color="primary"
+                                        sx={{ transform: "rotate(-90deg)", fontSize: 26 }}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="body1" fontWeight="bold">
+                                        {utilsService.formatNumber(post.upvotes)}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container direction="row" alignItems="center">
+                                <Grid item sx={{ mb: -0.5, mr: 0.5 }}>
+                                    <ChatBubbleIcon color="action" sx={{ fontSize: 20 }} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography
+                                        variant="body1"
+                                        color="discrete.main"
+                                        fontWeight="500"
+                                    >
+                                        {utilsService.formatNumber(post.num_comments)} Comments
+                                    </Typography>
+                                </Grid>
+                                <Button
+                                    href={post.reddit_url}
+                                    startIcon={<LaunchIcon sx={{ mr: -0.5 }} />}
+                                    target="_blank"
+                                    color="discrete"
+                                    sx={{ ml: 2 }}
+                                    size="large"
+                                >
+                                    Reddit
+                                </Button>
+                            </Grid>
                         </Stack>
                     </Box>
-                </ThemeProvider>
+                )}
+
+                <Typography variant="h5" sx={{ mt: 5 }} fontWeight="bold">
+                    Top Comments
+                </Typography>
+                <Divider sx={{ mb: 2.5 }} />
+
+                {/* COMMENT SECTION */}
+                <Box>
+                    <Stack spacing={2}>
+                        {(postComments.length === 0 ? [...Array(5)] : postComments).map(
+                            (comment, index) =>
+                                comment ? (
+                                    <>
+                                        <CommentCard comment={comment} key={index} />
+                                        <Divider sx={{ p: 0, mt: "0 !important" }} />
+                                    </>
+                                ) : (
+                                    <Skeleton variant="rounded" height={100} key={index} />
+                                )
+                        )}
+                    </Stack>
+                </Box>
             </Box>
         </Container>
     );

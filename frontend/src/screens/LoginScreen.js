@@ -17,13 +17,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
-import configService from "../services/config";
 import { attemptUserLogin } from "../store/userSlice";
-
-let theme = createTheme(configService.baseTheme);
-theme = responsiveFontSizes(theme);
 
 function LogInScreen() {
     const dispatch = useDispatch();
@@ -61,106 +56,104 @@ function LogInScreen() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        paddingTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Log in
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
-                        <InputLabel
-                            htmlFor="username"
-                            sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                        >
-                            Email
-                        </InputLabel>
-                        <TextField
-                            required
-                            fullWidth
-                            id="username"
-                            name="email"
-                            autoComplete="username"
-                            autoFocus
-                            color="primary"
-                            sx={{ mb: 3 }}
-                            onChange={() => setFormErrorText("")}
-                        />
+        <Container maxWidth="xs">
+            <CssBaseline />
+            <Box
+                sx={{
+                    paddingTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Log in
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+                    <InputLabel
+                        htmlFor="username"
+                        sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                    >
+                        Email
+                    </InputLabel>
+                    <TextField
+                        required
+                        fullWidth
+                        id="username"
+                        name="email"
+                        autoComplete="username"
+                        autoFocus
+                        color="primary"
+                        sx={{ mb: 3 }}
+                        onChange={() => setFormErrorText("")}
+                    />
 
-                        <Grid container>
-                            <Grid item xs>
-                                <InputLabel
-                                    htmlFor="current-password"
-                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                                >
-                                    Password
-                                </InputLabel>
-                            </Grid>
-                            <Grid item>
-                                <Link href="#" variant="body2" underline="none">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
+                    <Grid container>
+                        <Grid item xs>
+                            <InputLabel
+                                htmlFor="current-password"
+                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                            >
+                                Password
+                            </InputLabel>
                         </Grid>
-                        <TextField
-                            required
-                            fullWidth
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            id="current-password"
-                            autoComplete="current-password"
-                            color="primary"
-                            error={formErrorText !== ""}
-                            helperText={formErrorText}
-                            value={passwordValue}
-                            onChange={handlePasswordChange}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            onMouseDown={(event) => {
-                                                event.preventDefault();
-                                            }}
-                                            onMouseUp={(event) => {
-                                                event.preventDefault();
-                                            }}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                        <Grid item>
+                            <Link href="#" variant="body2" underline="none">
+                                Forgot password?
+                            </Link>
+                        </Grid>
+                    </Grid>
+                    <TextField
+                        required
+                        fullWidth
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        id="current-password"
+                        autoComplete="current-password"
+                        color="primary"
+                        error={formErrorText !== ""}
+                        helperText={formErrorText}
+                        value={passwordValue}
+                        onChange={handlePasswordChange}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        onMouseDown={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        onMouseUp={(event) => {
+                                            event.preventDefault();
+                                        }}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            color="primary"
-                        >
-                            Log In
-                        </Button>
-                        <Link href="/signup" variant="body2">
-                            Don't have an account? Sign Up
-                        </Link>
-                    </Box>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        color="primary"
+                    >
+                        Log In
+                    </Button>
+                    <Link href="/signup" variant="body2">
+                        Don't have an account? Sign Up
+                    </Link>
                 </Box>
-            </Container>
-        </ThemeProvider>
+            </Box>
+        </Container>
     );
 }
 
