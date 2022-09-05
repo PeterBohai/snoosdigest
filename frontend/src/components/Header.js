@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -36,11 +36,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-import configService from "../services/config";
 import apiService from "../services/api";
 import utilsService from "../services/utils";
 import { userActions, updateUserSubscriptions } from "../store/userSlice";
+import { themeActions } from "../store/themeSlice";
 import AddSubredditDialog from "./AddSubredditDialog";
 import ScrollToUpdate from "./ScrollToUpdate";
 
@@ -140,6 +142,7 @@ function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const theme = useTheme();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
     const userData = useSelector((state) => state.user.userData);
     const [openSideDrawer, setOpenSideDrawer] = useState(false);
@@ -311,6 +314,19 @@ function Header() {
                             justifyContent="center"
                             alignItems="center"
                         >
+                            <IconButton
+                                sx={{ ml: 1 }}
+                                onClick={() => {
+                                    dispatch(themeActions.toggleDarkMode());
+                                }}
+                                color="inherit"
+                            >
+                                {theme.palette.mode === "dark" ? (
+                                    <Brightness7Icon />
+                                ) : (
+                                    <Brightness4Icon />
+                                )}
+                            </IconButton>
                             {location.pathname === "/login" || userData ? null : (
                                 <Button
                                     sx={{ height: "30px" }}
@@ -373,6 +389,7 @@ function Header() {
                                             PaperProps={{
                                                 elevation: 0,
                                                 sx: {
+                                                    bgcolor: "background.default",
                                                     overflow: "visible",
                                                     filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
                                                     mt: 1.5,
@@ -391,7 +408,7 @@ function Header() {
                                                         right: 14,
                                                         width: 10,
                                                         height: 10,
-                                                        bgcolor: "background.paper",
+                                                        bgcolor: "background.default",
                                                         transform: "translateY(-50%) rotate(45deg)",
                                                         zIndex: 0,
                                                     },

@@ -15,16 +15,15 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import Skeleton from "@mui/material/Skeleton";
 import ForwardIcon from "@mui/icons-material/Forward";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import { createTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
 import utilsService from "../services/utils";
 import configService from "../services/config";
 
-const theme = createTheme(configService.baseTheme("light"));
-
 function PostDetailScreen() {
+    const theme = useTheme();
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
     const id = useParams().id;

@@ -1,7 +1,9 @@
 import React from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import { useTheme } from "@mui/material/styles";
 
 function ScrollToUpdate({ openSideDrawer, ...restProps }) {
+    const theme = useTheme();
     const {
         threshold,
         bgColorBefore,
@@ -14,10 +16,10 @@ function ScrollToUpdate({ openSideDrawer, ...restProps }) {
         ...other
     } = {
         threshold: 10,
-        bgColorBefore: "white",
-        bgColorAfter: "white",
-        textColorBefore: "black",
-        textColorAfter: "black",
+        bgColorBefore: theme.palette.background.default,
+        bgColorAfter: theme.palette.background.default,
+        textColorBefore: theme.palette.text.primary,
+        textColorAfter: theme.palette.text.primary,
         fadeIn: "0.2s ease-in",
         fadeOut: "0.2s ease-out",
         ...restProps,

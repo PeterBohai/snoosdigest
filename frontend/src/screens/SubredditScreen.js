@@ -7,16 +7,15 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import Divider from "@mui/material/Divider";
-import { createTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 import apiService from "../services/api";
 import PostPreviewCard from "../components/PostPreviewCard";
-import configService from "../services/config";
 
 const NUM_POSTS = 5;
-const theme = createTheme(configService.baseTheme("light"));
 
 function SubredditScreen() {
+    const theme = useTheme();
     const [posts, setPosts] = useState({ posts: [] });
     const subreddit = useParams().subreddit;
 

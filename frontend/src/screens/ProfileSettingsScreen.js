@@ -23,15 +23,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { createTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
-import configService from "../services/config";
 import utilsService from "../services/utils";
 import apiService from "../services/api";
 import store from "../store/index";
 import { userActions } from "../store/userSlice";
-
-const theme = createTheme(configService.baseTheme("light"));
 
 const SettingsTextField = styled(TextField)(({ theme }) => ({
     "label + &": {
@@ -93,6 +90,7 @@ const passwordConditionsText =
 function ProfileSettingsScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const theme = useTheme();
     const userData = useSelector((state) => state.user.userData);
     const [openDeleteAccountDialog, setOpenDeleteAccountDialog] = useState(false);
     const [updatePasswordSuccess, setUpdatePasswordSuccess] = useState(false);

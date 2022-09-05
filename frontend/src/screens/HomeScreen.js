@@ -9,18 +9,16 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import Divider from "@mui/material/Divider";
-import { createTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 import PostPreviewCard from "../components/PostPreviewCard";
 import apiService from "../services/api";
-import configService from "../services/config";
 import utilsService from "../services/utils";
 import { userActions } from "../store/userSlice";
 
-const theme = createTheme(configService.baseTheme("light"));
-
 function HomeScreen() {
     const [subredditPosts, setSubredditPosts] = useState({});
+    const theme = useTheme();
     const dispatch = useDispatch();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
