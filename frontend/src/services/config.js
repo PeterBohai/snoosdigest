@@ -38,6 +38,13 @@ const baseTheme = (mode) => ({
                 },
             },
         },
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundImage: "none",
+                },
+            },
+        },
     },
 });
 
