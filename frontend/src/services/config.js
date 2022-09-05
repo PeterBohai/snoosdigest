@@ -2,21 +2,10 @@ import { Typography, Table, TableBody, TableCell, TableHead, TableRow } from "@m
 import { grey } from "@mui/material/colors";
 
 // Base Theme designed with https://bareynol.github.io/mui-theme-creator/
-const baseTheme = {
+const baseTheme = (mode) => ({
     palette: {
-        type: "light",
-        primary: {
-            main: "#1565c0",
-        },
-        secondary: {
-            main: "#f50057",
-        },
-        info: {
-            main: "#2196f3",
-        },
-        discrete: {
-            main: grey[600],
-        },
+        mode,
+        ...(mode === "light" ? baseLightModePalette : baseDarkModePalette),
     },
     typography: {
         button: {
@@ -49,23 +38,43 @@ const baseTheme = {
                 },
             },
         },
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundImage: "none",
+                },
+            },
+        },
+    },
+});
+
+const baseLightModePalette = {
+    primary: {
+        main: "#1565c0",
+    },
+    secondary: {
+        main: "#f50057",
+    },
+    info: {
+        main: "#2196f3",
+    },
+    discrete: {
+        main: grey[600],
     },
 };
 
-const muiPostDetailScreenTheme = {
-    typography: {
-        body1: {
-            fontSize: "1.2rem",
-        },
-        h3: {
-            fontSize: "2.3rem",
-            fontWeight: 500,
-        },
+const baseDarkModePalette = {
+    primary: {
+        main: "#1565c0",
     },
-    palette: {
-        secondary: {
-            main: grey[500],
-        },
+    secondary: {
+        main: "#f50057",
+    },
+    info: {
+        main: "#2196f3",
+    },
+    discrete: {
+        main: grey[600],
     },
 };
 
@@ -150,7 +159,6 @@ const MAX_SUBSCRIPTIONS_NUM_PER_USER = 10;
 
 const exportedConfigs = {
     markdownBaseOptions,
-    muiPostDetailScreenTheme,
     baseTheme,
     MAX_SUBSCRIPTIONS_NUM_PER_USER,
 };

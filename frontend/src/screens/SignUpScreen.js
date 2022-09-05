@@ -16,14 +16,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles";
 
-import configService from "../services/config";
 import utilsService from "../services/utils";
 import { attemptUserRegistration } from "../store/userSlice";
-
-let theme = createTheme(configService.baseTheme);
-theme = responsiveFontSizes(theme);
 
 const passwordConditionsText =
     "Password must be 8 or more characters and contain and least one special character";
@@ -73,135 +68,129 @@ function SignUpScreen() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        paddingTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign up
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <InputLabel
-                                    htmlFor="firstName"
-                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                                >
-                                    First Name *
-                                </InputLabel>
-                                <TextField
-                                    autoComplete="given-name"
-                                    name="firstName"
-                                    required
-                                    fullWidth
-                                    id="firstName"
-                                    autoFocus
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <InputLabel
-                                    htmlFor="lastName"
-                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                                >
-                                    Last Name *
-                                </InputLabel>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    name="lastName"
-                                    autoComplete="family-name"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <InputLabel
-                                    htmlFor="username"
-                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                                >
-                                    Email *
-                                </InputLabel>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    name="email"
-                                    autoComplete="username"
-                                    error={emailErrorText !== ""}
-                                    helperText={emailErrorText}
-                                    onChange={(event) => setEmailErrorText("")}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <InputLabel
-                                    htmlFor="new-password"
-                                    sx={{ color: "black", fontWeight: "bold", mb: 1 }}
-                                >
-                                    Password *
-                                </InputLabel>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    id="new-password"
-                                    autoComplete="new-password"
-                                    helperText={passwordHelperText}
-                                    value={passwordValue}
-                                    onChange={handlePasswordInputChange}
-                                    error={passwordHelperText !== "" && passwordError}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={() => setShowPassword(!showPassword)}
-                                                    onMouseDown={(event) => {
-                                                        event.preventDefault();
-                                                    }}
-                                                    onMouseUp={(event) => {
-                                                        event.preventDefault();
-                                                    }}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? (
-                                                        <VisibilityOff />
-                                                    ) : (
-                                                        <Visibility />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            </Grid>
+        <Container maxWidth="xs">
+            <CssBaseline />
+            <Box
+                sx={{
+                    paddingTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign up
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <InputLabel
+                                htmlFor="firstName"
+                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                            >
+                                First Name *
+                            </InputLabel>
+                            <TextField
+                                autoComplete="given-name"
+                                name="firstName"
+                                required
+                                fullWidth
+                                id="firstName"
+                                autoFocus
+                            />
                         </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <InputLabel
+                                htmlFor="lastName"
+                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                            >
+                                Last Name *
+                            </InputLabel>
+                            <TextField
+                                required
+                                fullWidth
+                                id="lastName"
+                                name="lastName"
+                                autoComplete="family-name"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel
+                                htmlFor="username"
+                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                            >
+                                Email *
+                            </InputLabel>
+                            <TextField
+                                required
+                                fullWidth
+                                id="username"
+                                name="email"
+                                autoComplete="username"
+                                error={emailErrorText !== ""}
+                                helperText={emailErrorText}
+                                onChange={(event) => setEmailErrorText("")}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel
+                                htmlFor="new-password"
+                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                            >
+                                Password *
+                            </InputLabel>
+                            <TextField
+                                required
+                                fullWidth
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                id="new-password"
+                                autoComplete="new-password"
+                                helperText={passwordHelperText}
+                                value={passwordValue}
+                                onChange={handlePasswordInputChange}
+                                error={passwordHelperText !== "" && passwordError}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                onMouseDown={(event) => {
+                                                    event.preventDefault();
+                                                }}
+                                                onMouseUp={(event) => {
+                                                    event.preventDefault();
+                                                }}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            color="primary"
-                        >
-                            Sign Up
-                        </Button>
-                        <Link href="/login" variant="body2">
-                            Have an account? Log in
-                        </Link>
-                    </Box>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        color="primary"
+                    >
+                        Sign Up
+                    </Button>
+                    <Link href="/login" variant="body2">
+                        Have an account? Log in
+                    </Link>
                 </Box>
-            </Container>
-        </ThemeProvider>
+            </Box>
+        </Container>
     );
 }
 

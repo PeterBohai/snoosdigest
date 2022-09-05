@@ -1,11 +1,13 @@
 import React from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import { useTheme } from "@mui/material/styles";
 
 function ScrollToUpdate({ openSideDrawer, ...restProps }) {
+    const theme = useTheme();
     const {
         threshold,
         bgColorBefore,
-        bgColorAfter,
+        bgColorAfterDark,
         textColorBefore,
         textColorAfter,
         fadeIn,
@@ -14,12 +16,12 @@ function ScrollToUpdate({ openSideDrawer, ...restProps }) {
         ...other
     } = {
         threshold: 10,
-        bgColorBefore: "white",
-        bgColorAfter: "white",
-        textColorBefore: "black",
-        textColorAfter: "black",
-        fadeIn: "0.2s ease-in",
-        fadeOut: "0.2s ease-out",
+        bgColorBefore: theme.palette.background.default,
+        bgColorAfterDark: theme.palette.grey[900],
+        textColorBefore: theme.palette.text.primary,
+        textColorAfter: theme.palette.text.primary,
+        fadeIn: "box-shadow 0.25s ease-in",
+        fadeOut: "box-shadow 0.25s ease-out",
         ...restProps,
     };
 
@@ -31,8 +33,13 @@ function ScrollToUpdate({ openSideDrawer, ...restProps }) {
 
     return React.cloneElement(children, {
         style: {
-            boxShadow: trigger || openSideDrawer ? "1px 1px 8px #888888" : "none",
-            backgroundColor: trigger ? bgColorAfter : bgColorBefore,
+            boxShadow: trigger || openSideDrawer ? theme.shadows[4] : "none",
+            backgroundColor:
+                theme.palette.mode === "light"
+                    ? bgColorBefore
+                    : trigger
+                    ? bgColorAfterDark
+                    : bgColorBefore,
             color: trigger ? textColorAfter : textColorBefore,
             transition: trigger ? fadeIn : fadeOut,
             // paddingTop: trigger ? paddingAfter : paddingBefore,
