@@ -11,8 +11,10 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import { useTheme } from "@mui/material/styles";
 
 function Footer() {
+    const theme = useTheme();
     return (
         // margin-top auto needed to make a sticky footer (along with flexbox column in index.html)
         <footer style={{ marginTop: "auto" }}>
@@ -24,7 +26,16 @@ function Footer() {
                 borderTop="1px solid"
                 borderColor="grey.200"
             >
-                <Container maxWidth="lg">
+                <Container
+                    sx={{
+                        [theme.breakpoints.down("md")]: {
+                            maxWidth: "sm",
+                        },
+                        [theme.breakpoints.up("md")]: {
+                            maxWidth: "md",
+                        },
+                    }}
+                >
                     <Typography
                         variant="h5"
                         component="span"
