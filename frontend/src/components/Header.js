@@ -251,24 +251,20 @@ function Header() {
                 </Button>
             );
         }
-
-        if (subheaderYourSubredditState.hover && !subheaderYourSubredditState.edit) {
-            return (
-                <IconButton
-                    edge="end"
-                    aria-label="edit-subscriptions"
-                    onClick={() =>
-                        setSubheaderYourSubredditState({
-                            ...subheaderYourSubredditState,
-                            edit: true,
-                        })
-                    }
-                >
-                    <EditIcon sx={{ fontSize: 18 }} />
-                </IconButton>
-            );
-        }
-        return null;
+        return (
+            <IconButton
+                edge="end"
+                aria-label="edit-subscriptions"
+                onClick={() =>
+                    setSubheaderYourSubredditState({
+                        ...subheaderYourSubredditState,
+                        edit: true,
+                    })
+                }
+            >
+                <EditIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+        );
     };
 
     return (
