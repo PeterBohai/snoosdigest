@@ -89,7 +89,7 @@ function SignUpScreen() {
                         <Grid item xs={12} sm={6}>
                             <InputLabel
                                 htmlFor="firstName"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 First Name *
                             </InputLabel>
@@ -105,7 +105,7 @@ function SignUpScreen() {
                         <Grid item xs={12} sm={6}>
                             <InputLabel
                                 htmlFor="lastName"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Last Name *
                             </InputLabel>
@@ -120,7 +120,7 @@ function SignUpScreen() {
                         <Grid item xs={12}>
                             <InputLabel
                                 htmlFor="username"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Email *
                             </InputLabel>
@@ -138,7 +138,7 @@ function SignUpScreen() {
                         <Grid item xs={12}>
                             <InputLabel
                                 htmlFor="new-password"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Password *
                             </InputLabel>

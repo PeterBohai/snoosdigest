@@ -75,7 +75,7 @@ function LogInScreen() {
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
                     <InputLabel
                         htmlFor="username"
-                        sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                        sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                     >
                         Email
                     </InputLabel>
@@ -95,7 +95,7 @@ function LogInScreen() {
                         <Grid item xs>
                             <InputLabel
                                 htmlFor="current-password"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Password
                             </InputLabel>
