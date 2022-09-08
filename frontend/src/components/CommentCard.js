@@ -40,7 +40,7 @@ function CommentCard({ comment }) {
                 <Grid container direction="row" alignItems="center">
                     <Grid item sx={{ ml: -0.4, mt: 0.1 }}>
                         <ForwardIcon
-                            color="action"
+                            color="primary"
                             sx={{ transform: "rotate(-90deg)", fontSize: 19 }}
                         />
                     </Grid>

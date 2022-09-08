@@ -82,7 +82,7 @@ const baseDarkModePalette = {
         main: "#2196f3",
     },
     discrete: {
-        main: grey[600],
+        main: grey[500],
     },
     footer: {
         main: "#121212",
