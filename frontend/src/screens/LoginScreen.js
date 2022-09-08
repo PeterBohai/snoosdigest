@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link as RouterLink } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -75,7 +75,7 @@ function LogInScreen() {
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
                     <InputLabel
                         htmlFor="username"
-                        sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                        sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                     >
                         Email
                     </InputLabel>
@@ -95,7 +95,7 @@ function LogInScreen() {
                         <Grid item xs>
                             <InputLabel
                                 htmlFor="current-password"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Password
                             </InputLabel>
@@ -148,7 +148,7 @@ function LogInScreen() {
                     >
                         Log In
                     </Button>
-                    <Link href="/signup" variant="body2">
+                    <Link to="/signup" variant="body2" component={RouterLink}>
                         Don't have an account? Sign Up
                     </Link>
                 </Box>

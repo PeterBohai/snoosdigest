@@ -61,6 +61,14 @@ const baseLightModePalette = {
     discrete: {
         main: grey[600],
     },
+    footer: {
+        main: grey[50],
+        secondary: grey[200],
+    },
+    background: {
+        lighter: "#fff",
+        light: "#fff",
+    },
 };
 
 const baseDarkModePalette = {
@@ -74,7 +82,15 @@ const baseDarkModePalette = {
         main: "#2196f3",
     },
     discrete: {
-        main: grey[600],
+        main: grey[500],
+    },
+    footer: {
+        main: "#121212",
+        secondary: grey[800],
+    },
+    background: {
+        lighter: grey[900],
+        light: grey[800],
     },
 };
 

@@ -116,7 +116,7 @@ function PostDetailScreen() {
                             </Grid>
                             <Grid container direction="row" alignItems="center">
                                 <Grid item sx={{ mb: -0.5, mr: 0.5 }}>
-                                    <ChatBubbleIcon color="action" sx={{ fontSize: 20 }} />
+                                    <ChatBubbleIcon color="discrete" sx={{ fontSize: 20 }} />
                                 </Grid>
                                 <Grid item>
                                     <Typography

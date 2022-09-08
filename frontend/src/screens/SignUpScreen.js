@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -89,7 +90,7 @@ function SignUpScreen() {
                         <Grid item xs={12} sm={6}>
                             <InputLabel
                                 htmlFor="firstName"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 First Name *
                             </InputLabel>
@@ -105,7 +106,7 @@ function SignUpScreen() {
                         <Grid item xs={12} sm={6}>
                             <InputLabel
                                 htmlFor="lastName"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Last Name *
                             </InputLabel>
@@ -120,7 +121,7 @@ function SignUpScreen() {
                         <Grid item xs={12}>
                             <InputLabel
                                 htmlFor="username"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Email *
                             </InputLabel>
@@ -138,7 +139,7 @@ function SignUpScreen() {
                         <Grid item xs={12}>
                             <InputLabel
                                 htmlFor="new-password"
-                                sx={{ color: "black", fontWeight: "bold", mb: 1 }}
+                                sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
                             >
                                 Password *
                             </InputLabel>
@@ -185,7 +186,7 @@ function SignUpScreen() {
                     >
                         Sign Up
                     </Button>
-                    <Link href="/login" variant="body2">
+                    <Link to="/login" variant="body2" component={RouterLink}>
                         Have an account? Log in
                     </Link>
                 </Box>

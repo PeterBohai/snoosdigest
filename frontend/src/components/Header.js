@@ -387,6 +387,7 @@ function Header() {
                                                 sx: {
                                                     overflow: "visible",
                                                     filter: "drop-shadow(0px 2px 5px rgba(0,0,0,0.32))",
+                                                    bgcolor: "background.lighter",
                                                     mt: 1.5,
                                                     minWidth: 200,
                                                     "& .MuiAvatar-root": {
@@ -403,7 +404,7 @@ function Header() {
                                                         right: 14,
                                                         width: 10,
                                                         height: 10,
-                                                        bgcolor: "background.paper",
+                                                        bgcolor: "background.lighter",
                                                         transform: "translateY(-50%) rotate(45deg)",
                                                         zIndex: 0,
                                                     },
@@ -416,7 +417,7 @@ function Header() {
                                                     py: 0,
                                                     "& .MuiListItemIcon-root": {
                                                         minWidth: "30px !important",
-                                                        color: "common.black",
+                                                        color: "text.primary",
                                                     },
                                                 }}
                                             >
@@ -470,6 +471,7 @@ function Header() {
                 PaperProps={{
                     sx: {
                         width: drawerWidth,
+                        bgcolor: "background.light",
                     },
                 }}
                 anchor="left"
@@ -495,7 +497,11 @@ function Header() {
                                 })
                             }
                         >
-                            <ListSubheader component="div" id="your-subreddits-subheader">
+                            <ListSubheader
+                                component="div"
+                                id="your-subreddits-subheader"
+                                sx={{ bgcolor: "background.light" }}
+                            >
                                 YOUR SUBREDDITS
                             </ListSubheader>
                         </ListItem>
