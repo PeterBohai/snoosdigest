@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -185,7 +186,7 @@ function SignUpScreen() {
                     >
                         Sign Up
                     </Button>
-                    <Link href="/login" variant="body2">
+                    <Link to="/login" variant="body2" component={RouterLink}>
                         Have an account? Log in
                     </Link>
                 </Box>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link as RouterLink } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -148,7 +148,7 @@ function LogInScreen() {
                     >
                         Log In
                     </Button>
-                    <Link href="/signup" variant="body2">
+                    <Link to="/signup" variant="body2" component={RouterLink}>
                         Don't have an account? Sign Up
                     </Link>
                 </Box>
