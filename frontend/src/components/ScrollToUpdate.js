@@ -31,20 +31,25 @@ function ScrollToUpdate({ openSideDrawer, ...restProps }) {
         target: restProps.window ? window() : undefined,
     });
 
-    return React.cloneElement(children, {
-        style: {
-            boxShadow: trigger || openSideDrawer ? theme.shadows[4] : "none",
-            backgroundColor:
-                theme.palette.mode === "light"
-                    ? bgColorBefore
-                    : trigger
-                    ? bgColorAfterDark
-                    : bgColorBefore,
+    let componentStyle = {
+        boxShadow: trigger || openSideDrawer ? theme.shadows[3] : "none",
+        backgroundColor: bgColorBefore,
+        color: trigger ? textColorAfter : textColorBefore,
+        transition: trigger ? fadeIn : fadeOut,
+        // paddingTop: trigger ? paddingAfter : paddingBefore,
+        // paddingBottom: trigger ? paddingAfter : paddingBefore,
+    };
+
+    if (theme.palette.mode !== "light") {
+        componentStyle = {
+            boxShadow: "none",
+            backgroundColor: trigger || openSideDrawer ? bgColorAfterDark : bgColorBefore,
             color: trigger ? textColorAfter : textColorBefore,
             transition: trigger ? fadeIn : fadeOut,
-            // paddingTop: trigger ? paddingAfter : paddingBefore,
-            // paddingBottom: trigger ? paddingAfter : paddingBefore,
-        },
+        };
+    }
+    return React.cloneElement(children, {
+        style: componentStyle,
         ...other,
     });
 }

@@ -21,10 +21,10 @@ function Footer() {
             <Box
                 py={{ xs: 5, sm: 7 }}
                 mt={{ xs: 7, sm: 10 }}
-                bgcolor="grey.50"
-                color="black"
+                bgcolor="footer.main"
+                color="text.primary"
                 borderTop="1px solid"
-                borderColor="grey.200"
+                borderColor="footer.secondary"
             >
                 <Container
                     sx={{
@@ -36,17 +36,10 @@ function Footer() {
                         },
                     }}
                 >
-                    <Typography
-                        variant="h5"
-                        component="span"
-                        sx={{
-                            letterSpacing: ".1rem",
-                            color: "black",
-                        }}
-                    >
+                    <Typography variant="h5" component="span" sx={{ letterSpacing: ".1rem" }}>
                         SnoosDigest
                     </Typography>
-                    <Divider sx={{ my: 3, bgcolor: "grey.50" }} />
+                    <Divider sx={{ my: 3, bgcolor: "footer.secondary" }} />
                     <Grid container>
                         <Grid item xs={6}>
                             <Typography component="p" variant="body2" color="text.secondary">
