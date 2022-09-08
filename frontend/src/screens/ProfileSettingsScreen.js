@@ -240,7 +240,7 @@ function ProfileSettingsScreen() {
             <Typography variant="h5">Profile Settings</Typography>
             <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
 
-            <InputLabel htmlFor="user-email" sx={{ color: "black", fontWeight: "bold" }}>
+            <InputLabel htmlFor="user-email" sx={{ color: "text.primary", fontWeight: "bold" }}>
                 Email address
             </InputLabel>
             <SettingsTextField
@@ -251,7 +251,7 @@ function ProfileSettingsScreen() {
                 value={userData["snoosdigest/username"]}
             />
             <Box sx={{ width: "100%" }} component="form" onSubmit={handleProfileSubmit}>
-                <InputLabel htmlFor="first-name" sx={{ color: "black", fontWeight: "bold" }}>
+                <InputLabel htmlFor="first-name" sx={{ color: "text.primary", fontWeight: "bold" }}>
                     First Name
                 </InputLabel>
                 <SettingsTextField
@@ -264,7 +264,7 @@ function ProfileSettingsScreen() {
                     inputProps={{ maxLength: 150 }}
                 />
 
-                <InputLabel htmlFor="last-name" sx={{ color: "black", fontWeight: "bold" }}>
+                <InputLabel htmlFor="last-name" sx={{ color: "text.primary", fontWeight: "bold" }}>
                     Last Name
                 </InputLabel>
                 <SettingsTextField
@@ -294,7 +294,10 @@ function ProfileSettingsScreen() {
             <Divider sx={{ mt: 2, mb: 4, bgcolor: "grey.500" }} />
 
             <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
-                <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
+                <InputLabel
+                    htmlFor="old-password"
+                    sx={{ color: "text.primary", fontWeight: "bold" }}
+                >
                     Old password *
                 </InputLabel>
                 <SettingsTextField
@@ -331,7 +334,10 @@ function ProfileSettingsScreen() {
                         ),
                     }}
                 />
-                <InputLabel htmlFor="new-password" sx={{ color: "black", fontWeight: "bold" }}>
+                <InputLabel
+                    htmlFor="new-password"
+                    sx={{ color: "text.primary", fontWeight: "bold" }}
+                >
                     New password *
                 </InputLabel>
                 <SettingsTextField
@@ -368,7 +374,10 @@ function ProfileSettingsScreen() {
                         ),
                     }}
                 />
-                <InputLabel htmlFor="old-password" sx={{ color: "black", fontWeight: "bold" }}>
+                <InputLabel
+                    htmlFor="old-password"
+                    sx={{ color: "text.primary", fontWeight: "bold" }}
+                >
                     Confirm new password *
                 </InputLabel>
                 <SettingsTextField
