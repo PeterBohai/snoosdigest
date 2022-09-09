@@ -145,6 +145,7 @@ function Header() {
     const theme = useTheme();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
     const userData = useSelector((state) => state.user.userData);
+    const darkMode = useSelector((state) => state.theme.darkMode);
     const [openSideDrawer, setOpenSideDrawer] = useState(false);
     const [openAddSubreddit, setOpenAddSubreddit] = useState(false);
     const [openDeleteSubredditAlert, setOpenDeleteSubredditAlert] = useState(false);
@@ -175,6 +176,10 @@ function Header() {
             updateSubscriptions();
         }
     }, [userData, dispatch]);
+
+    useEffect(() => {
+        localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    }, [darkMode]);
 
     useEffect(() => {
         if (!openSideDrawer) {
