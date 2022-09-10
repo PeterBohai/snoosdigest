@@ -20,7 +20,7 @@ import { useTheme } from "@mui/material/styles";
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
 import utilsService from "../services/utils";
-import configService from "../services/config";
+import themeService from "../services/theme";
 
 function PostDetailScreen() {
     const theme = useTheme();
@@ -57,7 +57,7 @@ function PostDetailScreen() {
                 </Link>
             );
         }
-        return <Markdown options={configService.markdownBaseOptions}>{post.body}</Markdown>;
+        return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
     };
 
     return (

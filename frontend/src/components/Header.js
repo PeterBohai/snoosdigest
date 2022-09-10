@@ -24,6 +24,7 @@ import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Fab from "@mui/material/Fab";
@@ -535,7 +536,16 @@ function Header() {
                                 }
                             >
                                 <ListItemIcon sx={{ minWidth: "36px" }}>
-                                    <ArrowCircleRightIcon color="primary" />
+                                    {theme.palette.mode === "light" ? (
+                                        <ArrowCircleRightIcon color="primary" />
+                                    ) : (
+                                        <ArrowCircleUpIcon
+                                            sx={{
+                                                color: "primary.main",
+                                                transform: "rotate(90deg)",
+                                            }}
+                                        />
+                                    )}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={subreddit_name}

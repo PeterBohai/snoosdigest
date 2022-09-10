@@ -10,11 +10,11 @@ import Button from "@mui/material/Button";
 import ForwardIcon from "@mui/icons-material/Forward";
 
 import utilsService from "../services/utils";
-import configService from "../services/config";
+import themeService from "../services/theme";
 
 function CommentCard({ comment }) {
     const commentBody = (comment) => {
-        return <Markdown options={configService.markdownBaseOptions}>{comment.body}</Markdown>;
+        return <Markdown options={themeService.markdownBaseOptions}>{comment.body}</Markdown>;
     };
 
     return (
