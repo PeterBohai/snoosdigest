@@ -1,5 +1,6 @@
 from cachetools import TTLCache, cached
 from django.conf import settings
+from django.contrib.auth.models import update_last_login
 from praw import Reddit as PrawReddit
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -11,6 +12,7 @@ def generate_user_access_token(user: User) -> str:
     jwt_refresh_token = RefreshToken.for_user(user)
     # Custom private claims (also in user serializer)
     jwt_refresh_token[f'{settings.NAMESPACE}/username'] = user.username
+    update_last_login(None, user)
     return str(jwt_refresh_token.access_token)
 
 

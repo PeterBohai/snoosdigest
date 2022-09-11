@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,7 +14,7 @@ class SnoosDigestTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Custom private claims
         token[f'{settings.NAMESPACE}/username'] = user.username
-
+        update_last_login(None, user)
         return token
 
 

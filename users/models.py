@@ -5,7 +5,7 @@ from api.models import Subreddit
 
 
 class User(AbstractUser):
-    pass
+    dark_mode = models.BooleanField(default=False)
 
 
 class UserSubscription(models.Model):
