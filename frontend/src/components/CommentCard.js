@@ -41,7 +41,7 @@ function CommentCard({ comment }) {
                     <Grid item sx={{ ml: -0.4, mt: 0.1 }}>
                         <ForwardIcon
                             color="primary"
-                            sx={{ transform: "rotate(-90deg)", fontSize: 19 }}
+                            sx={{ transform: "rotate(-90deg)", fontSize: 20 }}
                         />
                     </Grid>
                     <Grid item width={32}>

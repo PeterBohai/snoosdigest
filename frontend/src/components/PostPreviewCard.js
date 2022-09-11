@@ -38,7 +38,7 @@ function PostPreviewCard({ post }) {
 
     return (
         <Card sx={{ border: "none", boxShadow: "none" }}>
-            <CardContent sx={{ overflow: "hidden", px: 0 }}>
+            <CardContent sx={{ overflow: "hidden", px: 0, pb: 1 }}>
                 <Typography variant="h4" fontFamily={"Palatino, Times New Roman, Times, serif"}>
                     <Link
                         component={RouterLink}
@@ -54,12 +54,19 @@ function PostPreviewCard({ post }) {
                         {post.title}
                     </Link>
                 </Typography>
+                <Stack direction="row" alignItems="center" spacing={0.4} mt={0.3}>
+                    <AccessTimeIcon sx={{ color: "discrete.main", fontSize: 16, mt: -0.2 }} />
+                    <Typography variant="body2" color="discrete.main">
+                        {`${utilsService.getRelativeTime(post.created_unix_timestamp)} 
+                            by u/${post.author_name}`}
+                    </Typography>
+                </Stack>
                 <Typography
                     variant="body2"
                     color="text.primary"
                     fontSize={15}
                     sx={{
-                        mt: 1,
+                        mt: 1.7,
                     }}
                 >
                     {postContent}
@@ -88,20 +95,13 @@ function PostPreviewCard({ post }) {
                         startIcon={
                             <ChatBubbleOutline sx={{ transform: "scale(0.9)", mr: -0.55 }} />
                         }
-                        color="inherit"
+                        sx={{ color: "text.primary", transition: "none" }}
                         size="small"
                     >
-                        <Typography variant="body1" color="text.primary" fontWeight="500">
+                        <Typography variant="body1" fontWeight="500">
                             {utilsService.formatNumber(post.num_comments)} Comments
                         </Typography>
                     </Button>
-                    <Stack direction="row" alignItems="center" spacing={0.4}>
-                        <AccessTimeIcon sx={{ color: "discrete.main", fontSize: 18, mt: -0.1 }} />
-                        <Typography variant="body1" color="discrete.main">
-                            {`${utilsService.getRelativeTime(post.created_unix_timestamp)} 
-                                by u/${post.author_name}`}
-                        </Typography>
-                    </Stack>
                 </Stack>
             </CardActions>
         </Card>
