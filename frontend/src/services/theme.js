@@ -36,7 +36,10 @@ const getTheme = (mode) => {
             },
         },
     });
-    theme = responsiveFontSizes(theme);
+    theme = responsiveFontSizes(theme, {
+        breakpoints: ["mobile", "sm", "md", "lg"],
+        factor: 2,
+    });
     return theme;
 };
 
@@ -60,6 +63,16 @@ const baseTheme = (mode) => ({
         h4: {
             fontSize: "1.6rem",
             fontWeight: 600,
+        },
+    },
+    breakpoints: {
+        values: {
+            mobile: 480,
+            xs: 0,
+            sm: 600,
+            md: 900,
+            lg: 1200,
+            xl: 1536,
         },
     },
 });

@@ -73,7 +73,7 @@ function SignUpScreen() {
             <CssBaseline />
             <Box
                 sx={{
-                    paddingTop: 8,
+                    py: 8,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",

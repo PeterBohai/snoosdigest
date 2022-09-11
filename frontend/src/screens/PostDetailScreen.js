@@ -17,6 +17,7 @@ import ForwardIcon from "@mui/icons-material/Forward";
 import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
@@ -27,6 +28,7 @@ function PostDetailScreen() {
     const theme = useTheme();
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("mobile"));
     const id = useParams().id;
 
     useEffect(() => {
@@ -38,7 +40,7 @@ function PostDetailScreen() {
         });
     }, [id]);
 
-    const botTopPadding = 8;
+    const botTopPadding = 5;
     const sidePadding = 5;
 
     const postContent = (post) => {
@@ -72,7 +74,7 @@ function PostDetailScreen() {
                 },
             }}
         >
-            <Box sx={{ pt: 0, my: botTopPadding, px: sidePadding, whiteSpace: "pre-line" }}>
+            <Box sx={{ pt: 0, my: botTopPadding, px: 0, whiteSpace: "pre-line" }}>
                 {/* POST SECTION */}
                 {Object.keys(post).length === 0 ? (
                     <Box>
@@ -89,12 +91,15 @@ function PostDetailScreen() {
                         >
                             {post.title}
                         </Typography>
-                        <Stack direction="row" alignItems="center" spacing={0.4}>
+                        <Stack direction="row" alignItems="center" spacing={0.4} mt={0.5}>
                             <AccessTimeIcon
                                 sx={{ color: "discrete.main", fontSize: 18, mt: -0.1 }}
                             />
-                            <Typography variant="subtitle1" color="discrete.main">
-                                {`${utilsService.getRelativeTime(post.created_utc)}  by u/${
+                            <Typography
+                                variant={isSmallScreen ? "body2" : "body1"}
+                                color="discrete.main"
+                            >
+                                {`${utilsService.getRelativeTime(post.created_utc)} by u/${
                                     post.author_name
                                 }`}
                             </Typography>
@@ -109,7 +114,7 @@ function PostDetailScreen() {
                             justifyContent="flex-start"
                             spacing={2}
                         >
-                            <Grid container direction="row" alignItems="center" maxWidth={"5.2rem"}>
+                            <Grid container direction="row" alignItems="center" maxWidth={"3.8rem"}>
                                 <Grid item sx={{ ml: -0.4 }}>
                                     <ForwardIcon
                                         color="primary"
@@ -128,7 +133,8 @@ function PostDetailScreen() {
                                 </Grid>
                                 <Grid item>
                                     <Typography variant="body1" fontWeight="500">
-                                        {utilsService.formatNumber(post.num_comments)} Comments
+                                        {utilsService.formatNumber(post.num_comments)}{" "}
+                                        {isSmallScreen ? "" : "Comments"}
                                     </Typography>
                                 </Grid>
                                 <Button

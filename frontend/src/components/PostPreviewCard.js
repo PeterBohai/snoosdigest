@@ -79,7 +79,7 @@ function PostPreviewCard({ post }) {
                     spacing={2}
                     minWidth="100%"
                 >
-                    <Stack direction="row" alignItems="center" spacing={0.3} minWidth="3.7rem">
+                    <Stack direction="row" alignItems="center" spacing={0.3} minWidth="3.8rem">
                         <ForwardIcon
                             color="primary"
                             sx={{ transform: "rotate(-90deg)", fontSize: 20, ml: -0.5, mt: -0.3 }}

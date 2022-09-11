@@ -39,6 +39,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import apiService from "../services/api";
 import utilsService from "../services/utils";
@@ -144,6 +145,7 @@ function Header() {
     const location = useLocation();
     const dispatch = useDispatch();
     const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("mobile"));
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
     const userData = useSelector((state) => state.user.userData);
     const darkMode = useSelector((state) => state.theme.darkMode);
@@ -278,7 +280,7 @@ function Header() {
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <ScrollToUpdate openSideDrawer={openSideDrawer}>
                 <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                    <Toolbar sx={{ mx: "10px" }}>
+                    <Toolbar sx={{ mx: "10px", ...(isSmallScreen && { mx: 0 }) }}>
                         <IconButton
                             onClick={toggleDrawer()}
                             size="large"
@@ -329,9 +331,11 @@ function Header() {
                                     <Brightness4Icon />
                                 )}
                             </IconButton>
-                            {location.pathname === "/login" || userData ? null : (
+                            {location.pathname === "/login" ||
+                            userData ||
+                            (isSmallScreen && location.pathname !== "/signup") ? null : (
                                 <Button
-                                    sx={{ height: "30px" }}
+                                    sx={{ height: "30px", ...(isSmallScreen && { px: 0 }) }}
                                     variant="outlined"
                                     color="primary"
                                     component={RouterLink}
@@ -343,7 +347,7 @@ function Header() {
                             )}
                             {location.pathname === "/signup" || userData ? null : (
                                 <Button
-                                    sx={{ height: "30px" }}
+                                    sx={{ height: "30px", ...(isSmallScreen && { px: 0 }) }}
                                     variant="contained"
                                     color="primary"
                                     component={RouterLink}
