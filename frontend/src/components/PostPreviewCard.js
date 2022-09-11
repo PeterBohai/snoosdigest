@@ -16,7 +16,6 @@ import utilsService from "../services/utils";
 
 function PostPreviewCard({ post }) {
     const contentMaxChars = 320;
-    console.log(post);
 
     let postContent = (post) => {
         if (Object.keys(post).length === 0) {
