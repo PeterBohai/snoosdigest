@@ -14,7 +14,8 @@ import CardMedia from "@mui/material/CardMedia";
 import LaunchIcon from "@mui/icons-material/Launch";
 import Skeleton from "@mui/material/Skeleton";
 import ForwardIcon from "@mui/icons-material/Forward";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
 
 import CommentCard from "../components/CommentCard";
@@ -88,9 +89,16 @@ function PostDetailScreen() {
                         >
                             {post.title}
                         </Typography>
-                        <Typography variant="subtitle1" color="discrete.main">
-                            {utilsService.getRelativeTime(post.created_utc)} by {post.author_name}
-                        </Typography>
+                        <Stack direction="row" alignItems="center" spacing={0.4}>
+                            <AccessTimeIcon
+                                sx={{ color: "discrete.main", fontSize: 18, mt: -0.1 }}
+                            />
+                            <Typography variant="subtitle1" color="discrete.main">
+                                {`${utilsService.getRelativeTime(post.created_utc)}  by u/${
+                                    post.author_name
+                                }`}
+                            </Typography>
+                        </Stack>
 
                         <Typography variant="body1" component="p" sx={{ my: 3 }}>
                             {postContent(post)}
@@ -102,10 +110,10 @@ function PostDetailScreen() {
                             spacing={2}
                         >
                             <Grid container direction="row" alignItems="center" maxWidth={"5.2rem"}>
-                                <Grid item sx={{ ml: -1 }}>
+                                <Grid item sx={{ ml: -0.4 }}>
                                     <ForwardIcon
                                         color="primary"
-                                        sx={{ transform: "rotate(-90deg)", fontSize: 26 }}
+                                        sx={{ transform: "rotate(-90deg)", fontSize: 20, mt: 0.5 }}
                                     />
                                 </Grid>
                                 <Grid item>
@@ -115,15 +123,11 @@ function PostDetailScreen() {
                                 </Grid>
                             </Grid>
                             <Grid container direction="row" alignItems="center">
-                                <Grid item sx={{ mb: -0.5, mr: 0.5 }}>
-                                    <ChatBubbleIcon color="discrete" sx={{ fontSize: 20 }} />
+                                <Grid item sx={{ mb: -0.8, mr: 0.5 }}>
+                                    <ChatBubbleOutline sx={{ fontSize: 18, fontWeight: 500 }} />
                                 </Grid>
                                 <Grid item>
-                                    <Typography
-                                        variant="body1"
-                                        color="discrete.main"
-                                        fontWeight="500"
-                                    >
+                                    <Typography variant="body1" fontWeight="500">
                                         {utilsService.formatNumber(post.num_comments)} Comments
                                     </Typography>
                                 </Grid>
@@ -131,8 +135,7 @@ function PostDetailScreen() {
                                     href={post.reddit_url}
                                     startIcon={<LaunchIcon sx={{ mr: -0.5 }} />}
                                     target="_blank"
-                                    color="discrete"
-                                    sx={{ ml: 2 }}
+                                    sx={{ ml: 2, color: "discrete.main" }}
                                     size="large"
                                 >
                                     Reddit
