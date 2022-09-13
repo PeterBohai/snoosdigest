@@ -13,17 +13,21 @@
 <a href="https://www.linkedin.com/in/peterbohai">
 <img alt="LinedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white"></a>
 
-Snoos Digest is a web application that provides users with only the top posts from select subreddits on reddit.
-Similar to how one scans the headlines of the day's or week's news, Snoos Digest will save you from scrolling through endless content.
+Snoos Digest is a web application that provides users with only the top posts from select subreddits on Reddit.
+Similar to how one scans the news headlines of the day or week, Snoos Digest will save you from scrolling through endless content.
 
 ### Built With
 
 These are the main frameworks, libraries, and tools used in this project.
 
 -   [React.js](https://reactjs.org/)
+    -   [MUI](https://mui.com/)
 -   [Django](https://www.djangoproject.com/)
     -   [Django REST Framework](https://www.django-rest-framework.org/)
 -   [PostgreSQL](https://www.postgresql.org/)
+
+Snoos Digest also relies on [Amazon Web Service](https://aws.amazon.com/)'s (AWS) serverless service [Lambda](https://aws.amazon.com/lambda/) for background updates.
+The repository for these processes are available at [PeterBohai/snoosdigest-updater](https://github.com/PeterBohai/snoosdigest-updater)
 
 ## Contributing
 
