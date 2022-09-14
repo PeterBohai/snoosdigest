@@ -12,7 +12,12 @@ STATICFILES_DIRS += [
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'snoosdigest-dev.herokuapp.com']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'snoosdigest-dev.herokuapp.com',
+    'snoosdigest-dev.onrender.com',
+]
 
 MIDDLEWARE = [
     # corsheaders should be placed as high as possible,
