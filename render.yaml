@@ -12,13 +12,13 @@ services:
         sync: false
       - key: SECRET_KEY
         sync: false
-      - key: DB_NAME_DEV
+      - key: DB_NAME
         sync: false
-      - key: DB_USER_DEV
+      - key: DB_USER
         sync: false
-      - key: DB_PASSWORD_DEV
+      - key: DB_PASSWORD
         sync: false
-      - key: DB_HOST_DEV
+      - key: DB_HOST
         sync: false
       - key: REDDIT_APP_CLIENT_ID
         sync: false

@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'snoosdigest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME_DEV'),
-        'USER': os.environ.get('DB_USER_DEV'),
-        'PASSWORD': os.environ.get('DB_PASSWORD_DEV'),
-        'HOST': os.environ.get('DB_HOST_DEV'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
