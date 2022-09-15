@@ -80,7 +80,7 @@ function updateUserData(newUserData) {
     let userLocalData = JSON.parse(localStorage.getItem("user"));
     userLocalData = { ...userLocalData, ...newUserData };
     localStorage.setItem("user", JSON.stringify(userLocalData));
-    console.log("store.dispatch(userActions.updateUserData(newUserData));");
+    console.info("store.dispatch(userActions.updateUserData(newUserData));");
     store.dispatch(userActions.updateUserData(newUserData));
 }
 
@@ -141,12 +141,12 @@ function ProfileSettingsScreen() {
         apiService
             .putUserProfile(requestData)
             .then((res) => {
-                console.log("Profile was updated:", res.data);
+                console.info("Profile was updated:", res.data);
                 updateUserData(res.data);
                 setUpdateProfileSuccess(true);
             })
             .catch((err) => {
-                console.log(err);
+                console.info(err);
                 setUpdateProfileSuccess(false);
             });
     };
@@ -176,7 +176,7 @@ function ProfileSettingsScreen() {
         apiService
             .postUpdateUserPassword(changePasswordFormData)
             .then((res) => {
-                console.log("Password was updated successfully", res);
+                console.info("Password was updated successfully", res);
                 setUpdatePasswordSuccess(true);
                 setUpdatePasswordValues({
                     oldPassword: "",
@@ -191,7 +191,7 @@ function ProfileSettingsScreen() {
             })
             .catch((err) => {
                 const errorData = err.response.data;
-                console.log(errorData);
+                console.info(errorData);
                 setUpdatePasswordSuccess(false);
                 setUpdatePasswordErrors({
                     oldPassword: "",
@@ -209,7 +209,7 @@ function ProfileSettingsScreen() {
         apiService
             .deleteUserProfile()
             .then((res) => {
-                console.log("Profile was deleted", res.data);
+                console.info("Profile was deleted", res.data);
                 navigate("/", { replace: true });
                 localStorage.removeItem("user");
                 dispatch(userActions.logout());

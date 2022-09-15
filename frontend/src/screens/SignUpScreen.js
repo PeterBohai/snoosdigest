@@ -46,7 +46,7 @@ function SignUpScreen() {
             email: data.get("email"),
             password: data.get("password"),
         };
-        console.log({
+        console.info({
             firstName: data.get("firstName"),
             lastName: data.get("lastName"),
             email: data.get("email"),

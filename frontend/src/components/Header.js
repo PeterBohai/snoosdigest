@@ -175,7 +175,7 @@ function Header() {
         };
 
         if (userData) {
-            console.log("dispatch(updateUserSubscriptions());");
+            console.info("dispatch(updateUserSubscriptions());");
             updateSubscriptions();
         }
     }, [userData, dispatch]);
@@ -229,7 +229,7 @@ function Header() {
         apiService
             .deleteUserSubscriptions(subreddit_prefixed)
             .then((res) => {
-                console.log("dispatch(updateUserSubscriptions());");
+                console.info("dispatch(updateUserSubscriptions());");
                 dispatch(updateUserSubscriptions());
             })
             .catch((err) => {

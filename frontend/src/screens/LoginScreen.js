@@ -38,7 +38,7 @@ function LogInScreen() {
 
         try {
             await dispatch(attemptUserLogin(loginCredentials)).unwrap();
-            console.log("User was logged in successfully");
+            console.info("User was logged in successfully");
             const returnToPath = searchParams.get("return_to");
             if (returnToPath) {
                 navigate(returnToPath, { replace: true });

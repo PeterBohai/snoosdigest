@@ -14,7 +14,7 @@ function AutoComplete({ id, onChange, error, helperText }) {
     useEffect(() => {
         apiService.getSubredditOptions().then((res) => {
             setOptions(res.data);
-            console.log(res.data);
+            console.info(res.data);
         });
     }, []);
 

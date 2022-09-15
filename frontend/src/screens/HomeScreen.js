@@ -26,7 +26,6 @@ function HomeScreen() {
         apiService
             .getHomePagePosts("day")
             .then((res) => {
-                console.log(res);
                 setSubredditPosts(res.data);
                 if (res.status === 204) {
                     setSubredditPosts(null);

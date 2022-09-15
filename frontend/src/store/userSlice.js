@@ -57,7 +57,7 @@ export const attemptUserLogin = createAsyncThunk(
         const profileResponseBody = profileResponse.data;
 
         const userData = { ...responseBody, ...profileResponseBody };
-        console.log(userData);
+        console.info(userData);
         localStorage.setItem("user", JSON.stringify(userData));
 
         return userData;
@@ -89,7 +89,7 @@ export const attemptUserRegistration = createAsyncThunk(
         const profileResponseBody = profileResponse.data;
 
         const userData = { ...responseBody, ...profileResponseBody };
-        console.log(userData);
+        console.info(userData);
         localStorage.setItem("user", JSON.stringify(userData));
 
         return userData;
@@ -106,7 +106,7 @@ export const updateUserSubscriptions = createAsyncThunk(
                 return rejectWithValue(response.data);
             }
             const responseBody = response.data;
-            console.log(responseBody);
+            console.info(responseBody);
             return responseBody;
         } catch (err) {
             console.error(

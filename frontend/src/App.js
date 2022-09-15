@@ -24,7 +24,7 @@ function App() {
 
     useEffect(() => {
         authService.verifyAccessToken();
-        console.log("dispatch(updateUserSubscriptions());");
+        console.info("dispatch(updateUserSubscriptions());");
         dispatch(updateUserSubscriptions());
     }, [dispatch]);
 

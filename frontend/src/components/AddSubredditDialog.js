@@ -47,15 +47,15 @@ function AddSubredditDialog({ openAddSubreddit, setOpenAddSubreddit, setOpenSide
         apiService
             .postUserSubscriptions(subredditNameInput)
             .then((res) => {
-                console.log(res.data);
-                console.log("dispatch(updateUserSubscriptions());");
+                console.info(res.data);
+                console.info("dispatch(updateUserSubscriptions());");
                 dispatch(updateUserSubscriptions());
                 setOpenAddSubreddit(false);
                 setSubredditNameInput("");
                 setInputErrorText("");
             })
             .catch((err) => {
-                console.log(`Endpoint responded with status code ${err.response.status}`);
+                console.info(`Endpoint responded with status code ${err.response.status}`);
                 const errorResponse = err.response;
                 const errorData =
                     errorResponse >= 500 ? "Internal server error" : errorResponse.data;

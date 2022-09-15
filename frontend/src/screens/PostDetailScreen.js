@@ -34,7 +34,7 @@ function PostDetailScreen() {
     useEffect(() => {
         apiService.getPost(id).then((res) => {
             const postData = res.data;
-            console.log(postData);
+            console.info(postData);
             setPost(postData);
             setPostComments(postData.comments);
         });
