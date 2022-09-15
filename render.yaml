@@ -8,6 +8,11 @@ services:
     envVars:
       - fromGroup: nodejs-envs
       - fromGroup: python-envs
+      - fromGroup: app-envs
+
+envVarGroups:
+  - name: app-envs
+    envVars:
       - key: DJANGO_SETTINGS_MODULE
         sync: false
       - key: SECRET_KEY
@@ -34,8 +39,6 @@ services:
         sync: false
       - key: PROD_ADMIN_URL
         sync: false
-
-envVarGroups:
   - name: nodejs-envs
     envVars:
       - key: NPM_CONFIG_LOGLEVEL
