@@ -16,6 +16,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'snoosdigest.onrender.com',
+    'snoosdigest.herokuapp.com',
+    'snoosdigest.com',
+    'www.snoosdigest.com',
 ]
 
 MIDDLEWARE = [
