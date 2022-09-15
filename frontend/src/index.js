@@ -8,7 +8,8 @@ import AppWrapper from "./AppWrapper";
 
 const root = createRoot(document.getElementById("root"));
 
-if (process.env.DJANGO_SETTINGS_MODULE === "snoosdigest.settings.production") {
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "production") {
     // Disable console.info in production environment
     console.info = () => {};
 }
