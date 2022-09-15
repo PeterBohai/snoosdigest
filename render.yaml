@@ -1,5 +1,40 @@
 services:
   - type: web
+    name: snoosdigest
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn snoosdigest.wsgi:application"
+    plan: free
+    envVars:
+      - fromGroup: nodejs-envs
+      - fromGroup: python-envs
+      - key: DJANGO_SETTINGS_MODULE
+        value: snoosdigest.settings.production
+      - key: SECRET_KEY
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: REDDIT_APP_CLIENT_ID
+        sync: false
+      - key: REDDIT_APP_SECRET
+        sync: false
+      - key: REDDIT_APP_USER_AGENT
+        sync: false
+      - key: DJANGO_ADMIN_PASSWORD
+        sync: false
+      - key: ACCESS_TOKEN_LIFETIME_DAYS
+        sync: false
+      - key: MAX_SUBREDDIT_UPDATE_GAP
+        sync: false
+      - key: PROD_ADMIN_URL
+        sync: false
+  - type: web
     name: snoosdigest-dev
     env: python
     buildCommand: "./build.sh"
@@ -9,7 +44,7 @@ services:
       - fromGroup: nodejs-envs
       - fromGroup: python-envs
       - key: DJANGO_SETTINGS_MODULE
-        sync: false
+        value: snoosdigest.settings.dev
       - key: SECRET_KEY
         sync: false
       - key: DB_NAME

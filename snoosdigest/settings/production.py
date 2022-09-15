@@ -10,21 +10,13 @@ STATICFILES_DIRS += [
     BASE_DIR / 'frontend/build/static',
 ]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
+    'snoosdigest.onrender.com',
 ]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME_PROD'),
-        'USER': os.environ.get('DB_USER_PROD'),
-        'PASSWORD': os.environ.get('DB_PASSWORD_PROD'),
-        'HOST': os.environ.get('DB_HOST_PROD'),
-        'PORT': '5432',
-    }
-}
 
 MIDDLEWARE = [
     # corsheaders should be placed as high as possible,
