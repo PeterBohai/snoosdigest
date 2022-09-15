@@ -1,5 +1,15 @@
 services:
   - type: web
+    name: snoosdigest
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn snoosdigest.wsgi:application"
+    plan: free
+    envVars:
+      - fromGroup: nodejs-envs
+      - fromGroup: python-envs
+      - fromGroup: app-envs
+  - type: web
     name: snoosdigest-dev
     env: python
     buildCommand: "./build.sh"
