@@ -8,8 +8,8 @@ import AppWrapper from "./AppWrapper";
 
 const root = createRoot(document.getElementById("root"));
 
-console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV === "production") {
+const reIsProductionHost = new RegExp("^.*snoosdigest\\..*$");
+if (reIsProductionHost.test(window.location.host)) {
     // Disable console.info in production environment
     console.info = () => {};
 }
