@@ -17,7 +17,8 @@ module = [
     "prawcore.*",
     "rest_framework.*",
     "cachetools.*",
-    "rest_framework_simplejwt.*"
+    "rest_framework_simplejwt.*",
+    "pytest.*"
 ]
 ignore_missing_imports = true
 
