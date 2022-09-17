@@ -1,5 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -31,6 +32,7 @@ const FooterTitle = styled(Typography)(({ theme }) => ({
 
 function Footer() {
     const theme = useTheme();
+    const userData = useSelector((state) => state.user.userData);
 
     const footerTextLinks = (
         <Stack
@@ -72,9 +74,11 @@ function Footer() {
             </List>
             <List dense sx={{ pt: 0 }}>
                 <FooterTitle variant="h6">Resources</FooterTitle>
-                <FooterListItem component={RouterLink} to="/login">
-                    <ListItemText primary="Login" font />
-                </FooterListItem>
+                {userData ? null : (
+                    <FooterListItem component={RouterLink} to="/login">
+                        <ListItemText primary="Log in" font />
+                    </FooterListItem>
+                )}
                 <FooterListItem component={RouterLink} to="/privacy">
                     <ListItemText primary="Privacy Policy" />
                 </FooterListItem>
