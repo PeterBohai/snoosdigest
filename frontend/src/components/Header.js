@@ -39,6 +39,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import MoreIcon from "@mui/icons-material/MoreVert";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import apiService from "../services/api";
@@ -158,6 +160,7 @@ function Header() {
         hover: false,
         edit: false,
     });
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
     useEffect(() => {
         const updateSubscriptions = async () => {
@@ -275,6 +278,69 @@ function Header() {
         );
     };
 
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    };
+    const handleMobileMenuOpen = (event) => {
+        setMobileMoreAnchorEl(event.currentTarget);
+        setOpenSideDrawer(false);
+    };
+    const mobileMenuId = "login-signup-mobile-menu";
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const renderMobileMenu = (
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+            }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+            }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+            sx={{ mt: "32px", ml: "-5px" }}
+            PaperProps={{
+                elevation: 0,
+                sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 4px rgba(0,0,0,0.32))",
+                    bgcolor: "background.lighter",
+                    minWidth: 150,
+                    p: 1,
+                },
+            }}
+        >
+            <ListItem>
+                <Link
+                    sx={{ textDecoration: "none", "&:hover": { color: "text.primary" } }}
+                    color="primary"
+                    component={RouterLink}
+                    to="/login"
+                    fontWeight=""
+                    onClick={() => setMobileMoreAnchorEl(null)}
+                >
+                    Log In
+                </Link>
+            </ListItem>
+            <ListItem>
+                <Link
+                    sx={{ textDecoration: "none", "&:hover": { color: "text.primary" } }}
+                    color="primary"
+                    component={RouterLink}
+                    to="/signup"
+                    fontWeight="bold"
+                    onClick={() => setMobileMoreAnchorEl(null)}
+                >
+                    Sign Up
+                </Link>
+            </ListItem>
+        </Menu>
+    );
+
     return (
         <Box sx={{ mb: 7 }}>
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
@@ -311,26 +377,42 @@ function Header() {
                                 </Typography>
                             </Link>
                         </Box>
-
+                        <IconButton
+                            sx={{ mr: 1 }}
+                            onClick={() => {
+                                dispatch(themeActions.toggleDarkMode());
+                            }}
+                            color="inherit"
+                        >
+                            {theme.palette.mode === "dark" ? (
+                                <Brightness7Icon />
+                            ) : (
+                                <Brightness4Icon />
+                            )}
+                        </IconButton>
+                        {userData ? null : (
+                            <Link
+                                href="https://github.com/PeterBohai/snoosdigest"
+                                target="_blank"
+                                color="discrete.main"
+                                sx={{
+                                    "&:hover": {
+                                        color: "text.primary",
+                                    },
+                                    display: "flex",
+                                    pr: { xs: 0, sm: 2 },
+                                }}
+                            >
+                                <GitHubIcon />
+                            </Link>
+                        )}
                         <Stack
                             direction="row"
-                            spacing={1}
+                            spacing={2}
                             justifyContent="center"
                             alignItems="center"
+                            sx={userData ? {} : { display: { xs: "none", sm: "flex" } }}
                         >
-                            <IconButton
-                                sx={{ ml: 1 }}
-                                onClick={() => {
-                                    dispatch(themeActions.toggleDarkMode());
-                                }}
-                                color="inherit"
-                            >
-                                {theme.palette.mode === "dark" ? (
-                                    <Brightness7Icon />
-                                ) : (
-                                    <Brightness4Icon />
-                                )}
-                            </IconButton>
                             {location.pathname === "/login" ||
                             userData ||
                             (isSmallScreen && location.pathname !== "/signup") ? null : (
@@ -468,10 +550,23 @@ function Header() {
                                 )
                             }
                         </Stack>
+                        {userData ? null : (
+                            <Box sx={{ display: { xs: "flex", sm: "none" }, ml: 1 }}>
+                                <IconButton
+                                    aria-label="show more"
+                                    aria-controls={mobileMenuId}
+                                    aria-haspopup="true"
+                                    onClick={handleMobileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <MoreIcon />
+                                </IconButton>
+                            </Box>
+                        )}
                     </Toolbar>
                 </AppBar>
             </ScrollToUpdate>
-
+            {renderMobileMenu}
             <Drawer
                 BackdropProps={{
                     sx: {
