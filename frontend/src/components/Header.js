@@ -49,6 +49,7 @@ import { userActions, updateUserSubscriptions } from "../store/userSlice";
 import { themeActions } from "../store/themeSlice";
 import AddSubredditDialog from "./AddSubredditDialog";
 import ScrollToUpdate from "./ScrollToUpdate";
+import DarkModeSwitch from "./DarkModeSwitch";
 
 const drawerWidth = 280;
 
@@ -377,19 +378,14 @@ function Header() {
                                 </Typography>
                             </Link>
                         </Box>
-                        <IconButton
-                            sx={{ mr: 1 }}
+                        <Box
+                            sx={{ mr: 1.5 }}
                             onClick={() => {
                                 dispatch(themeActions.toggleDarkMode());
                             }}
-                            color="inherit"
                         >
-                            {theme.palette.mode === "dark" ? (
-                                <Brightness7Icon />
-                            ) : (
-                                <Brightness4Icon />
-                            )}
-                        </IconButton>
+                            <DarkModeSwitch defaultChecked={false} />
+                        </Box>
                         {userData ? null : (
                             <Link
                                 href="https://github.com/PeterBohai/snoosdigest"
