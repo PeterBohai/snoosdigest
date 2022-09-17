@@ -38,7 +38,7 @@ function Footer() {
         <Stack
             direction="row"
             spacing={{ xs: 2, mobile: 6, sm: 7 }}
-            justifyContent={{ sm: "front", md: "end" }}
+            justifyContent={{ sm: "flex-start", md: "flex-end" }}
         >
             <List dense sx={{ pt: 0 }}>
                 <FooterTitle variant="h6">About</FooterTitle>
@@ -130,7 +130,7 @@ function Footer() {
                                 © {new Date().getFullYear()} SnoosDigest
                             </Typography>
                         </Grid>
-                        <Grid item xs={6} display="flex" justifyContent="end">
+                        <Grid item xs={6} display="flex" justifyContent="flex-end">
                             <Stack direction="row" spacing={2}>
                                 <Link
                                     href="https://github.com/PeterBohai"
