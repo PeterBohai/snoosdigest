@@ -315,6 +315,18 @@ function Header() {
         >
             <ListItem>
                 <Link
+                    component={RouterLink}
+                    to="/about"
+                    underline="none"
+                    color="text.primary"
+                    sx={{ "&:hover": { color: "text.secondary" }, mr: 1.5 }}
+                    onClick={() => setMobileMoreAnchorEl(null)}
+                >
+                    <strong>About</strong>
+                </Link>
+            </ListItem>
+            <ListItem>
+                <Link
                     sx={{ textDecoration: "none", "&:hover": { color: "text.primary" } }}
                     color="primary"
                     component={RouterLink}
@@ -380,6 +392,19 @@ function Header() {
                                 </Typography>
                             </Link>
                         </Box>
+                        <Link
+                            component={RouterLink}
+                            to="/about"
+                            underline="none"
+                            color="text.primary"
+                            sx={{
+                                "&:hover": { color: "text.secondary" },
+                                mr: 1.5,
+                                display: { xs: "none", sm: "flex" },
+                            }}
+                        >
+                            <strong>About</strong>
+                        </Link>
                         <Box
                             sx={{ mr: 1.5 }}
                             onClick={() => {
