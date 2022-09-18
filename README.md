@@ -1,4 +1,4 @@
-<h1 style="text-align: center">
+<h1 align="center">
   SnoosDigest
 </h1>
 
@@ -32,6 +32,29 @@ These are the main frameworks, libraries, and tools used in this project.
 
 SnoosDigest also relies on [Amazon Web Service](https://aws.amazon.com/)'s (AWS) serverless service [Lambda](https://aws.amazon.com/lambda/) for background updates.
 The repository for these processes are available at [PeterBohai/snoosdigest-updater](https://github.com/PeterBohai/snoosdigest-updater)
+
+## Deployment
+
+SnoosDigest is currently deployed on [Heroku](https://www.heroku.com/), but it can easily be hosted anywhere else.
+
+**Heroku**
+
+-   Currently, both production and dev environment is deployed on Heroku
+-   Due to discontinuation of the free-tier Heroku service on November 28th, 2022, the dev environment will migrate to [Render](https://render.com/) after
+-   The Heroku-specific deployment files include
+    -   `Procfile`
+    -   `runtime.txt`
+    -   `package.json` (Heroku needs a package.json in the root directory)
+-   Two Heroku Buildpacks are used for deployment - `nodejs` and `python`
+
+**Render**
+
+-   A Heroku alternative for the dev environment
+-   The Render-specific deployment files include
+    -   `render.yaml`
+    -   `build.sh`
+-   The `Python` [Native Environment](https://render.com/docs/native-environments) is used for deployment
+    -   All Native Environments contains `node` during build and deploy. See [Included Tools and Utilities](https://render.com/docs/native-environments#included-tools-and-utilities)
 
 ## Running Locally
 
@@ -75,7 +98,7 @@ npm install --legacy-peer-deps
 
 [pre-commit](https://pre-commit.com/) allows us to easily configure and run git hooks for things such as static analysis and code formatting before each `git commit`.
 
-The pre-commit package should already be installed in the previous step. To set up and install the git hooks scripts defined in `.pre-commit-config.yaml` for the first time, run
+The pre-commit package should already be installed in the previous step. To set up and install the git hooks scripts defined in `.pre-commit-config.yaml` run the following (only for the initial set up)
 
 ```shell
 pre-commit install
@@ -85,7 +108,7 @@ For more information om pre-commit, please refer to the docs linked above.
 
 ### Run the backend and frontend
 
-First run the Django backend using the local settings
+First, run the Django backend using the local settings
 
 ```shell
 python manage.py runserver --settings=snoosdigest.settings.local
@@ -97,29 +120,6 @@ In a second terminal window, run the React frontend
 cd frontend/
 npm start
 ```
-
-## Deployment
-
-SnoosDigest is currently deployed on [Heroku](https://www.heroku.com/), but it can easily be hosted anywhere else.
-
-**Heroku**
-
--   Currently, both production and dev environment is deployed on Heroku
--   Due to discontinuation of the free-tier Heroku service on November 28th, 2022, the dev environment will migrate to [Render](https://render.com/) after
--   The Heroku-specific deployment files include
-    -   `Procfile`
-    -   `runtime.txt`
-    -   `package.json` (Heroku needs a package.json in the root directory)
--   Two Heroku Buildpacks are used for deployment - `nodejs` and `python`
-
-**Render**
-
--   A Heroku alternative for the dev environment
--   The Render-specific deployment files include
-    -   `render.yaml`
-    -   `build.sh`
--   The `Python` [Native Environment](https://render.com/docs/native-environments) is used for deployment
-    -   All Native Environments contains `node` during build and deploy. See [Included Tools and Utilities](https://render.com/docs/native-environments#included-tools-and-utilities)
 
 ## Contributing
 
