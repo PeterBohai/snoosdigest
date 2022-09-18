@@ -43,7 +43,7 @@ function Footer() {
             <List dense sx={{ pt: 0 }}>
                 <FooterTitle variant="h6">About</FooterTitle>
                 <FooterListItem component={RouterLink} to="/about" sx={{ pl: 0 }}>
-                    <ListItemText primary="Overview" font />
+                    <ListItemText primary="Overview" />
                 </FooterListItem>
                 <FooterListItem
                     component={Link}
@@ -51,7 +51,7 @@ function Footer() {
                     target="_blank"
                     sx={{ pl: 0 }}
                 >
-                    <ListItemText primary="GitHub" font />
+                    <ListItemText primary="GitHub" />
                 </FooterListItem>
             </List>
 
@@ -62,21 +62,21 @@ function Footer() {
                     href="https://github.com/PeterBohai/snoosdigest/issues"
                     target="_blank"
                 >
-                    <ListItemText primary="GitHub Issues" font />
+                    <ListItemText primary="GitHub Issues" />
                 </FooterListItem>
                 <FooterListItem
                     component={Link}
                     href="mailto:support@snoosdigest.com"
                     target="_blank"
                 >
-                    <ListItemText primary="Email Support" font />
+                    <ListItemText primary="Email Support" />
                 </FooterListItem>
             </List>
             <List dense sx={{ pt: 0 }}>
                 <FooterTitle variant="h6">Resources</FooterTitle>
                 {userData ? null : (
                     <FooterListItem component={RouterLink} to="/login">
-                        <ListItemText primary="Log in" font />
+                        <ListItemText primary="Log in" />
                     </FooterListItem>
                 )}
                 <FooterListItem component={RouterLink} to="/privacy">
