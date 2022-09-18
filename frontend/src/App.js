@@ -10,6 +10,7 @@ import HomeScreen from "./screens/HomeScreen";
 import SubredditScreen from "./screens/SubredditScreen";
 import LogInScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
 import ProfileSettingsScreen from "./screens/ProfileSettingsScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
@@ -35,6 +36,7 @@ function App() {
                 <ScrollToTop />
                 <Routes>
                     <Route path="/" element={<HomeScreen />} />
+                    <Route path="/privacy" element={<PrivacyPolicyScreen />} />
                     <Route
                         path="/login"
                         element={

@@ -37,8 +37,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -346,7 +344,11 @@ function Header() {
         <Box sx={{ mb: 7 }}>
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <ScrollToUpdate openSideDrawer={openSideDrawer}>
-                <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <AppBar
+                    position="fixed"
+                    sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    elevation={0}
+                >
                     <Toolbar sx={{ mx: "10px", ...(isSmallScreen && { mx: 0 }) }}>
                         <IconButton
                             onClick={toggleDrawer()}
@@ -384,7 +386,7 @@ function Header() {
                                 dispatch(themeActions.toggleDarkMode());
                             }}
                         >
-                            <DarkModeSwitch defaultChecked={false} />
+                            <DarkModeSwitch checked={darkMode} />
                         </Box>
                         {userData ? null : (
                             <Link
@@ -570,6 +572,7 @@ function Header() {
                     },
                 }}
                 PaperProps={{
+                    elevation: theme.palette.mode === "dark" ? 0 : 10,
                     sx: {
                         width: drawerWidth,
                         bgcolor: "background.light",

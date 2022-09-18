@@ -20,10 +20,8 @@ const getTheme = (mode) => {
                 },
             },
             MuiPaper: {
-                styleOverrides: {
-                    root: {
-                        backgroundImage: "none",
-                    },
+                defaultProps: {
+                    elevation: 0,
                 },
             },
             MuiListItem: {
