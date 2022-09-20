@@ -36,5 +36,5 @@ profile = "black"
 skip = ["migrations"]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "snoosdigest.settings.test"
+DJANGO_SETTINGS_MODULE = "snoosdigest.settings.local"
 python_files = "tests.py test_*.py *_tests.py"

@@ -14,7 +14,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api import queries
-from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, MAX_SUBREDDIT_UPDATE_GAP
+from api.consts import (
+    DEFAULT_POSTS_PER_SUBREDDIT_HOME,
+    MAX_NUM_POSTS_PER_SUBREDDIT,
+    MAX_SUBREDDIT_UPDATE_GAP,
+)
 from api.models import Subreddit, SubredditPost
 from api.serializers import (
     RedditPostSerializer,
@@ -75,7 +79,9 @@ def get_subreddit_top_posts(
 class HomePagePostsList(APIView):
     def get(self, request: Request) -> Response:
         # Example GET request: /api/posts/homepage?time_filter=day&posts_per_subreddit=3
-        posts_per_subreddit: int = int(request.query_params.get('posts_per_subreddit', 2))
+        posts_per_subreddit: int = int(
+            request.query_params.get('posts_per_subreddit', DEFAULT_POSTS_PER_SUBREDDIT_HOME)
+        )
         time_filter: str = request.query_params['time_filter']
         user = request.user
         subreddits: list[str] = get_user_subscriptions(user, reddit)

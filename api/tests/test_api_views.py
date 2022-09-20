@@ -14,7 +14,7 @@ def test_home_page_posts(api_client: APIClient) -> None:
     response = api_client.get(url_params)
     assert response.status_code == 200
     assert type(response.json()['r/news']) is list
-    assert len(response.json()['r/news']) == consts.MAX_NUM_POSTS_PER_SUBREDDIT
+    assert len(response.json()['r/news']) == consts.DEFAULT_POSTS_PER_SUBREDDIT_HOME
 
 
 @pytest.mark.django_db
