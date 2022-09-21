@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.db.utils import IntegrityError
+from django.utils import timezone
 from praw import Reddit
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from api import consts, queries
 from api.models import Subreddit
 from users import utils
-from users.models import User, UserSubscription
+from users.models import PasswordResetRequest, User, UserSubscription
 from users.serializers import (
     SnoosDigestTokenObtainPairSerializer,
     UserSerializer,
@@ -225,3 +226,49 @@ class UserUpdatePassword(APIView):
         user.set_password(request.data['newPassword'])
         user.save()
         return Response('Password has been updated successfully')
+
+
+class UserResetPassword(APIView):
+    def post(self, request: Request) -> Response:
+        """Example POST request: /api/users/reset-password
+        --data { email: "example@email.com" }
+        """
+        requested_email = request.data['email']
+
+        try:
+            user = User.objects.get(email=requested_email)
+        except User.DoesNotExist:
+            logger.info(f"User ({requested_email}) does not exist")
+            return Response('User does not exist', status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if request already exists and not expired
+        try:
+            existing_reset = PasswordResetRequest.objects.get(user=user, used=False)
+            curr_time = timezone.now()
+            if curr_time < existing_reset.expire_time:
+                logger.info(f"The current reset request for {requested_email} has not expired yet")
+                return Response('An email has already been sent')
+
+            # Request has expired. Delete the current one so a new request can be created
+            logger.info("The current reset request has expired")
+            existing_reset.delete()
+        except PasswordResetRequest.DoesNotExist:
+            logger.info("No reset request exists")
+
+        new_password_request = PasswordResetRequest(user_id=user.id)
+        new_password_request.save()
+        logger.info(f"Created new PasswordResetRequest for {requested_email}")
+
+        # TODO: Use SendGrid to send email
+        host_name = request.build_absolute_uri('/')
+        confirm_link = (
+            f'{host_name}reset-password-confirmation/{user.id}/{new_password_request.reset_token}'
+        )
+        logger.info(f'Sent email with confirmation url {confirm_link}')
+
+        return Response(f'Email sent {new_password_request.reset_token}')
+
+
+class UserResetPasswordConfirm(APIView):
+    def post(self, request: Request) -> Response:
+        pass

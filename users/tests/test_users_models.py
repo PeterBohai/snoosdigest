@@ -2,7 +2,7 @@ import pytest
 from django.db.models.fields import BooleanField
 from django.db.models.fields.related import ForeignKey
 
-from users.models import User, UserSubscription
+from users.models import PasswordResetRequest, User, UserSubscription
 
 pytestmark = pytest.mark.django_db
 
@@ -40,3 +40,13 @@ class TestUserSubscription:
     def test_user_is_foreign_key(self, latest_user_subscription: UserSubscription) -> None:
         user_field = latest_user_subscription._meta.get_field('user')
         assert isinstance(user_field, ForeignKey)
+
+
+class TestPasswordResetRequest:
+    def test_count(self) -> None:
+        assert type(PasswordResetRequest.objects.count()) is int
+
+    def test_used_or_expired_type_is_boolean(self) -> None:
+        reset_request_example = PasswordResetRequest.objects.latest('id')
+        used_or_expired_field = reset_request_example._meta.get_field('used_or_expired')
+        assert isinstance(used_or_expired_field, BooleanField)
