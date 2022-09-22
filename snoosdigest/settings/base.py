@@ -183,3 +183,4 @@ SIMPLE_JWT = {
 
 # Project global constants
 NAMESPACE = 'snoosdigest'  # Ideally url of production site
+DEV_ENVIRONMENT = True

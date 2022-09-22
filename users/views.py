@@ -247,7 +247,7 @@ class UserResetPassword(APIView):
             curr_time = timezone.now()
             if curr_time < existing_reset.expire_time:
                 logger.info(f"The current reset request for {requested_email} has not expired yet")
-                return Response('An email has already been sent')
+                return Response(f'An email has already been sent to {requested_email}')
 
             # Request has expired. Delete the current one so a new request can be created
             logger.info("The current reset request has expired")
@@ -259,13 +259,20 @@ class UserResetPassword(APIView):
         new_password_request.save()
         logger.info(f"Created new PasswordResetRequest for {requested_email}")
 
-        # TODO: Use SendGrid to send email
+        # Create reset password URL and send email via SendGrid
         host_name = request.build_absolute_uri('/')
         confirm_link = (
             f'{host_name}reset-password-confirmation/{user.id}/{new_password_request.reset_token}'
         )
-        logger.info(f'Sent email with confirmation url {confirm_link}')
+        sent_email: bool = utils.send_reset_password_email(confirm_link, requested_email)
+        if not sent_email:
+            logger.error('There was an issue with sending the reset password email')
+            return Response(
+                'There was an issue with sending the reset password email',
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
+        logger.info(f'Sent email with reset url {confirm_link}')
         return Response(f'Email sent {new_password_request.reset_token}')
 
 
