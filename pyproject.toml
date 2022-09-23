@@ -18,7 +18,8 @@ module = [
     "rest_framework.*",
     "cachetools.*",
     "rest_framework_simplejwt.*",
-    "pytest.*"
+    "pytest.*",
+    "sendgrid.*"
 ]
 ignore_missing_imports = true
 
