@@ -273,7 +273,7 @@ function ResetPasswordConfirmScreen() {
                 <SettingsAlert
                     open={updatePasswordSuccess}
                     setOpen={setUpdatePasswordSuccess}
-                    alertMessage="Password was reset successfully"
+                    alertMessage="Password was reset successfully - redirecting to Login..."
                 />
             </Box>
         </Container>
