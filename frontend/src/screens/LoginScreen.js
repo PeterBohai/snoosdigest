@@ -101,7 +101,12 @@ function LogInScreen() {
                             </InputLabel>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2" underline="none">
+                            <Link
+                                to="/reset-password"
+                                variant="body2"
+                                component={RouterLink}
+                                underline="none"
+                            >
                                 Forgot password?
                             </Link>
                         </Grid>

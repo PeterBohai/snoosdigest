@@ -13,6 +13,8 @@ import SignUpScreen from "./screens/SignUpScreen";
 import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
 import AboutUsScreen from "./screens/AboutUsScreen";
 import ProfileSettingsScreen from "./screens/ProfileSettingsScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import ResetPasswordConfirmScreen from "./screens/ResetPasswordConfirmScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -56,6 +58,22 @@ function App() {
                         }
                     />
                     <Route
+                        path="/reset-password"
+                        element={
+                            <PublicOnlyRoute>
+                                <ResetPasswordScreen />
+                            </PublicOnlyRoute>
+                        }
+                    />
+                    <Route
+                        path="/reset-password-confirmation/:userID/:resetToken"
+                        element={
+                            <PublicOnlyRoute>
+                                <ResetPasswordConfirmScreen />
+                            </PublicOnlyRoute>
+                        }
+                    />
+                    <Route
                         path="/settings/profile"
                         element={
                             <PrivateOnlyRoute>
@@ -67,7 +85,7 @@ function App() {
                     <Route path="/posts/:id" element={<PostDetailScreen />} />
                 </Routes>
             </main>
-            {!["/login", "/signup"].includes(location.pathname) && <Footer />}
+            {!["/login", "/signup", "/reset-password"].includes(location.pathname) && <Footer />}
         </>
     );
 }

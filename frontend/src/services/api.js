@@ -128,6 +128,24 @@ function getSubredditOptions() {
     return axios.get(`${baseUrl}/subreddits`, requestConfig);
 }
 
+function postResetUserPasswordEmail(emailFormData) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    if (userData) {
+        throw new Error("Cannot send reset password request if logged in!");
+    }
+    return axios.post(`${baseUrl}/users/reset-password`, emailFormData);
+}
+
+function postResetUserPassword(emailFormData) {
+    const storeState = store.getState();
+    const userData = storeState.user.userData;
+    if (userData) {
+        throw new Error("Cannot send reset password request if logged in!");
+    }
+    return axios.post(`${baseUrl}/users/reset-password-confirmation`, emailFormData);
+}
+
 const exportedFunctions = {
     getTopPosts,
     getPost,
@@ -140,6 +158,8 @@ const exportedFunctions = {
     putUserProfile,
     deleteUserProfile,
     getSubredditOptions,
+    postResetUserPasswordEmail,
+    postResetUserPassword,
 };
 
 export default exportedFunctions;

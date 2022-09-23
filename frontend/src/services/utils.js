@@ -63,6 +63,10 @@ function getUserWelcomeName(userData) {
     return "No Name :(";
 }
 
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
@@ -71,6 +75,7 @@ const exportedFunctions = {
     validatePasswordConditions,
     getUserLetteredAvatar,
     getUserWelcomeName,
+    sleep,
 };
 
 export default exportedFunctions;

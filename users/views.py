@@ -228,7 +228,7 @@ class UserUpdatePassword(APIView):
         return Response('Password has been updated successfully')
 
 
-class UserResetPassword(APIView):
+class UserResetPasswordRequest(APIView):
     def post(self, request: Request) -> Response:
         """Example POST request: /api/users/reset-password
         --data { email: "example@email.com" }
@@ -273,9 +273,61 @@ class UserResetPassword(APIView):
             )
 
         logger.info(f'Sent email with reset url {confirm_link}')
-        return Response(f'Email sent {new_password_request.reset_token}')
+        return Response(f'Request sent to {requested_email}, please check your email')
 
 
 class UserResetPasswordConfirm(APIView):
     def post(self, request: Request) -> Response:
-        pass
+        """Example POST request: /api/users/reset-password-confirmation
+        --data {
+            userID: "12",
+            resetToken: "326jbadsk-nasnjijw2-das",
+            newPassword: "myseceretpass1!",
+            newPasswordConfirmation: "myseceretpass1!"
+        }
+        """
+        user_id = request.data['userID']
+        reset_token = request.data['resetToken']
+        try:
+            password_request: PasswordResetRequest = PasswordResetRequest.objects.get(
+                user_id=user_id, reset_token=reset_token, used=False
+            )
+        except PasswordResetRequest.DoesNotExist:
+            logger.error(f'PasswordResetRequest.DoesNotExist for ({user_id}, {reset_token})')
+            return Response(
+                {'newPasswordConfirmation': 'Invalid user and/or password reset token'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except PasswordResetRequest.MultipleObjectsReturned:
+            logger.error(
+                f'PasswordResetRequest.MultipleObjectsReturned for ({user_id}, {reset_token})'
+            )
+            return Response(
+                {
+                    'newPasswordConfirmation': 'An error occurred while attempting to '
+                    'reset your password'
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        if timezone.now() > password_request.expire_time:
+            logger.error(f'Reset password request has expired for ({user_id}, {reset_token})')
+            return Response(
+                {
+                    'newPasswordConfirmation': 'This password reset request has expired. '
+                    'Please request a new reset link.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if request.data['newPassword'] != request.data['newPasswordConfirmation']:
+            return Response(
+                {'newPasswordConfirmation': 'Confirmation password did not match the new password'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user: User = password_request.user
+        user.set_password(request.data['newPassword'])
+        user.save()
+        password_request.used = True
+        password_request.save()
+        return Response('Password has been reset successfully')
