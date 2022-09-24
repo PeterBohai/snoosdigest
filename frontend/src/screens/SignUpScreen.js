@@ -40,17 +40,17 @@ function SignUpScreen() {
             setPasswordError(true);
             return;
         }
+        if (!utilsService.validateEmail(data.get("email"))) {
+            setEmailErrorText("Please enter a valid email address");
+            return;
+        }
         const registrationCredentials = {
             firstName: data.get("firstName"),
             lastName: data.get("lastName"),
             email: data.get("email"),
             password: data.get("password"),
         };
-        console.info({
-            firstName: data.get("firstName"),
-            lastName: data.get("lastName"),
-            email: data.get("email"),
-        });
+
         try {
             await dispatch(attemptUserRegistration(registrationCredentials)).unwrap();
         } catch (rejectedValueOrSerializedError) {

@@ -67,6 +67,11 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function validateEmail(email) {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
 const exportedFunctions = {
     getRelativeTime,
     isValidHttpUrl,
@@ -76,6 +81,7 @@ const exportedFunctions = {
     getUserLetteredAvatar,
     getUserWelcomeName,
     sleep,
+    validateEmail,
 };
 
 export default exportedFunctions;
