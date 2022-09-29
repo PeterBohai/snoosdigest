@@ -51,11 +51,11 @@ const baseTheme = (mode) => ({
             textTransform: "none", // Remove button text all caps
         },
         h2: {
-            fontSize: "2.2rem",
+            fontSize: "2rem",
             fontWeight: 600,
         },
         h3: {
-            fontSize: "2.125rem",
+            fontSize: "1.9rem",
             fontWeight: 400,
         },
         h4: {
