@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 import prawcore
+from cachetools import LRUCache, cached
 from django.db import IntegrityError
 from django.db.models.query import QuerySet
 from django.utils import timezone
@@ -9,7 +10,7 @@ from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 
 from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT
-from api.models import Subreddit
+from api.models import Subreddit, SubredditPost
 from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
 
 UPDATE_SOURCE = 'django-snoosdigest'
@@ -128,3 +129,13 @@ def update_subreddit_last_viewed(display_name: str) -> None:
     subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=display_name)
     subreddit.last_viewed_timestamp = timezone.now()
     subreddit.save()
+
+
+@cached(cache=LRUCache(maxsize=128))
+def get_post_subreddit_display_name(post_reddit_id: str) -> str:
+    try:
+        print('get_post_subreddit_display_name', post_reddit_id)
+        return SubredditPost.objects.get(reddit_id=post_reddit_id).subreddit.display_name_prefixed
+    except (SubredditPost.DoesNotExist, SubredditPost.MultipleObjectsReturned) as err:
+        print(f'get_post_subreddit_display_name: {err}')
+        return ''

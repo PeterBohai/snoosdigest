@@ -51,7 +51,7 @@ const baseTheme = (mode) => ({
             textTransform: "none", // Remove button text all caps
         },
         h2: {
-            fontSize: "2.3rem",
+            fontSize: "2.2rem",
             fontWeight: 600,
         },
         h3: {
@@ -59,8 +59,20 @@ const baseTheme = (mode) => ({
             fontWeight: 400,
         },
         h4: {
+            fontSize: "1.5rem",
+            fontWeight: 700,
+        },
+        md_h1: {
+            fontSize: "1.7rem",
+            fontWeight: 500,
+        },
+        md_h2: {
             fontSize: "1.6rem",
-            fontWeight: 600,
+            fontWeight: 400,
+        },
+        md_h3: {
+            fontSize: "1.4rem",
+            fontWeight: 400,
         },
     },
     breakpoints: {
@@ -147,21 +159,21 @@ const markdownBaseOptions = {
         h1: {
             component: Typography,
             props: {
-                variant: "h4",
+                variant: "md_h1",
                 component: "h2",
             },
         },
         h2: {
             component: Typography,
             props: {
-                variant: "h5",
+                variant: "md_h2",
                 component: "h3",
             },
         },
         h3: {
             component: Typography,
             props: {
-                variant: "h6",
+                variant: "md_h3",
                 component: "h4",
             },
         },

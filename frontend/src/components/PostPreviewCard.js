@@ -38,7 +38,10 @@ function PostPreviewCard({ post }) {
     return (
         <Card sx={{ border: "none", boxShadow: "none" }}>
             <CardContent sx={{ overflow: "hidden", px: 0, pb: 1 }}>
-                <Typography variant="h4" fontFamily={"Palatino, Times New Roman, Times, serif"}>
+                <Typography
+                    variant="h4"
+                    fontFamily={"Domine, Palatino, Times New Roman, Times, serif"}
+                >
                     <Link
                         component={RouterLink}
                         to={`/posts/${post.reddit_id}`}

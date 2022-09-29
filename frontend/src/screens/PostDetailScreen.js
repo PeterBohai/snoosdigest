@@ -15,7 +15,6 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import Skeleton from "@mui/material/Skeleton";
 import ForwardIcon from "@mui/icons-material/Forward";
 import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -39,9 +38,6 @@ function PostDetailScreen() {
             setPostComments(postData.comments);
         });
     }, [id]);
-
-    const botTopPadding = 5;
-    const sidePadding = 5;
 
     const postContent = (post) => {
         if (Object.keys(post).length === 0) {
@@ -74,7 +70,7 @@ function PostDetailScreen() {
                 },
             }}
         >
-            <Box sx={{ pt: 0, my: botTopPadding, px: 0, whiteSpace: "pre-line" }}>
+            <Box sx={{ pt: 0, mt: 3, mb: 8, px: 0, whiteSpace: "pre-line" }}>
                 {/* POST SECTION */}
                 {Object.keys(post).length === 0 ? (
                     <Box>
@@ -84,26 +80,36 @@ function PostDetailScreen() {
                     </Box>
                 ) : (
                     <Box>
-                        <Typography
-                            variant="h2"
-                            component="h1"
-                            fontFamily={"Palatino, Times New Roman, Times, serif"}
+                        <Stack
+                            direction={{ xs: "column", md: "row" }}
+                            alignItems={{ xs: "", md: "center" }}
+                            spacing={{ xs: 0, md: 1 }}
                         >
-                            {post.title}
-                        </Typography>
-                        <Stack direction="row" alignItems="center" spacing={0.4} mt={0.5}>
-                            <AccessTimeIcon
-                                sx={{ color: "discrete.main", fontSize: 18, mt: -0.1 }}
-                            />
+                            {post.subreddit_display_name_prefixed.length !== 0 ? (
+                                <Typography
+                                    variant={{ xs: "body2", md: "body1" }}
+                                    fontWeight="bold"
+                                >
+                                    {post.subreddit_display_name_prefixed}
+                                </Typography>
+                            ) : null}
                             <Typography
-                                variant={isSmallScreen ? "body2" : "body1"}
+                                variant={{ xs: "body2", md: "body1" }}
                                 color="discrete.main"
                             >
-                                {`${utilsService.getRelativeTime(post.created_utc)} by u/${
+                                {`Posted ${utilsService.getRelativeTime(post.created_utc)} by u/${
                                     post.author_name
                                 }`}
                             </Typography>
                         </Stack>
+                        <Typography
+                            variant="h2"
+                            component="h1"
+                            mt={1}
+                            fontFamily={"Domine, Palatino, Times New Roman, Times, serif"}
+                        >
+                            {post.title}
+                        </Typography>
 
                         <Typography variant="body1" component="p" sx={{ my: 3 }}>
                             {postContent(post)}

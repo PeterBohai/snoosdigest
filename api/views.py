@@ -124,7 +124,14 @@ class RedditPostDetail(APIView):
         post.comment_limit = 8
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
-        return Response(serialized_post.data)
+
+        subreddit_name = queries.get_post_subreddit_display_name(post_id)
+        if not subreddit_name:
+            subreddit_name = post.subreddit.display_name_prefixed
+
+        post_data = serialized_post.data
+        post_data['subreddit_display_name_prefixed'] = subreddit_name
+        return Response(post_data)
 
 
 class SubredditList(APIView):
