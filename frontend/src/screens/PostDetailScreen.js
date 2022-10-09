@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import Markdown from "markdown-to-jsx";
 
 import Box from "@mui/material/Box";
@@ -87,17 +87,34 @@ function PostDetailScreen() {
                         >
                             {post.subreddit_display_name_prefixed.length !== 0 ? (
                                 <Typography
-                                    variant={{ xs: "body2", md: "body1" }}
+                                    variant="body1"
                                     fontWeight="bold"
+                                    fontSize={{
+                                        xs: theme.typography.body2.fontSize,
+                                        mobile: theme.typography.body1.fontSize,
+                                    }}
                                 >
-                                    {post.subreddit_display_name_prefixed}
+                                    <Link
+                                        component={RouterLink}
+                                        to={`/subreddits/${utilsService.removeSubredditPrefix(
+                                            post.subreddit_display_name_prefixed
+                                        )}`}
+                                        underline="hover"
+                                        color="inherit"
+                                    >
+                                        {post.subreddit_display_name_prefixed}
+                                    </Link>
                                 </Typography>
                             ) : null}
                             <Typography
-                                variant={{ xs: "body2", md: "body1" }}
+                                variant="body1"
                                 color="discrete.main"
+                                fontSize={{
+                                    xs: theme.typography.body2.fontSize,
+                                    mobile: theme.typography.body1.fontSize,
+                                }}
                             >
-                                {`Posted ${utilsService.getRelativeTime(post.created_utc)} by u/${
+                                {`${utilsService.getRelativeTime(post.created_utc)} by u/${
                                     post.author_name
                                 }`}
                             </Typography>
