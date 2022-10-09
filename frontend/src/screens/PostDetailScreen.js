@@ -87,8 +87,12 @@ function PostDetailScreen() {
                         >
                             {post.subreddit_display_name_prefixed.length !== 0 ? (
                                 <Typography
-                                    variant={{ xs: "body2", md: "body1" }}
+                                    variant="body1"
                                     fontWeight="bold"
+                                    fontSize={{
+                                        xs: theme.typography.body2.fontSize,
+                                        mobile: theme.typography.body1.fontSize,
+                                    }}
                                 >
                                     <Link
                                         component={RouterLink}
@@ -103,10 +107,14 @@ function PostDetailScreen() {
                                 </Typography>
                             ) : null}
                             <Typography
-                                variant={{ xs: "body2", md: "body1" }}
+                                variant="body1"
                                 color="discrete.main"
+                                fontSize={{
+                                    xs: theme.typography.body2.fontSize,
+                                    mobile: theme.typography.body1.fontSize,
+                                }}
                             >
-                                {`Posted ${utilsService.getRelativeTime(post.created_utc)} by u/${
+                                {`${utilsService.getRelativeTime(post.created_utc)} by u/${
                                     post.author_name
                                 }`}
                             </Typography>
