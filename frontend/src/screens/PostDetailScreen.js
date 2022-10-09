@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import Markdown from "markdown-to-jsx";
 
 import Box from "@mui/material/Box";
@@ -90,7 +90,16 @@ function PostDetailScreen() {
                                     variant={{ xs: "body2", md: "body1" }}
                                     fontWeight="bold"
                                 >
-                                    {post.subreddit_display_name_prefixed}
+                                    <Link
+                                        component={RouterLink}
+                                        to={`/subreddits/${utilsService.removeSubredditPrefix(
+                                            post.subreddit_display_name_prefixed
+                                        )}`}
+                                        underline="hover"
+                                        color="inherit"
+                                    >
+                                        {post.subreddit_display_name_prefixed}
+                                    </Link>
                                 </Typography>
                             ) : null}
                             <Typography
