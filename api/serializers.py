@@ -11,7 +11,7 @@ from api.models import Subreddit, SubredditPost
 class RedditPostPreviewSerializer(serializers.Serializer):
     reddit_id = serializers.CharField(source='id')
     title = serializers.CharField()
-    author_name = serializers.CharField(source='author.name')
+    author_name = serializers.CharField(source='author.name', default='nullReferenceError')
     upvotes = serializers.IntegerField(source='score')
     upvote_ratio = serializers.FloatField(min_value=0.0)
     num_comments = serializers.IntegerField()
