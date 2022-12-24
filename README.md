@@ -58,7 +58,19 @@ SnoosDigest is currently deployed on [Heroku](https://www.heroku.com/), but it c
 
 ## Running Locally
 
-Support for running with Docker will be coming soon.
+### With Docker
+
+The dev version of the app can be run with [Docker](https://www.docker.com/).
+
+1. Follow the instructions to first [clone the repo](#clone-the-repo) and then [set up your .env](#create-env) file.
+2. Try these commands in order (under the project's root directory):
+
+```shell
+docker image build -t snoosdigest .
+docker container run -p 8000:8000 snoosdigest
+```
+
+The app should then be running at http://localhost:8000/
 
 ### Clone the repo
 
