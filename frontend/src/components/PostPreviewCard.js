@@ -9,7 +9,7 @@ import CardActions from "@mui/material/CardActions";
 import Stack from "@mui/material/Stack";
 import ForwardIcon from "@mui/icons-material/Forward";
 import Button from "@mui/material/Button";
-import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
+import Comment from "@mui/icons-material/Comment";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import utilsService from "../services/utils";
@@ -94,10 +94,8 @@ function PostPreviewCard({ post }) {
                     <Button
                         component={RouterLink}
                         to={`/posts/${post.reddit_id}`}
-                        startIcon={
-                            <ChatBubbleOutline sx={{ transform: "scale(0.9)", mr: -0.55 }} />
-                        }
-                        sx={{ color: "text.primary", transition: "none" }}
+                        startIcon={<Comment sx={{ transform: "scale(0.95)", mr: -0.55 }} />}
+                        sx={{ color: "discrete.main", transition: "none" }}
                         size="small"
                     >
                         <Typography variant="body1" fontWeight="500">

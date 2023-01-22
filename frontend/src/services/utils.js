@@ -25,7 +25,7 @@ function removeSubredditPrefix(subreddit_with_prefix) {
 }
 
 function formatNumber(num) {
-    if (num >= 10000) {
+    if (num >= 1000) {
         num = (Math.round((num / 1000 + Number.EPSILON) * 10) / 10).toFixed(1);
         return `${num}k`;
     }

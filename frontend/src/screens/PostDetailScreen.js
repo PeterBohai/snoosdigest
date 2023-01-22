@@ -14,7 +14,7 @@ import CardMedia from "@mui/material/CardMedia";
 import LaunchIcon from "@mui/icons-material/Launch";
 import Skeleton from "@mui/material/Skeleton";
 import ForwardIcon from "@mui/icons-material/Forward";
-import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
+import Comment from "@mui/icons-material/Comment";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -152,32 +152,48 @@ function PostDetailScreen() {
                             </Grid>
                             <Grid container direction="row" alignItems="center">
                                 <Grid item sx={{ mb: -0.8, mr: 0.5 }}>
-                                    <ChatBubbleOutline sx={{ fontSize: 18, fontWeight: 500 }} />
+                                    <Comment
+                                        sx={{
+                                            fontSize: 18,
+                                            fontWeight: 500,
+                                            color: "discrete.main",
+                                        }}
+                                    />
                                 </Grid>
                                 <Grid item>
-                                    <Typography variant="body1" fontWeight="500">
+                                    <Typography
+                                        variant="body1"
+                                        fontWeight="bold"
+                                        color="discrete.main"
+                                    >
                                         {utilsService.formatNumber(post.num_comments)}{" "}
                                         {isSmallScreen ? "" : "Comments"}
                                     </Typography>
                                 </Grid>
-                                <Button
-                                    href={post.reddit_url}
-                                    startIcon={<LaunchIcon sx={{ mr: -0.5 }} />}
-                                    target="_blank"
-                                    sx={{ ml: 2, color: "discrete.main" }}
-                                    size="large"
-                                >
-                                    Reddit
-                                </Button>
+                                <Grid item sx={{ ml: 1 }}>
+                                    <Button
+                                        href={post.reddit_url}
+                                        startIcon={
+                                            <LaunchIcon
+                                                sx={{ mr: -0.5, transform: "scale(0.9)" }}
+                                            />
+                                        }
+                                        target="_blank"
+                                        sx={{ color: "discrete.main", fontWeight: "bold" }}
+                                        size="large"
+                                    >
+                                        Reddit
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Stack>
                     </Box>
                 )}
 
-                <Typography variant="h5" sx={{ mt: 5 }} fontWeight="bold">
+                <Typography variant="h6" sx={{ mt: 5 }} fontWeight="bold">
                     Top Comments
                 </Typography>
-                <Divider sx={{ mb: 2.5 }} />
+                <Divider sx={{ mb: 2.5, backgroundColor: "text.primary" }} />
 
                 {/* COMMENT SECTION */}
                 <Box>
