@@ -12,10 +12,10 @@ const getTheme = (mode) => {
                 },
                 styleOverrides: {
                     root: {
-                        backgroundColor: theme.palette.footer.main,
+                        backgroundColor: theme.palette.componentSkeleton.main,
                     },
                     rounded: {
-                        borderRadius: 7,
+                        borderRadius: 5,
                     },
                 },
             },
@@ -51,11 +51,11 @@ const baseTheme = (mode) => ({
             textTransform: "none", // Remove button text all caps
         },
         h2: {
-            fontSize: "2rem",
+            fontSize: "1.9em",
             fontWeight: 600,
         },
         h3: {
-            fontSize: "1.9rem",
+            fontSize: "1.7rem",
             fontWeight: 400,
         },
         h4: {
@@ -102,12 +102,16 @@ const baseLightModePalette = {
         main: grey[600],
     },
     footer: {
-        main: grey[50],
+        main: common.white,
         secondary: grey[200],
+    },
+    componentSkeleton: {
+        main: grey[200],
     },
     background: {
         lighter: common.white,
         light: common.white,
+        default: grey[50],
     },
 };
 
@@ -130,6 +134,9 @@ const baseDarkModePalette = {
     },
     text: {
         primary: grey[300],
+    },
+    componentSkeleton: {
+        main: grey[900],
     },
     background: {
         lighter: grey[900],
