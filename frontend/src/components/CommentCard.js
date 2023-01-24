@@ -9,6 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ForwardIcon from "@mui/icons-material/Forward";
 import LaunchIcon from "@mui/icons-material/Launch";
+import { useTheme } from "@mui/material/styles";
 
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
@@ -17,9 +18,13 @@ function CommentCard({ comment }) {
     const commentBody = (comment) => {
         return <Markdown options={themeService.markdownBaseOptions}>{comment.body}</Markdown>;
     };
+    const theme = useTheme();
 
     return (
-        <Card variant="outlined" sx={{ borderColor: "transparent" }}>
+        <Card
+            variant="outlined"
+            sx={{ borderColor: "transparent", backgroundColor: theme.palette.background.default }}
+        >
             <CardContent sx={{ p: 0, pb: "0.5rem !important" }}>
                 <Grid container direction="row" spacing={1}>
                     <Grid item>
@@ -44,7 +49,9 @@ function CommentCard({ comment }) {
                             </Grid>
                         </Grid>
                         <Grid item sx={{ pt: 1.5 }}>
-                            <Typography variant="body1">{commentBody(comment)}</Typography>
+                            <Typography variant="body1" component="div">
+                                {commentBody(comment)}
+                            </Typography>
                         </Grid>
                         <Grid item container alignItems="center">
                             <Grid item sx={{ ml: -0.4, mt: 0.4 }}>

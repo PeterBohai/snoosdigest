@@ -11,11 +11,13 @@ import ForwardIcon from "@mui/icons-material/Forward";
 import Button from "@mui/material/Button";
 import Comment from "@mui/icons-material/Comment";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { useTheme } from "@mui/material/styles";
 
 import utilsService from "../services/utils";
 
 function PostPreviewCard({ post }) {
     const contentMaxChars = 320;
+    const theme = useTheme();
 
     let postContent = (post) => {
         if (Object.keys(post).length === 0) {
@@ -36,7 +38,13 @@ function PostPreviewCard({ post }) {
         post.body.slice(0, contentMaxChars) + (post.body.length > contentMaxChars ? "..." : "");
 
     return (
-        <Card sx={{ border: "none", boxShadow: "none" }}>
+        <Card
+            sx={{
+                border: "none",
+                boxShadow: "none",
+                backgroundColor: theme.palette.background.default,
+            }}
+        >
             <CardContent sx={{ overflow: "hidden", px: 0, pb: 1 }}>
                 <Typography
                     variant="h4"

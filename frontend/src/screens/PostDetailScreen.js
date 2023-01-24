@@ -49,13 +49,6 @@ function PostDetailScreen() {
         if (post.video_url.length !== 0) {
             return <CardMedia component="video" image={post.video_url} controls />;
         }
-        if (utilsService.isValidHttpUrl(post.body)) {
-            return (
-                <Link href={post.body} target="_blank">
-                    {post.body}
-                </Link>
-            );
-        }
         return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
     };
 
@@ -74,9 +67,18 @@ function PostDetailScreen() {
                 {/* POST SECTION */}
                 {Object.keys(post).length === 0 ? (
                     <Box>
-                        <Skeleton variant="text" width={"80%"} height={100} />
+                        <Skeleton
+                            variant="text"
+                            width={"30%"}
+                            sx={{ fontSize: theme.typography.body1 }}
+                        />
+                        <Skeleton
+                            variant="text"
+                            width={"80%"}
+                            sx={{ fontSize: theme.typography.h2 }}
+                        />
                         <Skeleton variant="rounded" height={200} sx={{ mt: 2 }} />
-                        <Skeleton variant="text" width={"40%"} height={60} sx={{ mt: 3 }} />
+                        <Skeleton variant="rounded" width={"50%"} height={50} sx={{ mt: 3 }} />
                     </Box>
                 ) : (
                     <Box>
@@ -128,7 +130,7 @@ function PostDetailScreen() {
                             {post.title}
                         </Typography>
 
-                        <Typography variant="body1" component="p" sx={{ my: 3 }}>
+                        <Typography variant="body1" component="div" sx={{ my: 3 }}>
                             {postContent(post)}
                         </Typography>
                         <Stack
@@ -197,16 +199,19 @@ function PostDetailScreen() {
 
                 {/* COMMENT SECTION */}
                 <Box>
-                    <Stack spacing={2}>
+                    <Stack spacing={postComments.length === 0 ? 4 : 2}>
                         {(postComments.length === 0 ? [...Array(5)] : postComments).map(
                             (comment, index) =>
                                 comment ? (
-                                    <>
-                                        <CommentCard comment={comment} key={index} />
+                                    <Box key={index}>
+                                        <CommentCard comment={comment} />
                                         <Divider sx={{ p: 0, mt: "0 !important" }} />
-                                    </>
+                                    </Box>
                                 ) : (
-                                    <Skeleton variant="rounded" height={100} key={index} />
+                                    <Box key={index}>
+                                        <Skeleton variant="text" width={"30%"} sx={{ mb: 1 }} />
+                                        <Skeleton variant="rounded" height={80} />
+                                    </Box>
                                 )
                         )}
                     </Stack>
