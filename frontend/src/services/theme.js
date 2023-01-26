@@ -33,6 +33,44 @@ const getTheme = (mode) => {
                 },
             },
         },
+        typography: {
+            md_body: {
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1rem",
+                },
+                [theme.breakpoints.up("mobile")]: {
+                    fontSize: "1.15rem",
+                },
+            },
+            md_h1: {
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1.6rem",
+                },
+                [theme.breakpoints.up("mobile")]: {
+                    fontSize: "1.7rem",
+                },
+                fontWeight: 500,
+                marginBottom: "0.5rem",
+            },
+            md_h2: {
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1.5rem",
+                },
+                [theme.breakpoints.up("mobile")]: {
+                    fontSize: "1.6rem",
+                },
+                fontWeight: 400,
+            },
+            md_h3: {
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1.3rem",
+                },
+                [theme.breakpoints.up("mobile")]: {
+                    fontSize: "1.4rem",
+                },
+                fontWeight: 400,
+            },
+        },
     });
     theme = responsiveFontSizes(theme, {
         breakpoints: ["mobile", "sm", "md", "lg"],
@@ -61,18 +99,6 @@ const baseTheme = (mode) => ({
         h4: {
             fontSize: "1.5rem",
             fontWeight: 700,
-        },
-        md_h1: {
-            fontSize: "1.7rem",
-            fontWeight: 500,
-        },
-        md_h2: {
-            fontSize: "1.6rem",
-            fontWeight: 400,
-        },
-        md_h3: {
-            fontSize: "1.4rem",
-            fontWeight: 400,
         },
     },
     breakpoints: {
@@ -149,6 +175,8 @@ const markdownBaseOptions = {
         span: {
             component: Typography,
             props: {
+                component: "p",
+                variant: "md_body",
                 sx: {
                     mb: 1.5,
                 },
@@ -158,6 +186,7 @@ const markdownBaseOptions = {
             component: Typography,
             props: {
                 component: "p",
+                variant: "md_body",
                 sx: {
                     mb: 1.5,
                 },
