@@ -72,9 +72,8 @@ function PostPreviewCard({ post }) {
                     </Typography>
                 </Stack>
                 <Typography
-                    variant="body2"
+                    variant="body1"
                     color="text.primary"
-                    fontSize={15}
                     sx={{
                         mt: 1.7,
                     }}
