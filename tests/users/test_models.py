@@ -1,3 +1,5 @@
+from typing import Union
+
 import pytest
 from django.db.models.fields import BooleanField
 from django.db.models.fields.related import ForeignKey
@@ -8,23 +10,18 @@ pytestmark = pytest.mark.django_db
 
 
 class TestUser:
-    def test_count(self) -> None:
-        assert type(User.objects.count()) is int
+    def test_count(self, valid_user_data: dict[str, Union[str, bool]]) -> None:
+        assert User.objects.count() == 0
+        User.objects.create_user(**valid_user_data)
+        assert User.objects.count() == 1
 
-    def test_dark_mode_type_is_boolean(self) -> None:
-        user_example = User.objects.latest('id')
-        dark_mode_field = user_example._meta.get_field('dark_mode')
-        assert isinstance(dark_mode_field, BooleanField)
-
-    def test_no_null_values(self) -> None:
-        assert not User.objects.filter(dark_mode__isnull=True).exists()
+    def test_dark_mode_type_is_boolean(
+        self,
+    ) -> None:
+        assert isinstance(User._meta.get_field('dark_mode'), BooleanField)
 
 
 class TestUserSubscription:
-    @pytest.fixture
-    def latest_user_subscription(self) -> None:
-        return UserSubscription.objects.latest('id')
-
     def test_count(self) -> None:
         assert type(UserSubscription.objects.count()) is int
 
@@ -37,8 +34,8 @@ class TestUserSubscription:
     def test_created_at_is_not_null(self) -> None:
         assert not UserSubscription.objects.filter(created_at__isnull=True).exists()
 
-    def test_user_is_foreign_key(self, latest_user_subscription: UserSubscription) -> None:
-        user_field = latest_user_subscription._meta.get_field('user')
+    def test_user_is_foreign_key(self) -> None:
+        user_field = UserSubscription._meta.get_field('user')
         assert isinstance(user_field, ForeignKey)
 
 
@@ -47,6 +44,5 @@ class TestPasswordResetRequest:
         assert type(PasswordResetRequest.objects.count()) is int
 
     def test_used_or_expired_type_is_boolean(self) -> None:
-        reset_request_example = PasswordResetRequest.objects.latest('id')
-        used_or_expired_field = reset_request_example._meta.get_field('used_or_expired')
+        used_or_expired_field = PasswordResetRequest._meta.get_field('used')
         assert isinstance(used_or_expired_field, BooleanField)
