@@ -116,8 +116,14 @@ class SubredditTopPostsList(APIView):
 
 
 class RedditPostDetail(APIView):
+    """View to return a single Reddit Post instance."""
+
     def get(self, request: Request, post_id: str) -> Response:
-        # Example GET request: /api/posts/ukq48t
+        """Returns a single Reddit Post Instance. Includes a limited number of top comments.
+
+        Example GET request: /api/posts/<post_id>
+        * Response includes subreddit name
+        """
         post: PrawSubmission = reddit.submission(id=post_id)
 
         post.comment_sort = 'top'
@@ -126,7 +132,7 @@ class RedditPostDetail(APIView):
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
 
         subreddit_name = queries.get_post_subreddit_display_name(post_id)
-        if not subreddit_name:
+        if not subreddit_name:  # Only try to retrieve from external source if the above fails
             subreddit_name = post.subreddit.display_name_prefixed
 
         post_data = serialized_post.data
@@ -135,10 +141,19 @@ class RedditPostDetail(APIView):
 
 
 class SubredditList(APIView):
+    """View to list of all available Subreddits excluding current user's subreddits.
+
+    Mainly used to provide choices for autocomplete.
+    * Requires JWT authentication through request header.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        # Example GET request: /api/subreddits/
+        """Returns a list of Subreddit objects. Excludes request user's subreddits.
+
+        Example request: GET /api/subreddits/
+        """
         user = request.user
         user_subs = user.user_subscriptions.values_list('subreddit', flat=True)
         subreddits = Subreddit.objects.exclude(subreddit_id__in=user_subs).values('display_name')
