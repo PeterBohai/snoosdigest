@@ -39,16 +39,16 @@ def get_subreddit_top_posts(
     posts_up_to_date = True
 
     filter_params = {
-        'subreddit__display_name__iexact': subreddit_name,
-        f'top_{time_filter}_order__lte': MAX_NUM_POSTS_PER_SUBREDDIT,
+        "subreddit__display_name__iexact": subreddit_name,
+        f"top_{time_filter}_order__lte": MAX_NUM_POSTS_PER_SUBREDDIT,
     }
     subreddit_posts = SubredditPost.objects.filter(**filter_params).order_by(
-        f'top_{time_filter}_order'
+        f"top_{time_filter}_order"
     )
 
     if subreddit_posts and subreddit_posts.count() >= num_posts:
         # Check if all posts were updated within the `max_update_gap` time
-        display_name_prefixed = ''
+        display_name_prefixed = ""
         for post in subreddit_posts:
             display_name_prefixed = post.subreddit.display_name_prefixed
             if (
@@ -59,14 +59,14 @@ def get_subreddit_top_posts(
         if posts_up_to_date:
             serialized_posts = SubredditPostSerializer(subreddit_posts, many=True).data
             logger.info(
-                f'<{subreddit_name}> posts are available and up to date in db, returned db results'
+                f"<{subreddit_name}> posts are available and up to date in db, returned db results"
             )
             return display_name_prefixed, serialized_posts[:num_posts]
 
     # Call praw API if not in database or posts data is outdated, then update the database records
     logger.info(
-        f'<{subreddit_name}> posts are not available or out of date in db, '
-        f'query reddit API and cache to db'
+        f"<{subreddit_name}> posts are not available or out of date in db, "
+        f"query reddit API and cache to db"
     )
     praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_name)
     serialized_posts = queries.update_or_insert_subreddit_posts(
@@ -80,9 +80,9 @@ class HomePagePostsList(APIView):
     def get(self, request: Request) -> Response:
         # Example GET request: /api/posts/homepage?time_filter=day&posts_per_subreddit=3
         posts_per_subreddit: int = int(
-            request.query_params.get('posts_per_subreddit', DEFAULT_POSTS_PER_SUBREDDIT_HOME)
+            request.query_params.get("posts_per_subreddit", DEFAULT_POSTS_PER_SUBREDDIT_HOME)
         )
-        time_filter: str = request.query_params['time_filter']
+        time_filter: str = request.query_params["time_filter"]
         user = request.user
         subreddits: list[str] = get_user_subscriptions(user, reddit)
 
@@ -102,14 +102,14 @@ class HomePagePostsList(APIView):
 class SubredditTopPostsList(APIView):
     def get(self, request: Request, subreddit: str) -> Response:
         # Example GET request: /api/subreddits/news/top-posts?time_filter=day&n=2
-        n: int = int(request.query_params['n'])
-        time_filter: str = request.query_params['time_filter']
+        n: int = int(request.query_params["n"])
+        time_filter: str = request.query_params["time_filter"]
 
         display_name_prefixed, posts = get_subreddit_top_posts(subreddit, time_filter, n)
 
         response: dict[str, Union[str, list[dict]]] = {
-            'subreddit_name': display_name_prefixed,
-            'posts': posts,
+            "subreddit_name": display_name_prefixed,
+            "posts": posts,
         }
 
         return Response(response)
@@ -126,7 +126,7 @@ class RedditPostDetail(APIView):
         """
         post: PrawSubmission = reddit.submission(id=post_id)
 
-        post.comment_sort = 'top'
+        post.comment_sort = "top"
         post.comment_limit = 8
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
@@ -136,7 +136,7 @@ class RedditPostDetail(APIView):
             subreddit_name = post.subreddit.display_name_prefixed
 
         post_data = serialized_post.data
-        post_data['subreddit_display_name_prefixed'] = subreddit_name
+        post_data["subreddit_display_name_prefixed"] = subreddit_name
         return Response(post_data)
 
 
@@ -155,7 +155,7 @@ class SubredditList(APIView):
         Example request: GET /api/subreddits/
         """
         user = request.user
-        user_subs = user.user_subscriptions.values_list('subreddit', flat=True)
-        subreddits = Subreddit.objects.exclude(subreddit_id__in=user_subs).values('display_name')
+        user_subs = user.user_subscriptions.values_list("subreddit", flat=True)
+        subreddits = Subreddit.objects.exclude(subreddit_id__in=user_subs).values("display_name")
         serializer = SubredditSerializer(subreddits, many=True)
         return Response(serializer.data)

@@ -19,19 +19,19 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
-admin_url: str = 'admin/'
+admin_url: str = "admin/"
 
-if os.environ['DJANGO_SETTINGS_MODULE'] == 'snoosdigest.settings.production':
-    admin_url = os.environ['PROD_ADMIN_URL']
+if os.environ["DJANGO_SETTINGS_MODULE"] == "snoosdigest.settings.production":
+    admin_url = os.environ["PROD_ADMIN_URL"]
 
 urlpatterns = [
     path(admin_url, admin.site.urls),
-    path('api/users/', include('users.urls')),
-    path('api/', include('api.urls')),
+    path("api/users/", include("users.urls")),
+    path("api/", include("api.urls")),
 ]
 
-if os.environ['DJANGO_SETTINGS_MODULE'] != 'snoosdigest.settings.local':
+if os.environ["DJANGO_SETTINGS_MODULE"] != "snoosdigest.settings.local":
     urlpatterns += [
-        path('', TemplateView.as_view(template_name='index.html')),
-        re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html')),
+        path("", TemplateView.as_view(template_name="index.html")),
+        re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html")),
     ]

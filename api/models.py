@@ -16,10 +16,10 @@ class Subreddit(models.Model):
     last_viewed_timestamp = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'subreddit'
+        db_table = "subreddit"
 
     def __str__(self) -> str:
-        return f'Subreddit [{self.subreddit_id}]: {self.display_name_prefixed}'
+        return f"Subreddit [{self.subreddit_id}]: {self.display_name_prefixed}"
 
 
 class SubredditPost(models.Model):
@@ -48,10 +48,10 @@ class SubredditPost(models.Model):
     update_source = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
-        db_table = 'subreddit_post'
+        db_table = "subreddit_post"
         constraints = [
             models.UniqueConstraint(
-                fields=['subreddit', 'reddit_id', 'top_day_order'],
-                name='Unique subreddit day posts',
+                fields=["subreddit", "reddit_id", "top_day_order"],
+                name="Unique subreddit day posts",
             )
         ]

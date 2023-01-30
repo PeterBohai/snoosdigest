@@ -18,7 +18,7 @@ class TestUser:
     def test_dark_mode_type_is_boolean(
         self,
     ) -> None:
-        assert isinstance(User._meta.get_field('dark_mode'), BooleanField)
+        assert isinstance(User._meta.get_field("dark_mode"), BooleanField)
 
 
 class TestUserSubscription:
@@ -35,7 +35,7 @@ class TestUserSubscription:
         assert not UserSubscription.objects.filter(created_at__isnull=True).exists()
 
     def test_user_is_foreign_key(self) -> None:
-        user_field = UserSubscription._meta.get_field('user')
+        user_field = UserSubscription._meta.get_field("user")
         assert isinstance(user_field, ForeignKey)
 
 
@@ -44,5 +44,5 @@ class TestPasswordResetRequest:
         assert type(PasswordResetRequest.objects.count()) is int
 
     def test_used_or_expired_type_is_boolean(self) -> None:
-        used_or_expired_field = PasswordResetRequest._meta.get_field('used')
+        used_or_expired_field = PasswordResetRequest._meta.get_field("used")
         assert isinstance(used_or_expired_field, BooleanField)

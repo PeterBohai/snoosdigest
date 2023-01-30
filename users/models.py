@@ -13,14 +13,14 @@ class User(AbstractUser):
 
 
 class UserSubscription(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_subscriptions')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_subscriptions")
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     sort_order = models.PositiveIntegerField(null=True, blank=True)
     favorite = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'users_user_subscriptions'
+        db_table = "users_user_subscriptions"
 
 
 def current_time_offset_one_hr() -> datetime:
@@ -28,11 +28,11 @@ def current_time_offset_one_hr() -> datetime:
 
 
 class PasswordResetRequest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='password_resets')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="password_resets")
     request_time = models.DateTimeField(auto_now_add=True)
     expire_time = models.DateTimeField(default=current_time_offset_one_hr)
     reset_token = models.UUIDField(default=uuid.uuid4, editable=False)
     used = models.BooleanField(default=False)
 
     class Meta:
-        db_table = 'users_user_password_reset_requests'
+        db_table = "users_user_password_reset_requests"
