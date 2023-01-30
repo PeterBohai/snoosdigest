@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def django_db_setup() -> None:
     pass
 

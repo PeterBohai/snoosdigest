@@ -13,13 +13,13 @@ from api import consts, queries
 from users.models import User
 
 logger = logging.getLogger(__name__)
-RESET_PASSWORD_TEMPLATE_ID = 'd-12b7bc8ebe6c4296a937d682f5bb6fed'
+RESET_PASSWORD_TEMPLATE_ID = "d-12b7bc8ebe6c4296a937d682f5bb6fed"
 
 
 def generate_user_access_token(user: User) -> str:
     jwt_refresh_token = RefreshToken.for_user(user)
     # Custom private claims (also in user serializer)
-    jwt_refresh_token[f'{settings.NAMESPACE}/username'] = user.username
+    jwt_refresh_token[f"{settings.NAMESPACE}/username"] = user.username
     update_last_login(None, user)
     return str(jwt_refresh_token.access_token)
 
@@ -51,17 +51,17 @@ def send_reset_password_email(reset_password_url: str, to_email: str) -> bool:
         None
     """
     if settings.DEV_ENVIRONMENT:
-        to_email = os.environ['DEV_DEFAULT_EMAIL']
+        to_email = os.environ["DEV_DEFAULT_EMAIL"]
 
-    message = Mail(from_email='support@snoosdigest.com', to_emails=to_email)
-    message.dynamic_template_data = {'reset_password_url': reset_password_url}
+    message = Mail(from_email="support@snoosdigest.com", to_emails=to_email)
+    message.dynamic_template_data = {"reset_password_url": reset_password_url}
     message.template_id = RESET_PASSWORD_TEMPLATE_ID
 
     try:
-        sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
+        sg = SendGridAPIClient(os.environ["SENDGRID_API_KEY"])
         response = sg.send(message)
-        logger.info(f'Email was sent to {to_email}, status_code={response.status_code}')
+        logger.info(f"Email was sent to {to_email}, status_code={response.status_code}")
     except Exception as err:
-        logger.error(f'Exception: {err}')
+        logger.error(f"Exception: {err}")
         return False
     return True
