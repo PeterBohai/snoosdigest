@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 import prawcore
 from cachetools import LRUCache, cached
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from praw import Reddit as PrawReddit
@@ -19,20 +19,21 @@ UPDATE_SOURCE = "django-snoosdigest"
 def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
     created_unix_timestamp = int(subreddit.created_utc)
     try:
-        new_subreddit = Subreddit(
-            reddit_id=subreddit.id,
-            display_name=subreddit.display_name,
-            display_name_prefixed=subreddit.display_name_prefixed,
-            reddit_url_path=subreddit.url,
-            subscribers=subreddit.subscribers,
-            created_date_utc=date.fromtimestamp(created_unix_timestamp),
-            created_unix_timestamp=created_unix_timestamp,
-            data_updated_timestamp_utc=timezone.now(),
-            update_source=UPDATE_SOURCE,
-        )
-        new_subreddit.save()
+        with transaction.atomic():
+            new_subreddit = Subreddit(
+                reddit_id=subreddit.id,
+                display_name=subreddit.display_name,
+                display_name_prefixed=subreddit.display_name_prefixed,
+                reddit_url_path=subreddit.url,
+                subscribers=subreddit.subscribers,
+                created_date_utc=date.fromtimestamp(created_unix_timestamp),
+                created_unix_timestamp=created_unix_timestamp,
+                data_updated_timestamp_utc=timezone.now(),
+                update_source=UPDATE_SOURCE,
+            )
+            new_subreddit.save()
     except IntegrityError as err:
-        print(f"Django DB IntegrityError: {err}")
+        print(f"Django DB IntegrityError. {err} - returning existing row")
         return Subreddit.objects.get(reddit_id=subreddit.id, display_name=subreddit.display_name)
     return new_subreddit
 
