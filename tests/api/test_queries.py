@@ -1,14 +1,16 @@
 from unittest.mock import Mock
 
 import pytest
+from praw import reddit as PrawReddit
+from praw.models import Subreddit as PrawSubreddit
 
 from api.models import Subreddit
-from api.queries import insert_subreddit_data
+from api.queries import get_subreddit, insert_subreddit_data
 
 
 @pytest.mark.django_db
 def test_insert_subreddit_data_saves_unique_subreddit_to_db() -> None:
-    fake_subreddit = Mock(
+    fake_subreddit: PrawSubreddit = Mock(
         id="2qh3l",
         display_name="news",
         display_name_prefixed="r/news",
@@ -35,7 +37,7 @@ def test_insert_subreddit_data_saves_unique_subreddit_to_db() -> None:
 
 @pytest.mark.django_db
 def test_insert_subreddit_data_returns_existing_row_if_duplicate_insert() -> None:
-    fake_subreddit = Mock(
+    fake_subreddit: PrawSubreddit = Mock(
         id="2qh3l",
         display_name="news",
         display_name_prefixed="r/news",
@@ -43,7 +45,7 @@ def test_insert_subreddit_data_returns_existing_row_if_duplicate_insert() -> Non
         subscribers=25201892,
         created_utc=1201243765,
     )
-    duplicate_subreddit = Mock(
+    duplicate_subreddit: PrawSubreddit = Mock(
         id="2qh3l",
         display_name="news",
         display_name_prefixed="r/news",
@@ -58,3 +60,80 @@ def test_insert_subreddit_data_returns_existing_row_if_duplicate_insert() -> Non
     inserted_subreddit_dupe = insert_subreddit_data(duplicate_subreddit)
     assert Subreddit.objects.count() == 1
     assert inserted_subreddit_dupe.subreddit_id == inserted_subreddit.subreddit_id
+
+
+@pytest.mark.django_db
+def test_get_subreddit_existing_subreddit_returns_without_inserting() -> None:
+    fake_subreddit: PrawSubreddit = Mock(
+        id="2shb7",
+        display_name="Bogleheads",
+        display_name_prefixed="r/Bogleheads",
+        url="/r/Bogleheads/",
+        subscribers=3520189,
+        created_utc=1201245765,
+    )
+    inserted_subreddit = insert_subreddit_data(fake_subreddit)
+
+    # Try with praw_subreddit set
+    result_subreddit = get_subreddit(inserted_subreddit.display_name, praw_subreddit=fake_subreddit)
+    assert not fake_subreddit.called
+    assert inserted_subreddit.reddit_id == result_subreddit.reddit_id
+    assert inserted_subreddit.display_name == result_subreddit.display_name
+    assert Subreddit.objects.count() == 1
+
+    # Try with praw_reddit set
+    fake_reddit: PrawReddit = Mock()
+    result_subreddit = get_subreddit(inserted_subreddit.display_name, praw_reddit=fake_reddit)
+    assert not fake_reddit.called
+    assert inserted_subreddit.reddit_id == result_subreddit.reddit_id
+    assert inserted_subreddit.display_name == result_subreddit.display_name
+    assert Subreddit.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_get_non_existent_subreddit_with_praw_subreddit_inserts_and_returns() -> None:
+    fake_subreddit: PrawSubreddit = Mock(
+        id="2shb7",
+        display_name="Bogleheads",
+        display_name_prefixed="r/Bogleheads",
+        url="/r/Bogleheads/",
+        subscribers=3520189,
+        created_utc=1201245765,
+        created=1201245765,
+    )
+    assert Subreddit.objects.count() == 0
+
+    result_subreddit = get_subreddit(fake_subreddit.display_name, praw_subreddit=fake_subreddit)
+    query_subreddit = Subreddit.objects.get(reddit_id=fake_subreddit.id)
+    assert Subreddit.objects.count() == 1
+    assert result_subreddit.reddit_id == query_subreddit.reddit_id
+    assert query_subreddit.display_name == query_subreddit.display_name
+
+
+@pytest.mark.django_db
+def test_get_non_existent_subreddit_with_praw_reddit_inserts_and_returns() -> None:
+    fake_subreddit: PrawSubreddit = Mock(
+        id="2shb7",
+        display_name="Bogleheads",
+        display_name_prefixed="r/Bogleheads",
+        url="/r/Bogleheads/",
+        subscribers=3520189,
+        created_utc=1201245765,
+        created=1201245765,
+    )
+    fake_reddit: PrawReddit = Mock()
+    fake_reddit.subreddits.search_by_name.return_value = [fake_subreddit]
+
+    assert Subreddit.objects.count() == 0
+
+    result_subreddit = get_subreddit(fake_subreddit.display_name, praw_reddit=fake_reddit)
+    query_subreddit = Subreddit.objects.get(reddit_id=fake_subreddit.id)
+    assert Subreddit.objects.count() == 1
+    assert result_subreddit.reddit_id == query_subreddit.reddit_id
+    assert query_subreddit.display_name == query_subreddit.display_name
+
+
+@pytest.mark.django_db
+def test_get_subreddit_invalid_argument() -> None:
+    with pytest.raises(ValueError):
+        get_subreddit("news")

@@ -14,8 +14,8 @@ def mock_get_subreddit_top_posts_return_val(name: str, _: Any, num: int) -> tupl
     return f"r/{name}", [{} for _ in range(num)]
 
 
-def mock_get_subreddit_return_value(subreddit_display_name: str, _: Any) -> Subreddit:
-    return Subreddit(display_name=subreddit_display_name)
+def mock_get_subreddit_return_value(name: str, **_: Any) -> Subreddit:
+    return Subreddit(display_name=name)
 
 
 def test_unauthenticated_home_page_posts_view_returns_default_subscriptions(
