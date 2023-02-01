@@ -45,7 +45,7 @@ class UserSubredditSubscriptions(APIView):
         subreddit_input: str = request.data["subreddit"]
 
         try:
-            subreddit: Subreddit = queries.get_subreddit(subreddit_input, reddit)
+            subreddit: Subreddit = queries.get_subreddit(subreddit_input, praw_reddit=reddit)
         except ValueError as err:
             logger.error(f"Response(status=400, {err})")
             return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
@@ -157,7 +157,7 @@ class UserRegister(APIView):
             # Assign the default subscriptions to the new user
             for subreddit_name in consts.DEFAULT_SUBSCRIPTIONS:
                 try:
-                    subreddit: Subreddit = queries.get_subreddit(subreddit_name, reddit)
+                    subreddit: Subreddit = queries.get_subreddit(subreddit_name, praw_reddit=reddit)
                 except ValueError:
                     logger.info(
                         f"An error occurred with trying to access the default subreddit "

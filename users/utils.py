@@ -26,11 +26,10 @@ def generate_user_access_token(user: User) -> str:
 
 @cached(cache=TTLCache(maxsize=50, ttl=2))
 def get_user_subscriptions(user: User, praw_reddit: PrawReddit) -> list[str]:
-
     if user.is_anonymous:
         subscriptions: list[str] = []
         for subreddit_name in consts.DEFAULT_SUBSCRIPTIONS:
-            subreddit = queries.get_subreddit(subreddit_name, praw_reddit)
+            subreddit = queries.get_subreddit(subreddit_name, praw_reddit=praw_reddit)
             subscriptions.append(subreddit.display_name)
         return subscriptions
 
