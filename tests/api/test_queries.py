@@ -1,5 +1,5 @@
 from datetime import datetime
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 from django.utils import timezone
@@ -7,7 +7,7 @@ from praw import reddit as PrawReddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 
-from api.models import Subreddit
+from api.models import Subreddit, SubredditPost
 from api.queries import (
     get_subreddit,
     get_subreddit_prefixed_name_of_post,
@@ -230,3 +230,25 @@ def test_get_subreddit_prefixed_name_of_post_returns_if_not_exist_with_praw_post
         subreddit=Mock(display_name_prefixed="r/test"),
     )
     assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+
+
+@pytest.mark.django_db
+def test_get_subreddit_prefixed_name_of_post_uses_cache() -> None:
+    fake_post: PrawSubmission = Mock(id="10qwavm")
+    with patch("api.models.SubredditPost.objects.get") as db_get:
+        db_get.return_value = Mock(subreddit=Mock(display_name_prefixed="r/news"))
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+
+    # Test Cache is not affected by using praw_post over returning from DB
+    fake_post = Mock(id="diff-id", subreddit=Mock(display_name_prefixed="r/test"))
+    with patch("api.models.SubredditPost.objects.get") as db_get:
+        db_get.side_effect = SubredditPost.DoesNotExist()
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
