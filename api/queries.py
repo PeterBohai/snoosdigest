@@ -121,16 +121,27 @@ def get_subreddit(
 
 def update_subreddit_last_viewed(display_name: str) -> None:
     print(f"Updating <{display_name}> last_viewed_timestamp")
-    subreddit: Subreddit = Subreddit.objects.get(display_name__iexact=display_name)
-    subreddit.last_viewed_timestamp = timezone.now()
-    subreddit.save()
+    try:
+        subreddit: Subreddit = Subreddit.objects.get(display_name=display_name)
+        subreddit.last_viewed_timestamp = timezone.now()
+        subreddit.save()
+    except Subreddit.DoesNotExist:
+        print(f"Could not update last_viewed_timestamp. <{display_name}> does not exist in DB.")
+    except Subreddit.MultipleObjectsReturned:
+        print(f"Could not update last_viewed_timestamp. Multiple <{display_name}> found in DB.")
 
 
 @cached(cache=LRUCache(maxsize=128))
-def get_post_subreddit_display_name(post_reddit_id: str) -> str:
+def get_subreddit_prefixed_name_of_post(
+    post_reddit_id: str, praw_post: Optional[PrawSubmission] = None
+) -> str:
     try:
         print("get_post_subreddit_display_name", post_reddit_id)
         return SubredditPost.objects.get(reddit_id=post_reddit_id).subreddit.display_name_prefixed
     except (SubredditPost.DoesNotExist, SubredditPost.MultipleObjectsReturned) as err:
         print(f"get_post_subreddit_display_name: {err}")
+    if not praw_post:
+        print("Could not retrieve post's subreddit name")
         return ""
+    # Only retrieve from reddit API as a last resort due to slow requests
+    return praw_post.subreddit.display_name_prefixed
