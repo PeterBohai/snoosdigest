@@ -42,7 +42,6 @@ def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:
 def update_or_insert_subreddit_posts(
     query_result: QuerySet, praw_subreddit: PrawSubreddit, time_filter: str
 ) -> list[dict]:
-
     top_posts: list[PrawSubmission] = list(
         praw_subreddit.top(time_filter, limit=MAX_NUM_POSTS_PER_SUBREDDIT)
     )
