@@ -1,9 +1,9 @@
 import logging
-from datetime import datetime, timezone
 from typing import Union
 
 from cachetools import TTLCache, cached
 from django.conf import settings
+from django.utils import timezone
 from praw import Reddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
@@ -51,16 +51,12 @@ def get_subreddit_top_posts(
         display_name_prefixed = ""
         for post in subreddit_posts:
             display_name_prefixed = post.subreddit.display_name_prefixed
-            if (
-                datetime.now(tz=timezone.utc) - post.data_updated_timestamp_utc
-            ) > MAX_SUBREDDIT_UPDATE_GAP:
+            if (timezone.now() - post.data_updated_timestamp_utc) > MAX_SUBREDDIT_UPDATE_GAP:
                 posts_up_to_date = False
                 break
         if posts_up_to_date:
             serialized_posts = SubredditPostSerializer(subreddit_posts, many=True).data
-            logger.info(
-                f"<{subreddit_name}> posts are available and up to date in db, returned db results"
-            )
+            logger.info(f"<{subreddit_name}> posts are up to date in db, returned db results")
             return display_name_prefixed, serialized_posts[:num_posts]
 
     # Call praw API if not in database or posts data is outdated, then update the database records
@@ -72,7 +68,6 @@ def get_subreddit_top_posts(
     serialized_posts = queries.update_or_insert_subreddit_posts(
         subreddit_posts, praw_subreddit, time_filter
     )
-
     return praw_subreddit.display_name_prefixed, serialized_posts[:num_posts]
 
 
@@ -125,19 +120,12 @@ class RedditPostDetail(APIView):
         * Response includes subreddit name
         """
         post: PrawSubmission = reddit.submission(id=post_id)
-
         post.comment_sort = "top"
         post.comment_limit = 8
 
         serialized_post: RedditPostSerializer = RedditPostSerializer(post)
-
-        subreddit_name = queries.get_post_subreddit_display_name(post_id)
-        if not subreddit_name:  # Only try to retrieve from external source if the above fails
-            subreddit_name = post.subreddit.display_name_prefixed
-
-        post_data = serialized_post.data
-        post_data["subreddit_display_name_prefixed"] = subreddit_name
-        return Response(post_data)
+        subreddit_name = queries.get_subreddit_prefixed_name_of_post(post_id, post)
+        return Response({**serialized_post.data, "subreddit_display_name_prefixed": subreddit_name})
 
 
 class SubredditList(APIView):

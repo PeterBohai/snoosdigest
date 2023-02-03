@@ -1,11 +1,20 @@
-from unittest.mock import Mock
+from datetime import datetime
+from unittest.mock import Mock, patch
 
 import pytest
+from django.utils import timezone
 from praw import reddit as PrawReddit
+from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 
-from api.models import Subreddit
-from api.queries import get_subreddit, insert_subreddit_data
+from api.models import Subreddit, SubredditPost
+from api.queries import (
+    get_subreddit,
+    get_subreddit_prefixed_name_of_post,
+    insert_subreddit_data,
+    update_subreddit_last_viewed,
+)
+from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
 
 
 @pytest.mark.django_db
@@ -137,3 +146,109 @@ def test_get_non_existent_subreddit_with_praw_reddit_inserts_and_returns() -> No
 def test_get_subreddit_invalid_argument() -> None:
     with pytest.raises(ValueError):
         get_subreddit("news")
+
+
+@pytest.mark.django_db
+def test_update_subreddit_last_viewed_updates_valid_subreddit_name() -> None:
+    fake_subreddit: PrawSubreddit = Mock(
+        id="2qh3l",
+        display_name="news",
+        display_name_prefixed="r/news",
+        url="/r/news/",
+        subscribers=25201892,
+        created_utc=1201243765,
+    )
+
+    inserted_subreddit = insert_subreddit_data(fake_subreddit)
+    assert inserted_subreddit.last_viewed_timestamp is None
+
+    update_subreddit_last_viewed(inserted_subreddit.display_name)
+    updated_subreddit = Subreddit.objects.get(display_name=inserted_subreddit.display_name)
+    assert isinstance(updated_subreddit.last_viewed_timestamp, datetime)
+
+
+@pytest.mark.django_db
+def test_update_subreddit_last_viewed_does_nothing_for_invalid_subreddit_name() -> None:
+    try:
+        update_subreddit_last_viewed("nonExistentSubreddit")
+    except Subreddit.DoesNotExist:
+        pytest.fail("DoesNotExist exception should not be raised for invalid subreddit")
+    except Subreddit.MultipleObjectsReturned:
+        pytest.fail("MultipleObjectsReturned exception should not be raised for invalid subreddit")
+
+
+@pytest.mark.django_db
+def test_get_subreddit_prefixed_name_of_post_retrieves_from_db_if_exists() -> None:
+    insert_subreddit_data(
+        Mock(
+            id="2qh3l",
+            display_name="news",
+            display_name_prefixed="r/news",
+            url="/r/news/",
+            subscribers=25201892,
+            created_utc=1201243765,
+        )
+    )
+    fake_post: PrawSubmission = Mock(
+        id="10qwavm",
+        title="A Test Title for this Post",
+        score=67,
+        author=Mock(name="fake-author"),
+        upvote_ratio=97.6,
+        num_comments=134,
+        shortlink="some-url-string",
+        selftext="Example body text",
+        permalink="some-permalink",
+        created_utc=1201243765,
+        url="",
+    )
+    serializer = SubredditPostSerializer(
+        data={
+            **RedditPostPreviewSerializer(fake_post).data,
+            "top_day_order": 1,
+            "subreddit": 1,
+            "update_source": "test",
+            "created_unix_timestamp": fake_post.created_utc,
+            "created_timestamp_utc": datetime.fromtimestamp(fake_post.created_utc),
+            "data_updated_timestamp_utc": timezone.now(),
+        }
+    )
+    serializer.is_valid()
+    serializer.save()
+    assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+
+
+@pytest.mark.django_db
+def test_get_subreddit_prefixed_name_of_post_returns_empty_if_not_exist_and_no_praw_post() -> None:
+    assert "" == get_subreddit_prefixed_name_of_post("someid")
+
+
+@pytest.mark.django_db
+def test_get_subreddit_prefixed_name_of_post_returns_if_not_exist_with_praw_post_set() -> None:
+    fake_post: PrawSubmission = Mock(
+        id="10qwavm",
+        subreddit=Mock(display_name_prefixed="r/test"),
+    )
+    assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+
+
+@pytest.mark.django_db
+def test_get_subreddit_prefixed_name_of_post_uses_cache() -> None:
+    fake_post: PrawSubmission = Mock(id="10qwavm")
+    with patch("api.models.SubredditPost.objects.get") as db_get:
+        db_get.return_value = Mock(subreddit=Mock(display_name_prefixed="r/news"))
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert "r/news" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+
+    # Test Cache is not affected by using praw_post over returning from DB
+    fake_post = Mock(id="diff-id", subreddit=Mock(display_name_prefixed="r/test"))
+    with patch("api.models.SubredditPost.objects.get") as db_get:
+        db_get.side_effect = SubredditPost.DoesNotExist()
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert "r/test" == get_subreddit_prefixed_name_of_post(fake_post.id, praw_post=fake_post)
+        assert db_get.call_count == 1
