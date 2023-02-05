@@ -3,10 +3,13 @@ from typing import Union
 
 from cachetools import TTLCache, cached
 from django.conf import settings
+from django.http import Http404
 from django.utils import timezone
 from praw import Reddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
+from prawcore.exceptions import NotFound as PrawNotFound
+from prawcore.exceptions import Redirect as PrawRedirect
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -99,15 +102,16 @@ class SubredditTopPostsList(APIView):
         # Example GET request: /api/reddit/subreddits/news/top-posts?time_filter=day&n=2
         n: int = int(request.query_params["n"])
         time_filter: str = request.query_params["time_filter"]
-
-        display_name_prefixed, posts = get_subreddit_top_posts(subreddit, time_filter, n)
-
-        response: dict[str, Union[str, list[dict]]] = {
-            "subreddit_name": display_name_prefixed,
-            "posts": posts,
-        }
-
-        return Response(response)
+        try:
+            display_name_prefixed, posts = get_subreddit_top_posts(subreddit, time_filter, n)
+            response: dict[str, Union[str, list[dict]]] = {
+                "subreddit_name": display_name_prefixed,
+                "posts": posts,
+            }
+            return Response(response)
+        except PrawRedirect:
+            print(f"prawcore.exceptions.Redirect: Subreddit <{subreddit}> not found - return 404")
+            raise Http404
 
 
 class RedditPostDetail(APIView):
@@ -119,13 +123,18 @@ class RedditPostDetail(APIView):
         Example GET request: /api/reddit/posts/<post_id>
         * Response includes subreddit name
         """
-        post: PrawSubmission = reddit.submission(id=post_id)
-        post.comment_sort = "top"
-        post.comment_limit = 8
-
-        serialized_post: RedditPostSerializer = RedditPostSerializer(post)
-        subreddit_name = queries.get_subreddit_prefixed_name_of_post(post_id, post)
-        return Response({**serialized_post.data, "subreddit_display_name_prefixed": subreddit_name})
+        try:
+            post: PrawSubmission = reddit.submission(id=post_id)
+            post.comment_sort = "top"
+            post.comment_limit = 8
+            serialized_post: RedditPostSerializer = RedditPostSerializer(post)
+            subreddit_name = queries.get_subreddit_prefixed_name_of_post(post_id, post)
+            return Response(
+                {**serialized_post.data, "subreddit_display_name_prefixed": subreddit_name}
+            )
+        except PrawNotFound:
+            print(f"prawcore.exceptions.NotFound: Post <{post_id}> does not exist - return 404")
+            raise Http404
 
 
 class SubredditList(APIView):

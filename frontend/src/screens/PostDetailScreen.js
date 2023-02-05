@@ -29,15 +29,31 @@ function PostDetailScreen({ appName }) {
     const [postComments, setPostComments] = useState([]);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("mobile"));
     const { id, app } = useParams();
+    const [apiError, setApiError] = useState("");
 
     useEffect(() => {
         if (["reddit", "hackernews"].includes(app)) {
-            apiService.getPost(id).then((res) => {
-                const postData = res.data;
-                console.info(postData);
-                setPost(postData);
-                setPostComments(postData.comments);
-            });
+            apiService
+                .getPost(id)
+                .then((res) => {
+                    const postData = res.data;
+                    console.info(postData);
+                    setPost(postData);
+                    setPostComments(postData.comments);
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        const error = err.response;
+                        console.error(`${error.status} Response - ${JSON.stringify(error.data)}`);
+                        setApiError(error.data);
+                    } else if (err.request) {
+                        console.error(`Request made but got no response. Request - ${err.request}`);
+                        setApiError("Something is wrong, could not get response.");
+                    } else {
+                        console.error(`There was an issue with the request - ${err.message}`);
+                        setApiError("Something is wrong with the request.");
+                    }
+                });
         }
     }, [id, app]);
 
@@ -53,6 +69,9 @@ function PostDetailScreen({ appName }) {
         }
         return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
     };
+
+    if (!["reddit", "hackernews"].includes(app)) return;
+    if (apiError) return;
 
     return (
         <Container
