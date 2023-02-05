@@ -81,8 +81,8 @@ function App() {
                             </PrivateOnlyRoute>
                         }
                     />
-                    <Route path="/subreddits/:subreddit" element={<SubredditScreen />} />
-                    <Route path="/posts/:id" element={<PostDetailScreen />} />
+                    <Route path="/reddit/subreddits/:subreddit" element={<SubredditScreen />} />
+                    <Route path="/:app/posts/:id" element={<PostDetailScreen />} />
                 </Routes>
             </main>
             {!["/login", "/signup", "/reset-password"].includes(location.pathname) && <Footer />}

@@ -27,7 +27,7 @@ if os.environ["DJANGO_SETTINGS_MODULE"] == "snoosdigest.settings.production":
 urlpatterns = [
     path(admin_url, admin.site.urls),
     path("api/users/", include("users.urls")),
-    path("api/", include("api.urls")),
+    path("api/reddit/", include("api.urls")),
 ]
 
 if os.environ["DJANGO_SETTINGS_MODULE"] != "snoosdigest.settings.local":

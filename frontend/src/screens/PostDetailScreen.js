@@ -23,21 +23,39 @@ import apiService from "../services/api";
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
 
-function PostDetailScreen() {
+function PostDetailScreen({ appName }) {
     const theme = useTheme();
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("mobile"));
-    const id = useParams().id;
+    const { id, app } = useParams();
+    const [apiError, setApiError] = useState("");
 
     useEffect(() => {
-        apiService.getPost(id).then((res) => {
-            const postData = res.data;
-            console.info(postData);
-            setPost(postData);
-            setPostComments(postData.comments);
-        });
-    }, [id]);
+        if (["reddit", "hackernews"].includes(app)) {
+            apiService
+                .getPost(id)
+                .then((res) => {
+                    const postData = res.data;
+                    console.info(postData);
+                    setPost(postData);
+                    setPostComments(postData.comments);
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        const error = err.response;
+                        console.error(`${error.status} Response - ${JSON.stringify(error.data)}`);
+                        setApiError(error.data);
+                    } else if (err.request) {
+                        console.error(`Request made but got no response. Request - ${err.request}`);
+                        setApiError("Something is wrong, could not get response.");
+                    } else {
+                        console.error(`There was an issue with the request - ${err.message}`);
+                        setApiError("Something is wrong with the request.");
+                    }
+                });
+        }
+    }, [id, app]);
 
     const postContent = (post) => {
         if (Object.keys(post).length === 0) {
@@ -51,6 +69,9 @@ function PostDetailScreen() {
         }
         return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
     };
+
+    if (!["reddit", "hackernews"].includes(app)) return;
+    if (apiError) return;
 
     return (
         <Container
@@ -98,7 +119,7 @@ function PostDetailScreen() {
                                 >
                                     <Link
                                         component={RouterLink}
-                                        to={`/subreddits/${utilsService.removeSubredditPrefix(
+                                        to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
                                             post.subreddit_display_name_prefixed
                                         )}`}
                                         underline="hover"

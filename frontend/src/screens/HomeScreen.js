@@ -70,7 +70,7 @@ function HomeScreen() {
                                   >
                                       <Link
                                           component={RouterLink}
-                                          to={`/subreddits/${utilsService.removeSubredditPrefix(
+                                          to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
                                               subreddit
                                           )}`}
                                           underline="hover"
