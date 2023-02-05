@@ -4,7 +4,7 @@ import store from "../store/index";
 const baseUrl = "/api";
 
 function getTopPosts(subreddit, timeFilter, numPosts) {
-    return axios.get(`${baseUrl}/subreddits/${subreddit}/top-posts`, {
+    return axios.get(`${baseUrl}/reddit/subreddits/${subreddit}/top-posts`, {
         params: {
             n: numPosts,
             time_filter: timeFilter,
@@ -13,7 +13,7 @@ function getTopPosts(subreddit, timeFilter, numPosts) {
 }
 
 function getPost(postId) {
-    return axios.get(`${baseUrl}/posts/${postId}`);
+    return axios.get(`${baseUrl}/reddit/posts/${postId}`);
 }
 
 function postUserSubscriptions(subreddit_name) {
@@ -40,7 +40,7 @@ function getHomePagePosts(timeFilter) {
         // Send JWT access token through the Authorization header for server to authenticate and identify the user
         requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
     }
-    return axios.get(`${baseUrl}/posts/homepage`, requestConfig);
+    return axios.get(`${baseUrl}/reddit/posts/homepage`, requestConfig);
 }
 
 function getUserSubscriptions() {
@@ -125,7 +125,7 @@ function getSubredditOptions() {
         // Send JWT access token through the Authorization header for server to authenticate and identify the user
         requestConfig.headers = { Authorization: `Bearer ${userData.access}` };
     }
-    return axios.get(`${baseUrl}/subreddits`, requestConfig);
+    return axios.get(`${baseUrl}/reddit/subreddits`, requestConfig);
 }
 
 function postResetUserPasswordEmail(emailFormData) {

@@ -23,21 +23,23 @@ import apiService from "../services/api";
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
 
-function PostDetailScreen() {
+function PostDetailScreen({ appName }) {
     const theme = useTheme();
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("mobile"));
-    const id = useParams().id;
+    const { id, app } = useParams();
 
     useEffect(() => {
-        apiService.getPost(id).then((res) => {
-            const postData = res.data;
-            console.info(postData);
-            setPost(postData);
-            setPostComments(postData.comments);
-        });
-    }, [id]);
+        if (["reddit", "hackernews"].includes(app)) {
+            apiService.getPost(id).then((res) => {
+                const postData = res.data;
+                console.info(postData);
+                setPost(postData);
+                setPostComments(postData.comments);
+            });
+        }
+    }, [id, app]);
 
     const postContent = (post) => {
         if (Object.keys(post).length === 0) {
@@ -98,7 +100,7 @@ function PostDetailScreen() {
                                 >
                                     <Link
                                         component={RouterLink}
-                                        to={`/subreddits/${utilsService.removeSubredditPrefix(
+                                        to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
                                             post.subreddit_display_name_prefixed
                                         )}`}
                                         underline="hover"

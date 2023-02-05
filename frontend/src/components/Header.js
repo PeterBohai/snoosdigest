@@ -201,7 +201,7 @@ function Header() {
 
     const handleSubredditClick = (subreddit_name) => {
         setOpenSideDrawer(false);
-        navigate(`/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
+        navigate(`/reddit/subreddits/${utilsService.removeSubredditPrefix(subreddit_name)}`);
     };
 
     const handleOpenUserProfileMenu = (event) => {

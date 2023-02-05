@@ -73,7 +73,7 @@ def get_subreddit_top_posts(
 
 class HomePagePostsList(APIView):
     def get(self, request: Request) -> Response:
-        # Example GET request: /api/posts/homepage?time_filter=day&posts_per_subreddit=3
+        # Example GET request: /api/reddit/posts/homepage?time_filter=day&posts_per_subreddit=3
         posts_per_subreddit: int = int(
             request.query_params.get("posts_per_subreddit", DEFAULT_POSTS_PER_SUBREDDIT_HOME)
         )
@@ -96,7 +96,7 @@ class HomePagePostsList(APIView):
 
 class SubredditTopPostsList(APIView):
     def get(self, request: Request, subreddit: str) -> Response:
-        # Example GET request: /api/subreddits/news/top-posts?time_filter=day&n=2
+        # Example GET request: /api/reddit/subreddits/news/top-posts?time_filter=day&n=2
         n: int = int(request.query_params["n"])
         time_filter: str = request.query_params["time_filter"]
 
@@ -116,7 +116,7 @@ class RedditPostDetail(APIView):
     def get(self, request: Request, post_id: str) -> Response:
         """Returns a single Reddit Post Instance. Includes a limited number of top comments.
 
-        Example GET request: /api/posts/<post_id>
+        Example GET request: /api/reddit/posts/<post_id>
         * Response includes subreddit name
         """
         post: PrawSubmission = reddit.submission(id=post_id)
@@ -140,7 +140,7 @@ class SubredditList(APIView):
     def get(self, request: Request) -> Response:
         """Returns a list of Subreddit objects. Excludes request user's subreddits.
 
-        Example request: GET /api/subreddits/
+        Example request: GET /api/reddit/subreddits/
         """
         user = request.user
         user_subs = user.user_subscriptions.values_list("subreddit", flat=True)

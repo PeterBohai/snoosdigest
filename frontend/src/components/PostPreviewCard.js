@@ -52,7 +52,7 @@ function PostPreviewCard({ post }) {
                 >
                     <Link
                         component={RouterLink}
-                        to={`/posts/${post.reddit_id}`}
+                        to={`/reddit/posts/${post.reddit_id}`}
                         underline="none"
                         color="inherit"
                         sx={{
@@ -100,7 +100,7 @@ function PostPreviewCard({ post }) {
                     </Stack>
                     <Button
                         component={RouterLink}
-                        to={`/posts/${post.reddit_id}`}
+                        to={`/reddit/posts/${post.reddit_id}`}
                         startIcon={<Comment sx={{ transform: "scale(0.95)", mr: -0.55 }} />}
                         sx={{ color: "discrete.main", transition: "none" }}
                         size="small"
