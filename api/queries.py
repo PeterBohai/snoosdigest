@@ -10,11 +10,9 @@ from praw import Reddit as PrawReddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 
-from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT
+from api.consts import MAX_NUM_POSTS_PER_SUBREDDIT, UPDATE_SOURCE
 from api.models import Subreddit, SubredditPost
 from api.serializers import RedditPostPreviewSerializer, SubredditPostSerializer
-
-UPDATE_SOURCE = "django-snoosdigest"
 
 
 def insert_subreddit_data(subreddit: PrawSubreddit) -> Subreddit:

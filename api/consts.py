@@ -11,3 +11,4 @@ DEFAULT_SUBSCRIPTIONS: list = [
     "personalfinance",
     "investing",
 ]
+UPDATE_SOURCE: str = "django-snoosdigest"
