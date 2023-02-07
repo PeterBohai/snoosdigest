@@ -5,7 +5,7 @@ COPY frontend/ frontend/
 WORKDIR /code/frontend
 RUN npm install --legacy-peer-deps
 
-FROM python:3.9-alpine
+FROM python:3.11-alpine
 
 RUN apk update && apk upgrade
 RUN apk add --no-cache postgresql-dev gcc musl-dev  # In order to use psycopg2 built from sources

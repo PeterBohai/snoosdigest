@@ -84,6 +84,6 @@ envVarGroups:
   - name: python-envs
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9.13
+        value: 3.11.1
       - key: PYTHONUNBUFFERED
         value: 1
