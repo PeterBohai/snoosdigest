@@ -28,6 +28,7 @@ urlpatterns = [
     path(admin_url, admin.site.urls),
     path("api/users/", include("users.urls")),
     path("api/reddit/", include("api.urls")),
+    path("api/hackernews/", include("hackernews.urls")),
 ]
 
 if os.environ["DJANGO_SETTINGS_MODULE"] != "snoosdigest.settings.local":

@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api import consts, queries
+from api import configs, queries
 from api.models import Subreddit
 from users import utils
 from users.models import PasswordResetRequest, User, UserSubscription
@@ -155,7 +155,7 @@ class UserRegister(APIView):
             )
 
             # Assign the default subscriptions to the new user
-            for subreddit_name in consts.DEFAULT_SUBSCRIPTIONS:
+            for subreddit_name in configs.DEFAULT_SUBSCRIPTIONS:
                 try:
                     subreddit: Subreddit = queries.get_subreddit(subreddit_name, praw_reddit=reddit)
                 except ValueError:

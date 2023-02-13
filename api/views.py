@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api import queries
-from api.consts import (
+from api.configs import (
     DEFAULT_POSTS_PER_SUBREDDIT_HOME,
     MAX_NUM_POSTS_PER_SUBREDDIT,
     MAX_SUBREDDIT_UPDATE_GAP,

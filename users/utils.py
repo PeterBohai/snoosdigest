@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-from api import consts, queries
+from api import configs, queries
 from users.models import User
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ def generate_user_access_token(user: User) -> str:
 def get_user_subscriptions(user: User, praw_reddit: PrawReddit) -> list[str]:
     if user.is_anonymous:
         subscriptions: list[str] = []
-        for subreddit_name in consts.DEFAULT_SUBSCRIPTIONS:
+        for subreddit_name in configs.DEFAULT_SUBSCRIPTIONS:
             subreddit = queries.get_subreddit(subreddit_name, praw_reddit=praw_reddit)
             subscriptions.append(subreddit.display_name)
         return subscriptions
