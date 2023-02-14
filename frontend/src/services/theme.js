@@ -42,17 +42,17 @@ const getTheme = (mode) => {
         typography: {
             md_body: {
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: "1rem",
+                    fontSize: "0.97rem",
                 },
-                [theme.breakpoints.up("mobile")]: {
+                [theme.breakpoints.up("sm")]: {
                     fontSize: "1.15rem",
                 },
             },
             md_h1: {
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: "1.6rem",
+                    fontSize: "1.4rem",
                 },
-                [theme.breakpoints.up("mobile")]: {
+                [theme.breakpoints.up("sm")]: {
                     fontSize: "1.7rem",
                 },
                 fontWeight: 500,
@@ -60,18 +60,18 @@ const getTheme = (mode) => {
             },
             md_h2: {
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: "1.5rem",
+                    fontSize: "1.25rem",
                 },
-                [theme.breakpoints.up("mobile")]: {
+                [theme.breakpoints.up("sm")]: {
                     fontSize: "1.6rem",
                 },
                 fontWeight: 400,
             },
             md_h3: {
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: "1.3rem",
+                    fontSize: "1.15rem",
                 },
-                [theme.breakpoints.up("mobile")]: {
+                [theme.breakpoints.up("sm")]: {
                     fontSize: "1.4rem",
                 },
                 fontWeight: 400,
@@ -95,7 +95,7 @@ const baseTheme = (mode) => ({
             textTransform: "none", // Remove button text all caps
         },
         h2: {
-            fontSize: "1.9em",
+            fontSize: "1.9rem",
             fontWeight: 600,
         },
         h3: {
@@ -196,6 +196,13 @@ const markdownBaseOptions = {
                 sx: {
                     mb: 1.5,
                 },
+            },
+        },
+        li: {
+            component: Typography,
+            props: {
+                component: "li",
+                variant: "md_body",
             },
         },
         h1: {
