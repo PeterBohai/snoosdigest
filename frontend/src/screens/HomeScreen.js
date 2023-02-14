@@ -85,9 +85,13 @@ function HomeScreen({ tabIndex }) {
                             component={RouterLink}
                             to={"/hackernews"}
                             label={
-                                <Typography component="div">
+                                <Typography component="div" sx={{ fontWeight: "bold" }}>
                                     Hacker News
-                                    <Chip label="beta" size="small" sx={{ ml: 0.5 }} />
+                                    <Chip
+                                        label="beta"
+                                        size="small"
+                                        sx={{ ml: 0.5, fontWeight: "normal" }}
+                                    />
                                 </Typography>
                             }
                             {...tabProps(1)}
