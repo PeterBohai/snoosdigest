@@ -17,7 +17,7 @@ import ForwardIcon from "@mui/icons-material/Forward";
 import Comment from "@mui/icons-material/Comment";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Parser as HtmlParser } from "html-to-react";
+import parseHtml from "html-react-parser";
 
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
@@ -49,8 +49,7 @@ const getPostContent = (post, appName) => {
     }
 
     if (appName === "hackernews") {
-        const htmlToReactParser = new HtmlParser();
-        return htmlToReactParser.parse(post.body);
+        return parseHtml(post.body);
     }
     return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
 };

@@ -13,7 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import ForwardIcon from "@mui/icons-material/Forward";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { useTheme } from "@mui/material/styles";
-import { Parser as HtmlParser } from "html-to-react";
+import parseHtml from "html-react-parser";
 
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
@@ -21,8 +21,6 @@ import { getHackernewsCommentDetails } from "../services/hackernews";
 
 function CommentCard({ commentDetail, commentID, appName, needFetch = false }) {
     const theme = useTheme();
-    const htmlToReactParser = new HtmlParser();
-
     const [comment, setComment] = useState(commentDetail);
     const [apiError, setApiError] = useState("");
 
@@ -52,7 +50,7 @@ function CommentCard({ commentDetail, commentID, appName, needFetch = false }) {
 
     const commentBody = (comment, appName) => {
         if (appName === "hackernews") {
-            return htmlToReactParser.parse(comment.body);
+            return parseHtml(comment.body);
         }
         return <Markdown options={themeService.markdownBaseOptions}>{comment.body}</Markdown>;
     };
