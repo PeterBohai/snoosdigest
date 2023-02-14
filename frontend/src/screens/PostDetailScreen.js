@@ -259,7 +259,7 @@ function PostDetailScreen() {
 
                 {/* COMMENT SECTION */}
                 <Box>
-                    <Stack spacing={postComments.length === 0 ? 4 : 2}>
+                    <Stack spacing={2}>
                         {(postComments.length === 0 ? [...Array(5)] : postComments).map(
                             (comment, index) =>
                                 comment ? (
@@ -277,7 +277,7 @@ function PostDetailScreen() {
                                 ) : (
                                     <Box key={index}>
                                         <Skeleton variant="text" width={"30%"} sx={{ mb: 1 }} />
-                                        <Skeleton variant="rounded" height={80} />
+                                        <Skeleton variant="rounded" height={80} sx={{ mb: 2 }} />
                                     </Box>
                                 )
                         )}

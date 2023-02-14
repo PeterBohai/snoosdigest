@@ -3,7 +3,6 @@
 More info about their API can be found at https://github.com/HackerNews/API
 """
 import logging
-import time
 
 import requests
 from django.utils.decorators import method_decorator
@@ -82,7 +81,6 @@ class CommentDetail(APIView):
         Example GET request: /api/hackernews/comments/<comment_id>
         """
         try:
-            time.sleep(4)
             item = get_item_details(comment_id)
             if item.get("type") != "comment":  # Add support for polls later
                 return DrfResponse(

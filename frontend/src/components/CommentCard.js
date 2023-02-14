@@ -7,6 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import Skeleton from "@mui/material/Skeleton";
 import Avatar from "@mui/material/Avatar";
 import ForwardIcon from "@mui/icons-material/Forward";
 import LaunchIcon from "@mui/icons-material/Launch";
@@ -53,6 +54,14 @@ function CommentCard({ commentDetail, commentID, appName, needFetch = false }) {
         return <Markdown options={themeService.markdownBaseOptions}>{comment.body}</Markdown>;
     };
     if (apiError) return null;
+    if (!comment || Object.keys(comment).length === 0) {
+        return (
+            <>
+                <Skeleton variant="text" width={"30%"} sx={{ mb: 1 }} />
+                <Skeleton variant="rounded" height={80} sx={{ mb: 2 }} />
+            </>
+        );
+    }
 
     return (
         <Card
