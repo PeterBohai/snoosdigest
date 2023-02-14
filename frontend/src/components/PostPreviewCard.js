@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import Card from "@mui/material/Card";
@@ -10,33 +10,71 @@ import Stack from "@mui/material/Stack";
 import ForwardIcon from "@mui/icons-material/Forward";
 import Button from "@mui/material/Button";
 import Comment from "@mui/icons-material/Comment";
+import Skeleton from "@mui/material/Skeleton";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
 
 import utilsService from "../services/utils";
+import { getHackernewsPostDetails } from "../services/hackernews";
 
-function PostPreviewCard({ post }) {
-    const contentMaxChars = 320;
+const CONTENT_MAX_CHARS = 320;
+const getPostContent = (post) => {
+    if (Object.keys(post).length === 0 || !post.body) return "";
+    if (post.body_is_url) {
+        return (
+            <Link
+                component={RouterLink}
+                to={post.body}
+                target="_blank"
+                sx={{ color: "primary.main" }}
+                underline="hover"
+            >
+                {post.body}
+            </Link>
+        );
+    }
+    return (
+        post.body.slice(0, CONTENT_MAX_CHARS) + (post.body.length > CONTENT_MAX_CHARS ? "..." : "")
+    );
+};
+
+function PostPreviewCard({ postDetail, postID, needFetch = false }) {
     const theme = useTheme();
+    const [post, setPost] = useState({});
+    const [apiError, setApiError] = useState("");
 
-    let postContent = (post) => {
-        if (Object.keys(post).length === 0) {
-            return "";
+    useEffect(() => {
+        if (!needFetch) {
+            setPost(postDetail);
+        } else {
+            getHackernewsPostDetails(postID)
+                .then((res) => {
+                    setPost(res.data);
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        const error = err.response;
+                        console.error(`${error.status} Response - ${JSON.stringify(error.data)}`);
+                        setApiError(error.data);
+                    } else if (err.request) {
+                        console.error(`Request made but got no response. Request - ${err.request}`);
+                        setApiError("Something is wrong, could not get response.");
+                    } else {
+                        console.error(`There was an issue with the request - ${err.message}`);
+                        setApiError("Something is wrong with the request.");
+                    }
+                });
         }
-        if (post.img_url.length !== 0) {
-            return <img src={post.img_url} alt="" />;
-        }
-        if (post.video_url.length !== 0) {
-            return post.video_url;
-        }
-        if (utilsService.isValidHttpUrl(post.body)) {
-            return post.body;
-        }
-        return post.body;
-    };
-    postContent =
-        post.body.slice(0, contentMaxChars) + (post.body.length > contentMaxChars ? "..." : "");
+    }, [postDetail, postID, needFetch]);
+    if (!post) return null;
 
+    const appName = post.snoosdigest_app;
+    const postid = post[`${appName}_id`];
+    const detailPagePath = `/${appName}/posts/${postid}`;
+    if (apiError) return null;
+    if (!post || Object.keys(post).length === 0) {
+        return <Skeleton variant="rounded" height={130} sx={{ mt: 4 }} />;
+    }
     return (
         <Card
             sx={{
@@ -45,14 +83,14 @@ function PostPreviewCard({ post }) {
                 backgroundColor: theme.palette.background.default,
             }}
         >
-            <CardContent sx={{ overflow: "hidden", px: 0, pb: 1 }}>
+            <CardContent sx={{ overflow: "hidden", px: 0, pb: 0, pt: 1 }}>
                 <Typography
                     variant="h4"
                     fontFamily={"Domine, Palatino, Times New Roman, Times, serif"}
                 >
                     <Link
                         component={RouterLink}
-                        to={`/reddit/posts/${post.reddit_id}`}
+                        to={detailPagePath}
                         underline="none"
                         color="inherit"
                         sx={{
@@ -64,24 +102,26 @@ function PostPreviewCard({ post }) {
                         {post.title}
                     </Link>
                 </Typography>
-                <Stack direction="row" alignItems="center" spacing={0.4} mt={0.3}>
+                <Stack direction="row" alignItems="center" spacing={0.4} mt={0}>
                     <AccessTimeIcon sx={{ color: "discrete.main", fontSize: 16, mt: -0.2 }} />
                     <Typography variant="body2" color="discrete.main">
-                        {`${utilsService.getRelativeTime(post.created_unix_timestamp)} 
-                            by u/${post.author_name}`}
+                        {`${utilsService.getRelativeTime(post.created_utc)} 
+                            by ${appName === "reddit" ? "/u" : ""}${post.author_name}`}
                     </Typography>
                 </Stack>
                 <Typography
                     variant="body1"
                     color="text.primary"
+                    component="div"
                     sx={{
-                        mt: 1.7,
+                        mt: 1,
+                        overflowWrap: "break-word",
                     }}
                 >
-                    {postContent}
+                    {getPostContent(post)}
                 </Typography>
             </CardContent>
-            <CardActions sx={{ p: 2, px: 0, pt: 0 }}>
+            <CardActions sx={{ p: 2, px: 0, pt: 0.5 }}>
                 <Stack
                     direction="row"
                     alignItems="center"
@@ -91,8 +131,13 @@ function PostPreviewCard({ post }) {
                 >
                     <Stack direction="row" alignItems="center" spacing={0.3} minWidth="3.8rem">
                         <ForwardIcon
-                            color="primary"
-                            sx={{ transform: "rotate(-90deg)", fontSize: 20, ml: -0.5, mt: -0.3 }}
+                            sx={{
+                                transform: "rotate(-90deg)",
+                                fontSize: 20,
+                                ml: -0.5,
+                                mt: -0.3,
+                                color: theme.palette.app[appName],
+                            }}
                         />
                         <Typography variant="body1" color="text.primary" fontWeight="700">
                             {utilsService.formatNumber(post.upvotes)}
@@ -100,7 +145,7 @@ function PostPreviewCard({ post }) {
                     </Stack>
                     <Button
                         component={RouterLink}
-                        to={`/reddit/posts/${post.reddit_id}`}
+                        to={detailPagePath}
                         startIcon={<Comment sx={{ transform: "scale(0.95)", mr: -0.55 }} />}
                         sx={{ color: "discrete.main", transition: "none" }}
                         size="small"

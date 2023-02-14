@@ -6,7 +6,7 @@ from django.utils.http import urlencode
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
-from api import consts
+from api import configs
 from api.models import Subreddit
 
 
@@ -31,10 +31,10 @@ def test_unauthenticated_home_page_posts_view_returns_default_subscriptions(
         )
     assert response.status_code == 200
     assert type(response.data) is dict
-    assert len(response.data) == len(consts.DEFAULT_SUBSCRIPTIONS)
-    assert list(response.data.keys()) == [f"r/{name}" for name in consts.DEFAULT_SUBSCRIPTIONS]
+    assert len(response.data) == len(configs.DEFAULT_SUBSCRIPTIONS)
+    assert list(response.data.keys()) == [f"r/{name}" for name in configs.DEFAULT_SUBSCRIPTIONS]
     assert type(list(response.data.values())[0]) is list
-    assert len(list(response.data.values())[0]) == consts.DEFAULT_POSTS_PER_SUBREDDIT_HOME
+    assert len(list(response.data.values())[0]) == configs.DEFAULT_POSTS_PER_SUBREDDIT_HOME
 
 
 def test_subreddit_posts_top_view_returns_correct_schema(api_client: APIClient) -> None:
