@@ -17,8 +17,28 @@ import { useTheme } from "@mui/material/styles";
 import utilsService from "../services/utils";
 import { getHackernewsPostDetails } from "../services/hackernews";
 
+const CONTENT_MAX_CHARS = 320;
+const getPostContent = (post) => {
+    if (Object.keys(post).length === 0 || !post.body) return "";
+    if (post.body_is_url) {
+        return (
+            <Link
+                component={RouterLink}
+                to={post.body}
+                target="_blank"
+                sx={{ color: "primary.main" }}
+                underline="hover"
+            >
+                {post.body}
+            </Link>
+        );
+    }
+    return (
+        post.body.slice(0, CONTENT_MAX_CHARS) + (post.body.length > CONTENT_MAX_CHARS ? "..." : "")
+    );
+};
+
 function PostPreviewCard({ postDetail, postID, needFetch = false }) {
-    const contentMaxChars = 320;
     const theme = useTheme();
     const [post, setPost] = useState({});
     const [apiError, setApiError] = useState("");
@@ -47,9 +67,6 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
         }
     }, [postDetail, postID, needFetch]);
     if (!post) return null;
-    let postContent = post.body || "";
-    postContent =
-        postContent.slice(0, contentMaxChars) + (postContent.length > contentMaxChars ? "..." : "");
 
     const appName = post.snoosdigest_app;
     const postid = post[`${appName}_id`];
@@ -95,23 +112,12 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                 <Typography
                     variant="body1"
                     color="text.primary"
+                    component="div"
                     sx={{
                         mt: 1,
                     }}
                 >
-                    {post.body_is_url ? (
-                        <Link
-                            component={RouterLink}
-                            to={postContent}
-                            target="_blank"
-                            sx={{ color: "primary.main" }}
-                            underline="hover"
-                        >
-                            {postContent}
-                        </Link>
-                    ) : (
-                        postContent
-                    )}
+                    {getPostContent(post)}
                 </Typography>
             </CardContent>
             <CardActions sx={{ p: 2, px: 0, pt: 0.5 }}>

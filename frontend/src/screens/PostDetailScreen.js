@@ -17,11 +17,43 @@ import ForwardIcon from "@mui/icons-material/Forward";
 import Comment from "@mui/icons-material/Comment";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { Parser as HtmlParser } from "html-to-react";
 
 import CommentCard from "../components/CommentCard";
 import apiService from "../services/api";
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
+
+const getPostContent = (post, appName) => {
+    if (Object.keys(post).length === 0) {
+        return "";
+    }
+    if (post.img_url && post.img_url.length !== 0) {
+        return <img src={post.img_url} alt="" />;
+    }
+    if (post.video_url && post.video_url.length !== 0) {
+        return <CardMedia component="video" image={post.video_url} controls />;
+    }
+    if (post.body_is_url) {
+        return (
+            <Link
+                component={RouterLink}
+                to={post.body}
+                target="_blank"
+                sx={{ color: "primary.main" }}
+                underline="hover"
+            >
+                {post.body}
+            </Link>
+        );
+    }
+
+    if (appName === "hackernews") {
+        const htmlToReactParser = new HtmlParser();
+        return htmlToReactParser.parse(post.body);
+    }
+    return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
+};
 
 function PostDetailScreen() {
     const theme = useTheme();
@@ -37,10 +69,8 @@ function PostDetailScreen() {
                 .getPost(id, app)
                 .then((res) => {
                     const postData = res.data;
-                    console.info(postData);
                     setPost(postData);
                     setPostComments(postData.comments);
-                    console.info(postData.comments);
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -57,22 +87,6 @@ function PostDetailScreen() {
                 });
         }
     }, [id, app]);
-
-    const postContent = (post, appName) => {
-        if (Object.keys(post).length === 0) {
-            return "";
-        }
-        if (post.img_url && post.img_url.length !== 0) {
-            return <img src={post.img_url} alt="" />;
-        }
-        if (post.video_url && post.video_url.length !== 0) {
-            return <CardMedia component="video" image={post.video_url} controls />;
-        }
-        if (appName === "hackernews") {
-            return post.body;
-        }
-        return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
-    };
 
     if (!["reddit", "hackernews"].includes(app)) return;
     if (apiError) return;
@@ -175,19 +189,7 @@ function PostDetailScreen() {
                         </Typography>
 
                         <Typography variant="body1" component="div" sx={{ my: 3 }}>
-                            {post.body_is_url ? (
-                                <Link
-                                    component={RouterLink}
-                                    to={postContent(post, app)}
-                                    target="_blank"
-                                    sx={{ color: "primary.main" }}
-                                    underline="hover"
-                                >
-                                    {postContent(post, app)}
-                                </Link>
-                            ) : (
-                                postContent(post, app)
-                            )}
+                            {getPostContent(post, app)}
                         </Typography>
                         <Stack
                             direction="row"
@@ -272,7 +274,6 @@ function PostDetailScreen() {
                                             needFetch={app === "hackernews"}
                                             appName={app}
                                         />
-                                        <Divider sx={{ p: 0, mt: "0 !important" }} />
                                     </Box>
                                 ) : (
                                     <Box key={index}>

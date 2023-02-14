@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material/styles";
 
 import RedditHome from "../components/RedditHome";
 import HackernewsHome from "../components/HackernewsHome";
-import { Link, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 function TabPanel({ children, value, index, ...other }) {
     return (
@@ -85,7 +85,7 @@ function HomeScreen({ tabIndex }) {
                             component={RouterLink}
                             to={"/hackernews"}
                             label={
-                                <Typography>
+                                <Typography component="div">
                                     Hacker News
                                     <Chip label="beta" size="small" sx={{ ml: 0.5 }} />
                                 </Typography>
