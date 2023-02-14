@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import ForwardIcon from "@mui/icons-material/Forward";
 import Button from "@mui/material/Button";
 import Comment from "@mui/icons-material/Comment";
+import Skeleton from "@mui/material/Skeleton";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
 
@@ -54,6 +55,9 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
     const postid = post[`${appName}_id`];
     const detailPagePath = `/${appName}/posts/${postid}`;
     if (apiError) return null;
+    if (!post || Object.keys(post).length === 0) {
+        return <Skeleton variant="rounded" height={130} sx={{ mt: 4 }} />;
+    }
     return (
         <Card
             sx={{

@@ -36,12 +36,12 @@ function HackernewsHome() {
 
     return (
         <Box>
-            <Stack spacing={posts.length === 0 ? 4 : 0}>
+            <Stack spacing={0}>
                 {(posts.length === 0 ? [...Array(5)] : posts).map((postID, index) =>
                     postID ? (
                         <PostPreviewCard postID={postID} key={index} needFetch />
                     ) : (
-                        <Skeleton variant="rounded" height={130} key={index} sx={{ mt: 2 }} />
+                        <Skeleton variant="rounded" height={130} key={index} sx={{ mt: 4 }} />
                     )
                 )}
             </Stack>

@@ -2,6 +2,7 @@
 from typing import Any
 
 import requests
+from cachetools import TTLCache, cached
 from django.conf import settings
 from requests import JSONDecodeError
 from rest_framework import status
@@ -10,6 +11,7 @@ from rest_framework.exceptions import APIException
 from .configs import API_BASE_URL, APP_NAME, MAX_COMMENTS
 
 
+@cached(cache=TTLCache(maxsize=500, ttl=20))
 def get_item_details(item_id: int) -> dict[str, Any]:
     """Returns the specified item's details as a dictionary. Can raise APIException."""
     item = requests.get(f"{API_BASE_URL}/item/{item_id}.json")

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -39,9 +40,9 @@ function tabProps(index) {
     };
 }
 
-function HomeScreen() {
+function HomeScreen({ tabIndex }) {
     const theme = useTheme();
-    const [tabValue, setTabValue] = useState(0);
+    const [tabValue, setTabValue] = useState(tabIndex);
 
     const handleChange = (event, newValue) => {
         setTabValue(newValue);
@@ -78,11 +79,11 @@ function HomeScreen() {
                         }}
                         textColor="inherit"
                     >
-                        <Tab label="Reddit" {...tabProps(0)} />
+                        <Tab component={RouterLink} to={"/"} label="Reddit" {...tabProps(0)} />
 
                         <Tab
-                            component={Link}
-                            to={"/login"}
+                            component={RouterLink}
+                            to={"/hackernews"}
                             label={
                                 <Typography>
                                     Hacker News

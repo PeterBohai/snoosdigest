@@ -3,8 +3,11 @@
 More info about their API can be found at https://github.com/HackerNews/API
 """
 import logging
+import time
 
 import requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from requests import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
@@ -24,6 +27,7 @@ class PostList(APIView):
     Supported types are described in config.SORT_TYPES
     """
 
+    @method_decorator(cache_page(10 * 60))
     def get(self, request: Request) -> DrfResponse:
         """Returns a lists o posts under the specified `sort_type`.
 
@@ -71,12 +75,14 @@ class PostDetail(APIView):
 class CommentDetail(APIView):
     """Retrieve a single HackerNews comment item"""
 
+    @method_decorator(cache_page(10 * 60))
     def get(self, request: Request, comment_id: int) -> Response:
         """Returns a single comment item instance.
 
         Example GET request: /api/hackernews/comments/<comment_id>
         """
         try:
+            time.sleep(4)
             item = get_item_details(comment_id)
             if item.get("type") != "comment":  # Add support for polls later
                 return DrfResponse(
