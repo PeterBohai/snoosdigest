@@ -30,6 +30,8 @@ from api.serializers import (
 )
 from users.utils import get_user_subscriptions
 
+from .utils import get_augmented_post_details
+
 reddit: Reddit = Reddit(**settings.REDDIT_APP_SETTINGS)
 logger = logging.getLogger(__name__)
 
@@ -60,7 +62,10 @@ def get_subreddit_top_posts(
         if posts_up_to_date:
             serialized_posts = SubredditPostSerializer(subreddit_posts, many=True).data
             logger.info(f"<{subreddit_name}> posts are up to date in db, returned db results")
-            return display_name_prefixed, serialized_posts[:num_posts]
+            posts = []
+            for post_details in serialized_posts[:num_posts]:
+                posts.append(get_augmented_post_details(post_details, display_name_prefixed))
+            return display_name_prefixed, posts
 
     # Call praw API if not in database or posts data is outdated, then update the database records
     logger.info(
@@ -71,7 +76,10 @@ def get_subreddit_top_posts(
     serialized_posts = queries.update_or_insert_subreddit_posts(
         subreddit_posts, praw_subreddit, time_filter
     )
-    return praw_subreddit.display_name_prefixed, serialized_posts[:num_posts]
+    posts = []
+    for post_details in serialized_posts[:num_posts]:
+        posts.append(get_augmented_post_details(post_details, praw_subreddit.display_name_prefixed))
+    return praw_subreddit.display_name_prefixed, posts
 
 
 class HomePagePostsList(APIView):
@@ -129,9 +137,7 @@ class RedditPostDetail(APIView):
             post.comment_limit = 8
             serialized_post: RedditPostSerializer = RedditPostSerializer(post)
             subreddit_name = queries.get_subreddit_prefixed_name_of_post(post_id, post)
-            return Response(
-                {**serialized_post.data, "subreddit_display_name_prefixed": subreddit_name}
-            )
+            return Response(get_augmented_post_details(serialized_post.data, subreddit_name))
         except PrawNotFound:
             print(f"prawcore.exceptions.NotFound: Post <{post_id}> does not exist - return 404")
             raise Http404

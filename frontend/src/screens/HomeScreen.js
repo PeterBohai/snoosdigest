@@ -1,108 +1,108 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
+import React, { useState } from "react";
 
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
+import Tabs from "@mui/material/Tabs";
+import Chip from "@mui/material/Chip";
+import Tab from "@mui/material/Tab";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Skeleton from "@mui/material/Skeleton";
-import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 
-import PostPreviewCard from "../components/PostPreviewCard";
-import apiService from "../services/api";
-import utilsService from "../services/utils";
-import { userActions } from "../store/userSlice";
+import RedditHome from "../components/RedditHome";
+import HackernewsHome from "../components/HackernewsHome";
+import { Link, Typography } from "@mui/material";
+
+function TabPanel({ children, value, index, ...other }) {
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+        </div>
+    );
+}
+
+function tabProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        "aria-controls": `simple-tabpanel-${index}`,
+        sx: {
+            py: 1.2,
+            px: 2.8,
+            minHeight: "32px",
+            fontWeight: "bold",
+            fontSize: "inherit",
+        },
+    };
+}
 
 function HomeScreen() {
-    const [subredditPosts, setSubredditPosts] = useState({});
     const theme = useTheme();
-    const dispatch = useDispatch();
-    const userSubscriptions = useSelector((state) => state.user.subscriptions);
+    const [tabValue, setTabValue] = useState(0);
 
-    useEffect(() => {
-        apiService
-            .getHomePagePosts("day")
-            .then((res) => {
-                setSubredditPosts(res.data);
-                if (res.status === 204) {
-                    setSubredditPosts(null);
-                }
-            })
-            .catch((err) => {
-                console.error("ERROR getting home page posts", err.response.data);
-                if (err.response.data.code === "user_not_found") {
-                    localStorage.removeItem("user");
-                    dispatch(userActions.logout());
-                    window.location.reload();
-                }
-            });
-    }, [userSubscriptions, dispatch]);
+    const handleChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+    const container_breakpoints = {
+        [theme.breakpoints.down("lg")]: {
+            maxWidth: "sm",
+        },
+        [theme.breakpoints.up("lg")]: {
+            maxWidth: "md",
+        },
+    };
 
     return (
-        <div>
-            <Container
-                sx={{
-                    [theme.breakpoints.down("lg")]: {
-                        maxWidth: "sm",
-                    },
-                    [theme.breakpoints.up("lg")]: {
-                        maxWidth: "md",
-                    },
-                }}
-            >
-                {/* If subredditPosts is not loaded, provide empty (2D) Array to map function in order to properly display loading skeletons */}
-                {subredditPosts === null
-                    ? null
-                    : (Object.keys(subredditPosts).length === 0
-                          ? [...Array(3)].map((e) => new Array(2))
-                          : Object.entries(subredditPosts)
-                      ).map(([subreddit, posts], index) => (
-                          <Box sx={{ pt: 3, pb: 1 }} key={index}>
-                              {subreddit ? (
-                                  <Typography
-                                      gutterBottom
-                                      variant="h3"
-                                      component="h3"
-                                      color="primary"
-                                  >
-                                      <Link
-                                          component={RouterLink}
-                                          to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
-                                              subreddit
-                                          )}`}
-                                          underline="hover"
-                                          color="inherit"
-                                      >
-                                          {subreddit}
-                                      </Link>
-                                  </Typography>
-                              ) : (
-                                  <Skeleton variant="text" width={310} height={54} sx={{ mb: 2 }} />
-                              )}
-                              <Divider />
-                              {
-                                  <Stack spacing={posts ? 1 : 4}>
-                                      {(posts ? posts : [...Array(2)]).map((post, index) =>
-                                          post ? (
-                                              <PostPreviewCard post={post} key={index} />
-                                          ) : (
-                                              <Skeleton
-                                                  variant="rounded"
-                                                  height={130}
-                                                  key={index}
-                                                  sx={{ mt: 2 }}
-                                              />
-                                          )
-                                      )}
-                                  </Stack>
-                              }
-                          </Box>
-                      ))}
+        <Box>
+            <Box sx={{ borderBottom: 0, borderColor: "divider" }}>
+                <Container sx={container_breakpoints}>
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleChange}
+                        aria-label="App Tabs"
+                        centered
+                        sx={{
+                            minHeight: "32px",
+                            fontSize: theme.typography.subtitle1.fontSize,
+                        }}
+                        TabIndicatorProps={{
+                            sx: {
+                                bgcolor:
+                                    tabValue === 1
+                                        ? theme.palette.app.hackernews
+                                        : theme.palette.app.reddit,
+                            },
+                        }}
+                        textColor="inherit"
+                    >
+                        <Tab label="Reddit" {...tabProps(0)} />
+
+                        <Tab
+                            component={Link}
+                            to={"/login"}
+                            label={
+                                <Typography>
+                                    Hacker News
+                                    <Chip label="beta" size="small" sx={{ ml: 0.5 }} />
+                                </Typography>
+                            }
+                            {...tabProps(1)}
+                        />
+                    </Tabs>
+                </Container>
+            </Box>
+            <Container sx={container_breakpoints}>
+                <TabPanel value={tabValue} index={0}>
+                    <RedditHome />
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                    <HackernewsHome />
+                </TabPanel>
             </Container>
-        </div>
+        </Box>
     );
 }
 

@@ -23,7 +23,7 @@ import apiService from "../services/api";
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
 
-function PostDetailScreen({ appName }) {
+function PostDetailScreen() {
     const theme = useTheme();
     const [post, setPost] = useState({});
     const [postComments, setPostComments] = useState([]);
@@ -34,12 +34,13 @@ function PostDetailScreen({ appName }) {
     useEffect(() => {
         if (["reddit", "hackernews"].includes(app)) {
             apiService
-                .getPost(id)
+                .getPost(id, app)
                 .then((res) => {
                     const postData = res.data;
                     console.info(postData);
                     setPost(postData);
                     setPostComments(postData.comments);
+                    console.info(postData.comments);
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -57,15 +58,18 @@ function PostDetailScreen({ appName }) {
         }
     }, [id, app]);
 
-    const postContent = (post) => {
+    const postContent = (post, appName) => {
         if (Object.keys(post).length === 0) {
             return "";
         }
-        if (post.img_url.length !== 0) {
+        if (post.img_url && post.img_url.length !== 0) {
             return <img src={post.img_url} alt="" />;
         }
-        if (post.video_url.length !== 0) {
+        if (post.video_url && post.video_url.length !== 0) {
             return <CardMedia component="video" image={post.video_url} controls />;
+        }
+        if (appName === "hackernews") {
+            return post.body;
         }
         return <Markdown options={themeService.markdownBaseOptions}>{post.body}</Markdown>;
     };
@@ -108,7 +112,7 @@ function PostDetailScreen({ appName }) {
                             alignItems={{ xs: "", md: "center" }}
                             spacing={{ xs: 0, md: 1 }}
                         >
-                            {post.subreddit_display_name_prefixed.length !== 0 ? (
+                            {post.subreddit_name && post.subreddit_name.length !== 0 ? (
                                 <Typography
                                     variant="body1"
                                     fontWeight="bold"
@@ -120,15 +124,34 @@ function PostDetailScreen({ appName }) {
                                     <Link
                                         component={RouterLink}
                                         to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
-                                            post.subreddit_display_name_prefixed
+                                            post.subreddit_name
                                         )}`}
                                         underline="hover"
                                         color="inherit"
                                     >
-                                        {post.subreddit_display_name_prefixed}
+                                        {post.subreddit_name}
                                     </Link>
                                 </Typography>
-                            ) : null}
+                            ) : (
+                                <Typography
+                                    variant="body1"
+                                    fontWeight="bold"
+                                    fontSize={{
+                                        xs: theme.typography.body2.fontSize,
+                                        mobile: theme.typography.body1.fontSize,
+                                    }}
+                                >
+                                    <Link
+                                        component={RouterLink}
+                                        to={post[app + "_url"]}
+                                        underline="hover"
+                                        target="_blank"
+                                        color="inherit"
+                                    >
+                                        {app}
+                                    </Link>
+                                </Typography>
+                            )}
                             <Typography
                                 variant="body1"
                                 color="discrete.main"
@@ -137,9 +160,9 @@ function PostDetailScreen({ appName }) {
                                     mobile: theme.typography.body1.fontSize,
                                 }}
                             >
-                                {`${utilsService.getRelativeTime(post.created_utc)} by u/${
-                                    post.author_name
-                                }`}
+                                {`${utilsService.getRelativeTime(post.created_utc)} by ${
+                                    app === "reddit" ? "/u" : ""
+                                }${post.author_name}`}
                             </Typography>
                         </Stack>
                         <Typography
@@ -152,7 +175,19 @@ function PostDetailScreen({ appName }) {
                         </Typography>
 
                         <Typography variant="body1" component="div" sx={{ my: 3 }}>
-                            {postContent(post)}
+                            {post.body_is_url ? (
+                                <Link
+                                    component={RouterLink}
+                                    to={postContent(post, app)}
+                                    target="_blank"
+                                    sx={{ color: "primary.main" }}
+                                    underline="hover"
+                                >
+                                    {postContent(post, app)}
+                                </Link>
+                            ) : (
+                                postContent(post, app)
+                            )}
                         </Typography>
                         <Stack
                             direction="row"
@@ -163,8 +198,12 @@ function PostDetailScreen({ appName }) {
                             <Grid container direction="row" alignItems="center" maxWidth={"3.8rem"}>
                                 <Grid item sx={{ ml: -0.4 }}>
                                     <ForwardIcon
-                                        color="primary"
-                                        sx={{ transform: "rotate(-90deg)", fontSize: 20, mt: 0.5 }}
+                                        sx={{
+                                            transform: "rotate(-90deg)",
+                                            fontSize: 20,
+                                            mt: 0.5,
+                                            color: theme.palette.app[app],
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item>
@@ -195,7 +234,7 @@ function PostDetailScreen({ appName }) {
                                 </Grid>
                                 <Grid item sx={{ ml: 1 }}>
                                     <Button
-                                        href={post.reddit_url}
+                                        href={post[app + "_url"]}
                                         startIcon={
                                             <LaunchIcon
                                                 sx={{ mr: -0.5, transform: "scale(0.9)" }}
@@ -205,7 +244,7 @@ function PostDetailScreen({ appName }) {
                                         sx={{ color: "discrete.main", fontWeight: "bold" }}
                                         size="large"
                                     >
-                                        Reddit
+                                        Source
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -225,7 +264,14 @@ function PostDetailScreen({ appName }) {
                             (comment, index) =>
                                 comment ? (
                                     <Box key={index}>
-                                        <CommentCard comment={comment} />
+                                        <CommentCard
+                                            commentDetail={
+                                                typeof comment === "object" ? comment : null
+                                            }
+                                            commentID={comment}
+                                            needFetch={app === "hackernews"}
+                                            appName={app}
+                                        />
                                         <Divider sx={{ p: 0, mt: "0 !important" }} />
                                     </Box>
                                 ) : (

@@ -33,6 +33,12 @@ const getTheme = (mode) => {
                 },
             },
         },
+        palette: {
+            app: {
+                reddit: theme.palette.primary.main,
+                hackernews: theme.palette.warning.main,
+            },
+        },
         typography: {
             md_body: {
                 [theme.breakpoints.up("xs")]: {

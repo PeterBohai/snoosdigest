@@ -69,7 +69,7 @@ function SubredditScreen() {
                         {(posts.posts.length === 0 ? [...Array(NUM_POSTS)] : posts.posts).map(
                             (post, index) =>
                                 post ? (
-                                    <PostPreviewCard post={post} key={index} />
+                                    <PostPreviewCard postDetail={post} key={index} />
                                 ) : (
                                     <Skeleton
                                         variant="rounded"

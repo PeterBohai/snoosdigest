@@ -13,7 +13,7 @@ from rest_framework.response import Response as DrfResponse
 from rest_framework.views import APIView
 
 from .configs import API_BASE_URL, MAX_POSTS, SORT_TYPES
-from .utils import get_item_details
+from .utils import build_comment_item, build_post_like_item, get_item_details
 
 logger = logging.getLogger(__name__)
 
@@ -56,13 +56,35 @@ class PostDetail(APIView):
         """
         try:
             item = get_item_details(post_id)
-            if item.get("type") == "comment":
+            if item.get("type") in ("comment", "poll"):  # Add support for polls later
                 return DrfResponse(
                     f"id={post_id} is not a post-like item", status=status.HTTP_400_BAD_REQUEST
                 )
-            return DrfResponse(item)
+            return DrfResponse(build_post_like_item(item))
         except APIException as err:
             return DrfResponse(
                 f"APIException occurred. Skipped post - {err}",
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class CommentDetail(APIView):
+    """Retrieve a single HackerNews comment item"""
+
+    def get(self, request: Request, comment_id: int) -> Response:
+        """Returns a single comment item instance.
+
+        Example GET request: /api/hackernews/comments/<comment_id>
+        """
+        try:
+            item = get_item_details(comment_id)
+            if item.get("type") != "comment":  # Add support for polls later
+                return DrfResponse(
+                    f"id={comment_id} is not a comment item", status=status.HTTP_400_BAD_REQUEST
+                )
+            return DrfResponse(build_comment_item(item))
+        except APIException as err:
+            return DrfResponse(
+                f"APIException occurred. Skipped comment - {err}",
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

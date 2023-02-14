@@ -12,8 +12,8 @@ function getTopPosts(subreddit, timeFilter, numPosts) {
     });
 }
 
-function getPost(postId) {
-    return axios.get(`${baseUrl}/reddit/posts/${postId}`);
+function getPost(postId, appName) {
+    return axios.get(`${baseUrl}/${appName}/posts/${postId}`);
 }
 
 function postUserSubscriptions(subreddit_name) {
