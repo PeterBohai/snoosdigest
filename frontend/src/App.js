@@ -39,6 +39,7 @@ function App() {
                 <ScrollToTop />
                 <Routes>
                     <Route path="/" element={<HomeScreen tabIndex={0} />} />
+                    <Route path="/reddit" element={<HomeScreen tabIndex={0} />} />
                     <Route path="/hackernews" element={<HomeScreen tabIndex={1} />} />
                     <Route path="/privacy" element={<PrivacyPolicyScreen />} />
                     <Route path="/about" element={<AboutUsScreen />} />

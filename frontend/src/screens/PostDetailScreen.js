@@ -156,7 +156,7 @@ function PostDetailScreen() {
                                 >
                                     <Link
                                         component={RouterLink}
-                                        to={post[app + "_url"]}
+                                        to={`/${app}`}
                                         underline="hover"
                                         target="_blank"
                                         color="inherit"
