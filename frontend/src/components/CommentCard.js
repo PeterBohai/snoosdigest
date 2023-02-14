@@ -29,7 +29,6 @@ function CommentCard({ commentDetail, commentID, appName, needFetch = false }) {
             getHackernewsCommentDetails(commentID)
                 .then((res) => {
                     setComment(res.data);
-                    console.log(res.data);
                 })
                 .catch((err) => {
                     if (err.response) {

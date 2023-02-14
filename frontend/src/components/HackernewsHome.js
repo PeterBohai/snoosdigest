@@ -16,7 +16,6 @@ function HackernewsHome() {
         getHackernewsPosts("best")
             .then((res) => {
                 setPosts(res.data);
-                console.log(res.data);
             })
             .catch((err) => {
                 if (err.response) {

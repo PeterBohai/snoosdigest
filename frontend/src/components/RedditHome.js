@@ -24,7 +24,6 @@ function RedditHome() {
             .getHomePagePosts("day")
             .then((res) => {
                 setSubredditPosts(res.data);
-                console.log(res.data);
                 if (res.status === 204) {
                     setSubredditPosts(null);
                 }
