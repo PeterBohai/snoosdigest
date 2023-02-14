@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 
-import { getHackernewsPosts } from "../services/hackernews";
-import PostPreviewCard from "../components/PostPreviewCard";
+import { getHackernewsPosts } from "../../services/hackernews";
+import PostPreviewCard from "../PostPreviewCard";
 
 function HackernewsHome() {
     const [posts, setPosts] = useState([]);

@@ -9,10 +9,10 @@ import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import Divider from "@mui/material/Divider";
 
-import PostPreviewCard from "../components/PostPreviewCard";
-import apiService from "../services/api";
-import utilsService from "../services/utils";
-import { userActions } from "../store/userSlice";
+import PostPreviewCard from "../PostPreviewCard";
+import apiService from "../../services/api";
+import utilsService from "../../services/utils";
+import { userActions } from "../../store/userSlice";
 
 function RedditHome() {
     const [subredditPosts, setSubredditPosts] = useState({});

@@ -8,28 +8,26 @@ import Tab from "@mui/material/Tab";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 
-import RedditHome from "../components/RedditHome";
-import HackernewsHome from "../components/HackernewsHome";
 import { Typography } from "@mui/material";
 
-function TabPanel({ children, value, index, ...other }) {
+function TabPanel({ children, value, panelName, ...other }) {
     return (
         <div
             role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            hidden={value !== panelName}
+            id={`simple-tabpanel-${panelName}`}
+            aria-labelledby={`simple-tab-${panelName}`}
             {...other}
         >
-            {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+            {value === panelName && <Box sx={{ py: 3 }}>{children}</Box>}
         </div>
     );
 }
 
-function tabProps(index) {
+function tabProps(value) {
     return {
-        id: `simple-tab-${index}`,
-        "aria-controls": `simple-tabpanel-${index}`,
+        id: `simple-tab-${value}`,
+        "aria-controls": `simple-tabpanel-${value}`,
         sx: {
             py: 1.2,
             px: 2.8,
@@ -40,9 +38,11 @@ function tabProps(index) {
     };
 }
 
-function HomeScreen({ tabIndex }) {
+export default function HomeWrapper({ tabName, children }) {
     const theme = useTheme();
-    const [tabValue, setTabValue] = useState(tabIndex);
+    const [tabValue, setTabValue] = useState(tabName);
+    console.log(tabName);
+    console.log(tabValue);
 
     const handleChange = (event, newValue) => {
         setTabValue(newValue);
@@ -79,9 +79,16 @@ function HomeScreen({ tabIndex }) {
                         }}
                         textColor="inherit"
                     >
-                        <Tab component={RouterLink} to={"/"} label="Reddit" {...tabProps(0)} />
+                        <Tab
+                            value="reddit"
+                            component={RouterLink}
+                            to={"/"}
+                            label="Reddit"
+                            {...tabProps("reddit")}
+                        />
 
                         <Tab
+                            value="hackernews"
                             component={RouterLink}
                             to={"/hackernews"}
                             label={
@@ -94,21 +101,16 @@ function HomeScreen({ tabIndex }) {
                                     />
                                 </Typography>
                             }
-                            {...tabProps(1)}
+                            {...tabProps("hackernews")}
                         />
                     </Tabs>
                 </Container>
             </Box>
             <Container sx={container_breakpoints}>
-                <TabPanel value={tabValue} index={0}>
-                    <RedditHome />
-                </TabPanel>
-                <TabPanel value={tabValue} index={1}>
-                    <HackernewsHome />
+                <TabPanel value={tabValue} panelName={tabName}>
+                    {children}
                 </TabPanel>
             </Container>
         </Box>
     );
 }
-
-export default HomeScreen;

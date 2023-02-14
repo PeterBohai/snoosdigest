@@ -6,7 +6,6 @@ import "./App.css";
 import Header from "./components/Header";
 import PostDetailScreen from "./screens/PostDetailScreen";
 import Footer from "./components/Footer";
-import HomeScreen from "./screens/HomeScreen";
 import SubredditScreen from "./screens/SubredditScreen";
 import LogInScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -18,6 +17,8 @@ import ResetPasswordConfirmScreen from "./screens/ResetPasswordConfirmScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import HomeScreenReddit from "./screens/HomeScreenReddit";
+import HomeScreenHackernews from "./screens/HomeScreenHackernews";
 
 import authService from "./services/auth";
 import { updateUserSubscriptions } from "./store/userSlice";
@@ -38,9 +39,9 @@ function App() {
             <main>
                 <ScrollToTop />
                 <Routes>
-                    <Route path="/" element={<HomeScreen tabIndex={0} />} />
-                    <Route path="/reddit" element={<HomeScreen tabIndex={0} />} />
-                    <Route path="/hackernews" element={<HomeScreen tabIndex={1} />} />
+                    <Route path="/" element={<HomeScreenReddit />} />
+                    <Route path="/reddit" element={<HomeScreenReddit />} />
+                    <Route path="/hackernews" element={<HomeScreenHackernews />} />
                     <Route path="/privacy" element={<PrivacyPolicyScreen />} />
                     <Route path="/about" element={<AboutUsScreen />} />
                     <Route
