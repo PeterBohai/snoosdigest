@@ -110,7 +110,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     )}
                 </Typography>
             </CardContent>
-            <CardActions sx={{ p: 2, px: 0, pt: 0 }}>
+            <CardActions sx={{ p: 2, px: 0, pt: 0.5 }}>
                 <Stack
                     direction="row"
                     alignItems="center"
