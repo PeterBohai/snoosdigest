@@ -187,7 +187,11 @@ function PostDetailScreen() {
                             {post.title}
                         </Typography>
 
-                        <Typography variant="body1" component="div" sx={{ my: 3 }}>
+                        <Typography
+                            variant="body1"
+                            component="div"
+                            sx={{ my: 3, overflowWrap: "break-word" }}
+                        >
                             {getPostContent(post, app)}
                         </Typography>
                         <Stack

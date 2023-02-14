@@ -115,6 +115,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     component="div"
                     sx={{
                         mt: 1,
+                        overflowWrap: "break-word",
                     }}
                 >
                     {getPostContent(post)}
