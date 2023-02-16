@@ -1,5 +1,5 @@
 from datetime import date, datetime, timezone
-from typing import Union
+from typing import Any, Union
 
 import pytest
 
@@ -58,4 +58,19 @@ def valid_user_data() -> dict[str, Union[str, bool]]:
         "email": user_email,
         "password": "very-secret-password",
         "dark_mode": True,
+    }
+
+
+@pytest.fixture
+def hackernews_json_res() -> dict[str, Any]:
+    return {
+        "by": "dhouston",
+        "descendants": 71,
+        "id": 8863,
+        "kids": [9224, 8917],
+        "score": 104,
+        "time": 1175714200,
+        "title": "My YC app: Dropbox - Throw away your USB drive",
+        "type": "story",
+        "url": "http://www.getdropbox.com/u/2/screencast.html",
     }
