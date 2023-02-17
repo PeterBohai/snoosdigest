@@ -74,3 +74,19 @@ def hackernews_json_res() -> dict[str, Any]:
         "type": "story",
         "url": "http://www.getdropbox.com/u/2/screencast.html",
     }
+
+
+@pytest.fixture
+def hackernews_comment_json_res() -> dict[str, Any]:
+    return {
+        "by": "norvig",
+        "id": 2921983,
+        "kids": [
+            2922097,
+            2922429,
+        ],
+        "parent": 2921506,
+        "text": "Test text",
+        "time": 1314211127,
+        "type": "comment",
+    }

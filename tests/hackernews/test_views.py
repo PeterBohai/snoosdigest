@@ -31,13 +31,39 @@ def test_get_post_detail_returns_200_for_valid_id(
     with patch("requests.get") as mock_get:
         mock_get.return_value = Mock(status_code=200, json=lambda: hackernews_json_res)
         res: Response = api_client.get(reverse("hackernews:post_detail", kwargs={"post_id": 8863}))
-    assert type(res.data) is dict
-    assert res.data["author_name"] == "dhouston"
-    assert type(res.data["num_comments"]) is int
-    assert res.data["hackernews_id"] == 8863
-    assert type(res.data["comments"]) is list
-    assert type(res.data["upvotes"]) is int
-    assert res.data["created_utc"] == 1175714200
-    assert res.data["title"] == "My YC app: Dropbox - Throw away your USB drive"
-    assert res.data["type"] == "story"
-    assert res.data["body"] == "http://www.getdropbox.com/u/2/screencast.html"
+
+    assert res.status_code == 200
+    assert res.data == {
+        "snoosdigest_app": "hackernews",
+        "hackernews_id": 8863,
+        "title": "My YC app: Dropbox - Throw away your USB drive",
+        "author_name": "dhouston",
+        "upvotes": 104,
+        "num_comments": 71,
+        "body": "http://www.getdropbox.com/u/2/screencast.html",
+        "body_is_url": True,
+        "hackernews_url": "https://news.ycombinator.com/item?id=8863",
+        "created_utc": 1175714200,
+        "comments": [9224, 8917],
+        "type": "story",
+    }
+
+
+def test_get_comment_detail_returns_200_for_valid_id(
+    api_client: APIClient, hackernews_comment_json_res: dict
+) -> None:
+    with patch("requests.get") as mock_get:
+        mock_get.return_value = Mock(status_code=200, json=lambda: hackernews_comment_json_res)
+        res: Response = api_client.get(
+            reverse("hackernews:comment_detail", kwargs={"comment_id": 2921983})
+        )
+    assert res.status_code == 200
+    assert res.data == {
+        "id": 2921983,
+        "author": "norvig",
+        "body": "Test text",
+        "is_submitter": False,
+        "upvotes": None,
+        "created_utc": 1314211127,
+        "permalink": "https://news.ycombinator.com/item?id=2921983",
+    }

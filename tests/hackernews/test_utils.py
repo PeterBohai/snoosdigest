@@ -1,11 +1,13 @@
-from typing import Generator
+from typing import Any, Generator
 from unittest.mock import Mock, patch
 
 import pytest
 from rest_framework.exceptions import APIException
 
 from hackernews.utils import (
+    build_comment_item,
     build_post_body,
+    build_post_like_item,
     build_source_url,
     determine_is_body_url,
     get_item_details,
@@ -98,3 +100,60 @@ def test_build_post_body_when_no_text_or_body() -> None:
 def test_build_source_url() -> None:
     assert build_source_url({"id": 123}) == "https://news.ycombinator.com/item?id=123"
     assert build_source_url({}) == "https://news.ycombinator.com"
+
+
+def test_build_post_like_item(hackernews_json_res: dict) -> None:
+    basic_result: dict[str, Any] = {
+        "snoosdigest_app": "hackernews",
+        "hackernews_id": 8863,
+        "title": "My YC app: Dropbox - Throw away your USB drive",
+        "author_name": "dhouston",
+        "upvotes": 104,
+        "num_comments": 71,
+        "body": "http://www.getdropbox.com/u/2/screencast.html",
+        "body_is_url": True,
+        "hackernews_url": "https://news.ycombinator.com/item?id=8863",
+        "created_utc": 1175714200,
+        "comments": [9224, 8917],
+        "type": "story",
+    }
+    assert build_post_like_item(hackernews_json_res) == basic_result
+    assert build_post_like_item({**hackernews_json_res, "deleted": True}) == {
+        **basic_result,
+        "deleted": True,
+    }
+    assert build_post_like_item({**hackernews_json_res, "dead": False}) == {
+        **basic_result,
+        "dead": False,
+    }
+    assert build_post_like_item({**hackernews_json_res, "dead": False, "deleted": True}) == {
+        **basic_result,
+        "dead": False,
+        "deleted": True,
+    }
+
+
+def test_build_comment_item(hackernews_comment_json_res: dict) -> None:
+    basic_result: dict[str, Any] = {
+        "id": 2921983,
+        "author": "norvig",
+        "body": "Test text",
+        "is_submitter": False,
+        "upvotes": None,
+        "created_utc": 1314211127,
+        "permalink": "https://news.ycombinator.com/item?id=2921983",
+    }
+    assert build_comment_item(hackernews_comment_json_res) == basic_result
+    assert build_comment_item({**hackernews_comment_json_res, "deleted": True}) == {
+        **basic_result,
+        "deleted": True,
+    }
+    assert build_comment_item({**hackernews_comment_json_res, "dead": False}) == {
+        **basic_result,
+        "dead": False,
+    }
+    assert build_comment_item({**hackernews_comment_json_res, "dead": False, "deleted": True}) == {
+        **basic_result,
+        "dead": False,
+        "deleted": True,
+    }
