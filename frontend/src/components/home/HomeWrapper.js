@@ -41,8 +41,6 @@ function tabProps(value) {
 export default function HomeWrapper({ tabName, children }) {
     const theme = useTheme();
     const [tabValue, setTabValue] = useState(tabName);
-    console.log(tabName);
-    console.log(tabValue);
 
     const handleChange = (event, newValue) => {
         setTabValue(newValue);
@@ -90,7 +88,7 @@ export default function HomeWrapper({ tabName, children }) {
                         <Tab
                             value="hackernews"
                             component={RouterLink}
-                            to={"/hackernews"}
+                            to={"/hackernews?sort_type=best"}
                             label={
                                 <Typography component="div" sx={{ fontWeight: "bold" }}>
                                     Hacker News

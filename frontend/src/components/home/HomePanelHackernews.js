@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -14,11 +15,11 @@ import PostPreviewCard from "../PostPreviewCard";
 function HackernewsHome() {
     const [posts, setPosts] = useState([]);
     const [apiError, setApiError] = useState("");
-    const [sortType, setSortType] = useState("best");
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         setPosts([]);
-        getHackernewsPosts(sortType)
+        getHackernewsPosts(searchParams.get("sort_type") || "best")
             .then((res) => {
                 setPosts(res.data);
             })
@@ -35,12 +36,12 @@ function HackernewsHome() {
                     setApiError("Something is wrong with the request.");
                 }
             });
-    }, [sortType]);
+    }, [searchParams]);
 
     if (apiError) return null;
 
     const handleSortTypeChange = (event) => {
-        setSortType(event.target.value);
+        setSearchParams({ sort_type: event.target.value });
     };
 
     return (
@@ -51,9 +52,9 @@ function HackernewsHome() {
                     <Select
                         labelId="sort-type-select-label"
                         id="sort-type-select"
-                        value={sortType}
+                        value={searchParams.get("sort_type") || "best"}
                         label="Sort By"
-                        defaultValue="best"
+                        defaultValue={searchParams.get("sort_type") || "best"}
                         onChange={handleSortTypeChange}
                         sx={{
                             borderWidth: "2px",
