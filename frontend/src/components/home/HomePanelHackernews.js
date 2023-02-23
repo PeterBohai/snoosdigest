@@ -70,9 +70,9 @@ function HackernewsHome() {
                 </FormControl>
             </Box>
             <Stack spacing={0}>
-                {(posts.length === 0 ? [...Array(5)] : posts).map((postID, index) =>
-                    postID ? (
-                        <PostPreviewCard postID={postID} key={index} needFetch />
+                {(posts.length === 0 ? [...Array(5)] : posts).map((post, index) =>
+                    post ? (
+                        <PostPreviewCard postDetail={post} key={index} />
                     ) : (
                         <Skeleton variant="rounded" height={130} key={index} sx={{ mt: 4 }} />
                     )

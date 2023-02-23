@@ -1,4 +1,6 @@
 """This module contains utility functions that help abstract actions and promote DRY."""
+import logging
+import time
 from typing import Any
 
 import requests
@@ -9,6 +11,8 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 from .configs import API_BASE_URL, APP_NAME, MAX_COMMENTS
+
+logger = logging.getLogger(__name__)
 
 
 @cached(cache=TTLCache(maxsize=500, ttl=20))
@@ -22,6 +26,17 @@ def get_item_details(item_id: int) -> dict[str, Any]:
         return item.json()
     except JSONDecodeError:
         raise APIException("Found invalid JSON when parsing item from HN API response")
+
+
+def get_post_details_from_ids(post_ids: list[int]) -> list[dict]:
+    """Given a list of post ids, return their post details as a list."""
+    post_details: list[dict] = []
+    start_benchmark = time.time()
+    for post_id in post_ids:
+        post = get_item_details(post_id)
+        post_details.append(build_post_like_item(post))
+    logger.info(f"{time.time() - start_benchmark:.3f}s to finish querying all post details")
+    return post_details
 
 
 def determine_is_body_url(item: dict[str, Any]) -> bool:
