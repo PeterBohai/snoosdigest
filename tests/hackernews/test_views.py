@@ -16,9 +16,20 @@ def test_get_posts_returns_400_on_bad_sort_type(api_client: APIClient) -> None:
     assert ", ".join(SORT_TYPES) in res.data
 
 
-def test_get_posts_returns_200_for_valid_path(api_client: APIClient) -> None:
-    with patch("requests.get") as mock_get:
-        mock_get.return_value = Mock(status_code=200, json=lambda: [1234, 5678, 1237, 2323])
+def test_get_posts_returns_200_for_valid_path(
+    api_client: APIClient, hackernews_json_res: dict
+) -> None:
+    with patch("requests.get") as mock_get, patch(
+        "hackernews.utils.get_item_details"
+    ) as mock_get_item_details:
+        mock_get.return_value = Mock(
+            status_code=200,
+            json=lambda: [
+                1234,
+                5678,
+            ],
+        )
+        mock_get_item_details.return_value = hackernews_json_res
         res: Response = api_client.get(f"{reverse('hackernews:posts')}?sort_type=best")
     assert res.status_code == HTTP_200_OK
     assert type(res.data) is list

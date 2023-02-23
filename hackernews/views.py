@@ -15,7 +15,12 @@ from rest_framework.response import Response as DrfResponse
 from rest_framework.views import APIView
 
 from .configs import API_BASE_URL, MAX_POSTS, SORT_TYPES
-from .utils import build_comment_item, build_post_like_item, get_item_details
+from .utils import (
+    build_comment_item,
+    build_post_like_item,
+    get_item_details,
+    get_post_details_from_ids,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -46,12 +51,13 @@ class PostList(APIView):
 
         res: Response = requests.get(f"{API_BASE_URL}/{sort_type}stories.json")
         post_ids: list[int] = res.json()[:MAX_POSTS]
-        return DrfResponse(post_ids)
+        return DrfResponse(get_post_details_from_ids(post_ids))
 
 
 class PostDetail(APIView):
     """Retrieve a single HackerNews post-like item"""
 
+    @method_decorator(cache_page(5 * 60))
     def get(self, request: Request, post_id: int) -> Response:
         """Returns a single post-like instance.
 
@@ -74,7 +80,7 @@ class PostDetail(APIView):
 class CommentDetail(APIView):
     """Retrieve a single HackerNews comment item"""
 
-    @method_decorator(cache_page(10 * 60))
+    @method_decorator(cache_page(30 * 60))
     def get(self, request: Request, comment_id: int) -> Response:
         """Returns a single comment item instance.
 
