@@ -45,7 +45,7 @@ const getTheme = (mode) => {
                 lineHeight: theme.typography.h4.lineHeight,
                 letterSpacing: theme.typography.h4.letterSpacing,
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: "1.12rem",
+                    fontSize: "1.05rem",
                 },
                 [theme.breakpoints.up("sm")]: {
                     fontSize: "1.15rem",
@@ -59,7 +59,7 @@ const getTheme = (mode) => {
             },
             preview_body: {
                 [theme.breakpoints.up("xs")]: {
-                    fontSize: theme.typography.body2.fontSize,
+                    fontSize: "0.85rem",
                     lineHeight: "1.2",
                     letterSpacing: theme.typography.body2.letterSpacing,
                 },

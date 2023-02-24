@@ -114,8 +114,21 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     </Link>
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={0.4} mt={0}>
-                    <AccessTimeIcon sx={{ color: "discrete.main", fontSize: 16, mt: -0.2 }} />
-                    <Typography variant="body2" color="discrete.main">
+                    <AccessTimeIcon
+                        sx={{
+                            color: "discrete.main",
+                            fontSize: { xs: 14, sm: 15 },
+                        }}
+                    />
+                    <Typography
+                        variant="body2"
+                        color="discrete.main"
+                        noWrap
+                        fontSize={{
+                            xs: "0.85rem",
+                            sm: theme.typography.body2.fontSize,
+                        }}
+                    >
                         {`${utilsService.getRelativeTime(post.created_utc)} 
                             by ${appName === "reddit" ? "/u" : ""}${post.author_name}`}
                     </Typography>
