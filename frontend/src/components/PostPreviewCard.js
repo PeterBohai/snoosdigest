@@ -96,7 +96,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
         >
             <CardContent sx={{ overflow: "hidden", px: 0, pb: 0, pt: 1 }}>
                 <Typography
-                    variant="h4"
+                    variant="preview_title"
                     fontFamily={"Domine, Palatino, Times New Roman, Times, serif"}
                 >
                     <Link
@@ -114,19 +114,32 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     </Link>
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={0.4} mt={0}>
-                    <AccessTimeIcon sx={{ color: "discrete.main", fontSize: 16, mt: -0.2 }} />
-                    <Typography variant="body2" color="discrete.main">
+                    <AccessTimeIcon
+                        sx={{
+                            color: "discrete.main",
+                            fontSize: { xs: 14, sm: 15 },
+                        }}
+                    />
+                    <Typography
+                        variant="body2"
+                        color="discrete.main"
+                        noWrap
+                        fontSize={{
+                            xs: "0.85rem",
+                            sm: theme.typography.body2.fontSize,
+                        }}
+                    >
                         {`${utilsService.getRelativeTime(post.created_utc)} 
                             by ${appName === "reddit" ? "/u" : ""}${post.author_name}`}
                     </Typography>
                 </Stack>
                 <Typography
-                    variant="body1"
+                    variant="preview_body"
                     color="text.primary"
                     component="div"
                     ref={bodyRef}
                     sx={{
-                        mt: 1,
+                        mt: { xs: 0.5, md: 1 },
                         overflowWrap: "break-word",
                         maxHeight: "74px",
                         WebkitMaskImage: `${

@@ -46,8 +46,11 @@ export default function HomeWrapper({ tabName, children }) {
         setTabValue(newValue);
     };
     const container_breakpoints = {
-        [theme.breakpoints.down("lg")]: {
+        [theme.breakpoints.up("xs")]: {
             maxWidth: "sm",
+        },
+        [theme.breakpoints.up("md")]: {
+            maxWidth: "750px",
         },
         [theme.breakpoints.up("lg")]: {
             maxWidth: "md",

@@ -40,6 +40,45 @@ const getTheme = (mode) => {
             },
         },
         typography: {
+            preview_title: {
+                fontWeight: 700,
+                lineHeight: theme.typography.h4.lineHeight,
+                letterSpacing: theme.typography.h4.letterSpacing,
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1.05rem",
+                },
+                [theme.breakpoints.up("sm")]: {
+                    fontSize: "1.15rem",
+                },
+                [theme.breakpoints.up("md")]: {
+                    fontSize: "1.25rem",
+                },
+                [theme.breakpoints.up("lg")]: {
+                    fontSize: "1.42rem",
+                },
+            },
+            preview_body: {
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "0.85rem",
+                    lineHeight: "1.2",
+                    letterSpacing: theme.typography.body2.letterSpacing,
+                },
+                [theme.breakpoints.up("sm")]: {
+                    fontSize: "0.9rem",
+                    lineHeight: "1.3",
+                    letterSpacing: theme.typography.body1.letterSpacing,
+                },
+                [theme.breakpoints.up("md")]: {
+                    fontSize: "0.95rem",
+                    lineHeight: "1.35",
+                    letterSpacing: theme.typography.body1.letterSpacing,
+                },
+                [theme.breakpoints.up("lg")]: {
+                    fontSize: theme.typography.body1.fontSize,
+                    lineHeight: "1.4",
+                    letterSpacing: theme.typography.body1.letterSpacing,
+                },
+            },
             md_body: {
                 [theme.breakpoints.up("xs")]: {
                     fontSize: "0.97rem",
