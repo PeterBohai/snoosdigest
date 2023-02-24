@@ -96,7 +96,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
         >
             <CardContent sx={{ overflow: "hidden", px: 0, pb: 0, pt: 1 }}>
                 <Typography
-                    variant="h4"
+                    variant="preview_title"
                     fontFamily={"Domine, Palatino, Times New Roman, Times, serif"}
                 >
                     <Link
@@ -121,12 +121,12 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     </Typography>
                 </Stack>
                 <Typography
-                    variant="body1"
+                    variant="preview_body"
                     color="text.primary"
                     component="div"
                     ref={bodyRef}
                     sx={{
-                        mt: 1,
+                        mt: { xs: 0.5, sm: 1 },
                         overflowWrap: "break-word",
                         maxHeight: "74px",
                         WebkitMaskImage: `${
