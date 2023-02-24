@@ -47,15 +47,8 @@ const getPostContent = (post) => {
 function PostPreviewCard({ postDetail, postID, needFetch = false }) {
     const theme = useTheme();
     const bodyRef = useRef(null);
-    const [bodyHeight, setBodyHeight] = useState(0);
     const [post, setPost] = useState(postDetail);
     const [apiError, setApiError] = useState("");
-
-    useEffect(() => {
-        if (bodyRef.current) {
-            setBodyHeight(bodyRef.current.clientHeight);
-        }
-    }, []);
 
     useEffect(() => {
         if (!needFetch) {
@@ -85,6 +78,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
     const postid = post[`${appName}_id`];
     const detailPagePath = `/${appName}/posts/${postid}`;
     if (apiError) return null;
+    const postBodyText = getPostContent(post);
 
     return (
         <Card
@@ -141,13 +135,24 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     sx={{
                         mt: { xs: 0.5, md: 1 },
                         overflowWrap: "break-word",
-                        maxHeight: "74px",
-                        WebkitMaskImage: `${
-                            bodyHeight <= 72 ? "" : "linear-gradient(180deg, #000 60%, transparent)"
-                        }`,
+                        maxHeight: { xs: "54px", sm: "60px", md: "66px", lg: "74px" },
+                        WebkitMaskImage: {
+                            xs:
+                                postBodyText.length <= 215 ||
+                                "linear-gradient(180deg, #000 60%, transparent)",
+                            sm:
+                                postBodyText.length <= 240 ||
+                                "linear-gradient(180deg, #000 60%, transparent)",
+                            md:
+                                postBodyText.length <= 285 ||
+                                "linear-gradient(180deg, #000 60%, transparent)",
+                            lg:
+                                postBodyText.length <= 340 ||
+                                "linear-gradient(180deg, #000 60%, transparent)",
+                        },
                     }}
                 >
-                    {getPostContent(post)}
+                    {postBodyText}
                 </Typography>
             </CardContent>
             <CardActions sx={{ p: 2, px: 0, pt: 0.5 }}>
