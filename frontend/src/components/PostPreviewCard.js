@@ -126,7 +126,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     component="div"
                     ref={bodyRef}
                     sx={{
-                        mt: { xs: 0.5, sm: 1 },
+                        mt: { xs: 0.5, md: 1 },
                         overflowWrap: "break-word",
                         maxHeight: "74px",
                         WebkitMaskImage: `${
