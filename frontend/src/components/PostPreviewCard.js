@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import Card from "@mui/material/Card";
@@ -10,14 +10,15 @@ import Stack from "@mui/material/Stack";
 import ForwardIcon from "@mui/icons-material/Forward";
 import Button from "@mui/material/Button";
 import Comment from "@mui/icons-material/Comment";
-import Skeleton from "@mui/material/Skeleton";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useTheme } from "@mui/material/styles";
+import { convert } from "html-to-text";
+import { marked } from "marked";
 
 import utilsService from "../services/utils";
 import { getHackernewsPostDetails } from "../services/hackernews";
 
-const CONTENT_MAX_CHARS = 320;
+const CONTENT_MAX_CHARS = 800;
 const getPostContent = (post) => {
     if (Object.keys(post).length === 0 || !post.body) return "";
     if (post.body_is_url) {
@@ -33,15 +34,28 @@ const getPostContent = (post) => {
             </Link>
         );
     }
-    return (
-        post.body.slice(0, CONTENT_MAX_CHARS) + (post.body.length > CONTENT_MAX_CHARS ? "..." : "")
-    );
+    let postText = post.body;
+    if (post.snoosdigest_app === "reddit") {
+        postText = marked.parse(postText);
+    }
+    postText = convert(postText, {
+        selectors: [{ selector: "a", options: { hideLinkHrefIfSameAsText: true } }],
+    });
+    return postText.slice(0, CONTENT_MAX_CHARS);
 };
 
 function PostPreviewCard({ postDetail, postID, needFetch = false }) {
     const theme = useTheme();
-    const [post, setPost] = useState({});
+    const bodyRef = useRef(null);
+    const [bodyHeight, setBodyHeight] = useState(0);
+    const [post, setPost] = useState(postDetail);
     const [apiError, setApiError] = useState("");
+
+    useEffect(() => {
+        if (bodyRef.current) {
+            setBodyHeight(bodyRef.current.clientHeight);
+        }
+    }, []);
 
     useEffect(() => {
         if (!needFetch) {
@@ -66,15 +80,12 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                 });
         }
     }, [postDetail, postID, needFetch]);
-    if (!post) return null;
 
     const appName = post.snoosdigest_app;
     const postid = post[`${appName}_id`];
     const detailPagePath = `/${appName}/posts/${postid}`;
     if (apiError) return null;
-    if (!post || Object.keys(post).length === 0) {
-        return <Skeleton variant="rounded" height={130} sx={{ mt: 4 }} />;
-    }
+
     return (
         <Card
             sx={{
@@ -113,9 +124,14 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     variant="body1"
                     color="text.primary"
                     component="div"
+                    ref={bodyRef}
                     sx={{
                         mt: 1,
                         overflowWrap: "break-word",
+                        maxHeight: "74px",
+                        WebkitMaskImage: `${
+                            bodyHeight <= 72 ? "" : "linear-gradient(180deg, #000 60%, transparent)"
+                        }`,
                     }}
                 >
                     {getPostContent(post)}
