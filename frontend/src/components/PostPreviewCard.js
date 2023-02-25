@@ -135,21 +135,41 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     sx={{
                         mt: { xs: 0.5, md: 1 },
                         overflowWrap: "break-word",
-                        maxHeight: { xs: "51px", sm: "60px", md: "66px", lg: "74px" },
                         ...(typeof postBodyText === "string" && {
-                            WebkitMaskImage: {
-                                xs:
-                                    postBodyText.length <= 215 ||
-                                    "linear-gradient(180deg, #000 60%, transparent)",
-                                sm:
-                                    postBodyText.length <= 240 ||
-                                    "linear-gradient(180deg, #000 60%, transparent)",
-                                md:
-                                    postBodyText.length <= 285 ||
-                                    "linear-gradient(180deg, #000 60%, transparent)",
-                                lg:
-                                    postBodyText.length <= 340 ||
-                                    "linear-gradient(180deg, #000 60%, transparent)",
+                            [theme.breakpoints.between("xs", "mobile")]: {
+                                maxHeight: "51px",
+                                ...(postBodyText.length > 194 && {
+                                    WebkitMaskImage:
+                                        "linear-gradient(180deg, #000 60%, transparent)",
+                                }),
+                            },
+                            [theme.breakpoints.between("mobile", "sm")]: {
+                                maxHeight: "51px",
+                                ...(postBodyText.length > 215 && {
+                                    WebkitMaskImage:
+                                        "linear-gradient(180deg, #000 60%, transparent)",
+                                }),
+                            },
+                            [theme.breakpoints.between("sm", "md")]: {
+                                maxHeight: "60px",
+                                ...(postBodyText.length > 240 && {
+                                    WebkitMaskImage:
+                                        "linear-gradient(180deg, #000 60%, transparent)",
+                                }),
+                            },
+                            [theme.breakpoints.between("md", "lg")]: {
+                                maxHeight: "66px",
+                                ...(postBodyText.length > 285 && {
+                                    WebkitMaskImage:
+                                        "linear-gradient(180deg, #000 60%, transparent)",
+                                }),
+                            },
+                            [theme.breakpoints.up("lg")]: {
+                                maxHeight: "71px",
+                                ...(postBodyText.length > 340 && {
+                                    WebkitMaskImage:
+                                        "linear-gradient(180deg, #000 60%, transparent)",
+                                }),
                             },
                         }),
                     }}
