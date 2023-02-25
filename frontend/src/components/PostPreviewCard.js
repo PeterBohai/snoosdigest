@@ -135,21 +135,23 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     sx={{
                         mt: { xs: 0.5, md: 1 },
                         overflowWrap: "break-word",
-                        maxHeight: { xs: "54px", sm: "60px", md: "66px", lg: "74px" },
-                        WebkitMaskImage: {
-                            xs:
-                                postBodyText.length <= 215 ||
-                                "linear-gradient(180deg, #000 60%, transparent)",
-                            sm:
-                                postBodyText.length <= 240 ||
-                                "linear-gradient(180deg, #000 60%, transparent)",
-                            md:
-                                postBodyText.length <= 285 ||
-                                "linear-gradient(180deg, #000 60%, transparent)",
-                            lg:
-                                postBodyText.length <= 340 ||
-                                "linear-gradient(180deg, #000 60%, transparent)",
-                        },
+                        maxHeight: { xs: "51px", sm: "60px", md: "66px", lg: "74px" },
+                        ...(typeof postBodyText === "string" && {
+                            WebkitMaskImage: {
+                                xs:
+                                    postBodyText.length <= 215 ||
+                                    "linear-gradient(180deg, #000 60%, transparent)",
+                                sm:
+                                    postBodyText.length <= 240 ||
+                                    "linear-gradient(180deg, #000 60%, transparent)",
+                                md:
+                                    postBodyText.length <= 285 ||
+                                    "linear-gradient(180deg, #000 60%, transparent)",
+                                lg:
+                                    postBodyText.length <= 340 ||
+                                    "linear-gradient(180deg, #000 60%, transparent)",
+                            },
+                        }),
                     }}
                 >
                     {postBodyText}
