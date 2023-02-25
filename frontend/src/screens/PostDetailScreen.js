@@ -104,7 +104,7 @@ function PostDetailScreen() {
                 },
             }}
         >
-            <Box sx={{ pt: 0, mt: 3, mb: 8, px: 0, whiteSpace: "pre-line" }}>
+            <Box sx={{ pt: 0, mt: { xs: 1, sm: 2 }, mb: 8, px: 0, whiteSpace: "pre-line" }}>
                 {/* POST SECTION */}
                 {Object.keys(post).length === 0 ? (
                     <Box>
@@ -124,9 +124,9 @@ function PostDetailScreen() {
                 ) : (
                     <Box>
                         <Stack
-                            direction={{ xs: "column", md: "row" }}
-                            alignItems={{ xs: "", md: "center" }}
-                            spacing={{ xs: 0, md: 1 }}
+                            direction={{ xs: "column", sm: "row" }}
+                            alignItems={{ xs: "", sm: "center" }}
+                            spacing={{ xs: -0.5, sm: 1 }}
                         >
                             {post.subreddit_name && post.subreddit_name.length !== 0 ? (
                                 <Typography
@@ -176,7 +176,7 @@ function PostDetailScreen() {
                                 }}
                             >
                                 {`${utilsService.getRelativeTime(post.created_utc)} by ${
-                                    app === "reddit" ? "/u" : ""
+                                    app === "reddit" ? "u/" : ""
                                 }${post.author_name}`}
                             </Typography>
                         </Stack>

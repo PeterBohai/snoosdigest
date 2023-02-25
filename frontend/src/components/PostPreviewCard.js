@@ -124,7 +124,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                         }}
                     >
                         {`${utilsService.getRelativeTime(post.created_utc)} 
-                            by ${appName === "reddit" ? "/u" : ""}${post.author_name}`}
+                            by ${appName === "reddit" ? "u/" : ""}${post.author_name}`}
                     </Typography>
                 </Stack>
                 <Typography
@@ -177,7 +177,7 @@ function PostPreviewCard({ postDetail, postID, needFetch = false }) {
                     {postBodyText}
                 </Typography>
             </CardContent>
-            <CardActions sx={{ p: 2, px: 0, pt: 0.5 }}>
+            <CardActions sx={{ p: 2, px: 0, pt: 0, pb: 1 }}>
                 <Stack
                     direction="row"
                     alignItems="center"

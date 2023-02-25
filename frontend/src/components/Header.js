@@ -353,7 +353,7 @@ function Header() {
     );
 
     return (
-        <Box sx={{ mb: 7 }}>
+        <Box sx={{ mb: 0 }}>
             {/* The zIndex is used to clip the side menu (Drawer) underneath the AppBar */}
             <ScrollToUpdate openSideDrawer={openSideDrawer}>
                 <AppBar
@@ -361,7 +361,7 @@ function Header() {
                     sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     elevation={0}
                 >
-                    <Toolbar sx={{ mx: "10px", ...(isSmallScreen && { mx: 0 }) }}>
+                    <Toolbar sx={{ mx: { xs: 0, sm: "10px" } }}>
                         <IconButton
                             onClick={toggleDrawer()}
                             size="large"
@@ -714,6 +714,7 @@ function Header() {
                     />
                 </Box>
             </Drawer>
+            <Toolbar id="back-to-top-anchor" />
         </Box>
     );
 }

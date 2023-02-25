@@ -48,24 +48,32 @@ function SubredditScreen() {
         <div>
             <Container
                 sx={{
-                    [theme.breakpoints.down("lg")]: {
+                    [theme.breakpoints.up("xs")]: {
                         maxWidth: "sm",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                        maxWidth: "750px",
                     },
                     [theme.breakpoints.up("lg")]: {
                         maxWidth: "md",
                     },
                 }}
             >
-                <Box sx={{ pt: 3, pb: 3 }} key={subreddit}>
+                <Box sx={{ pt: { xs: 1, sm: 2 }, pb: 3 }} key={subreddit}>
                     {posts.posts.length === 0 ? (
-                        <Skeleton variant="text" width={310} height={54} sx={{ mb: 2 }} />
+                        <Skeleton variant="text" width={"30%"} height={50} sx={{ mb: 0.5 }} />
                     ) : (
-                        <Typography gutterBottom variant="h3" component="h3" color="primary">
+                        <Typography
+                            variant="h3"
+                            component="h2"
+                            color="primary"
+                            sx={{ mb: { xs: 0.2, md: 0.5 } }}
+                        >
                             {posts.subreddit_name}
                         </Typography>
                     )}
                     <Divider />
-                    <Stack spacing={posts.posts.length === 0 ? 4 : 1}>
+                    <Stack spacing={0}>
                         {(posts.posts.length === 0 ? [...Array(NUM_POSTS)] : posts.posts).map(
                             (post, index) =>
                                 post ? (
@@ -73,9 +81,9 @@ function SubredditScreen() {
                                 ) : (
                                     <Skeleton
                                         variant="rounded"
-                                        height={130}
+                                        height={100}
                                         key={index}
-                                        sx={{ mt: 2 }}
+                                        sx={{ mt: 2.5 }}
                                     />
                                 )
                         )}

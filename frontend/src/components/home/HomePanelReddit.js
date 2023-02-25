@@ -48,9 +48,14 @@ function RedditHome() {
                       ? [...Array(3)].map((e) => new Array(2))
                       : Object.entries(subredditPosts)
                   ).map(([subreddit, posts], index) => (
-                      <Box sx={{ pt: index === 0 ? 0 : 3 }} key={index}>
+                      <Box sx={{ pt: index === 0 ? 0 : 1 }} key={index}>
                           {subreddit ? (
-                              <Typography gutterBottom variant="h3" component="h3" color="primary">
+                              <Typography
+                                  variant="panel_section_title"
+                                  component="h3"
+                                  color="primary"
+                                  sx={{ mb: { xs: 0.2, md: 0.5 } }}
+                              >
                                   <Link
                                       component={RouterLink}
                                       to={`/reddit/subreddits/${utilsService.removeSubredditPrefix(
@@ -63,25 +68,29 @@ function RedditHome() {
                                   </Link>
                               </Typography>
                           ) : (
-                              <Skeleton variant="text" width={310} height={54} sx={{ mb: 2 }} />
+                              <Skeleton
+                                  variant="text"
+                                  width={"30%"}
+                                  height={45}
+                                  sx={{ mb: 0.5, mt: 2 }}
+                              />
                           )}
                           <Divider />
-                          {
-                              <Stack spacing={posts ? 1 : 4}>
-                                  {(posts ? posts : [...Array(2)]).map((post, index) =>
-                                      post ? (
-                                          <PostPreviewCard postDetail={post} key={index} />
-                                      ) : (
-                                          <Skeleton
-                                              variant="rounded"
-                                              height={130}
-                                              key={index}
-                                              sx={{ mt: 2 }}
-                                          />
-                                      )
-                                  )}
-                              </Stack>
-                          }
+
+                          <Stack spacing={0}>
+                              {(posts ? posts : [...Array(2)]).map((post, index) =>
+                                  post ? (
+                                      <PostPreviewCard postDetail={post} key={index} />
+                                  ) : (
+                                      <Skeleton
+                                          variant="rounded"
+                                          height={100}
+                                          key={index}
+                                          sx={{ mt: 2.5 }}
+                                      />
+                                  )
+                              )}
+                          </Stack>
                       </Box>
                   ))}
         </Box>

@@ -40,6 +40,34 @@ const getTheme = (mode) => {
             },
         },
         typography: {
+            tab_label: {
+                fontWeight: "500",
+                lineHeight: theme.typography.subtitle2.lineHeight,
+                letterSpacing: theme.typography.subtitle1.letterSpacing,
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "0.95rem",
+                },
+                [theme.breakpoints.up("sm")]: {
+                    fontSize: "1rem",
+                },
+            },
+            panel_section_title: {
+                fontWeight: "normal",
+                lineHeight: theme.typography.h4.lineHeight,
+                letterSpacing: theme.typography.h4.letterSpacing,
+                [theme.breakpoints.up("xs")]: {
+                    fontSize: "1.15rem",
+                },
+                [theme.breakpoints.up("sm")]: {
+                    fontSize: "1.25rem",
+                },
+                [theme.breakpoints.up("md")]: {
+                    fontSize: "1.35rem",
+                },
+                [theme.breakpoints.up("lg")]: {
+                    fontSize: "1.45rem",
+                },
+            },
             preview_title: {
                 fontWeight: 700,
                 lineHeight: theme.typography.h4.lineHeight,
@@ -54,7 +82,7 @@ const getTheme = (mode) => {
                     fontSize: "1.25rem",
                 },
                 [theme.breakpoints.up("lg")]: {
-                    fontSize: "1.42rem",
+                    fontSize: "1.35rem",
                 },
             },
             preview_body: {

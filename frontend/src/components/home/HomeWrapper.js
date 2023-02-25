@@ -3,7 +3,6 @@ import { Link as RouterLink } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
-import Chip from "@mui/material/Chip";
 import Tab from "@mui/material/Tab";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
@@ -19,7 +18,7 @@ function TabPanel({ children, value, panelName, ...other }) {
             aria-labelledby={`simple-tab-${panelName}`}
             {...other}
         >
-            {value === panelName && <Box sx={{ py: 3 }}>{children}</Box>}
+            {value === panelName && <Box sx={{ py: { xs: 2, md: 3 } }}>{children}</Box>}
         </div>
     );
 }
@@ -29,11 +28,11 @@ function tabProps(value) {
         id: `simple-tab-${value}`,
         "aria-controls": `simple-tabpanel-${value}`,
         sx: {
-            py: 1.2,
-            px: 2.8,
+            pt: 0.5,
+            pb: 0.5,
+            px: 1.5,
             minHeight: "32px",
             fontWeight: "bold",
-            fontSize: "inherit",
         },
     };
 }
@@ -84,7 +83,11 @@ export default function HomeWrapper({ tabName, children }) {
                             value="reddit"
                             component={RouterLink}
                             to={"/"}
-                            label="Reddit"
+                            label={
+                                <Typography variant="tab_label" component="div">
+                                    Reddit
+                                </Typography>
+                            }
                             {...tabProps("reddit")}
                         />
 
@@ -93,13 +96,8 @@ export default function HomeWrapper({ tabName, children }) {
                             component={RouterLink}
                             to={"/hackernews?sort_type=best"}
                             label={
-                                <Typography component="div" sx={{ fontWeight: "bold" }}>
+                                <Typography variant="tab_label" component="div">
                                     Hacker News
-                                    <Chip
-                                        label="beta"
-                                        size="small"
-                                        sx={{ ml: 0.5, fontWeight: "normal" }}
-                                    />
                                 </Typography>
                             }
                             {...tabProps("hackernews")}

@@ -17,8 +17,11 @@ import ResetPasswordConfirmScreen from "./screens/ResetPasswordConfirmScreen";
 import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import PrivateOnlyRoute from "./components/PrivateOnlyRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 import HomeScreenReddit from "./screens/HomeScreenReddit";
 import HomeScreenHackernews from "./screens/HomeScreenHackernews";
+import Fab from "@mui/material/Fab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import authService from "./services/auth";
 import { updateUserSubscriptions } from "./store/userSlice";
@@ -88,6 +91,11 @@ function App() {
                     <Route path="/:app/posts/:id" element={<PostDetailScreen />} />
                 </Routes>
             </main>
+            <BackToTop>
+                <Fab size="small" aria-label="scroll back to top" color="default">
+                    <KeyboardArrowUpIcon />
+                </Fab>
+            </BackToTop>
             {!["/login", "/signup", "/reset-password"].includes(location.pathname) && <Footer />}
         </>
     );
