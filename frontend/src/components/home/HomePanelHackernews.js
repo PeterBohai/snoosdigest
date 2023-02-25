@@ -74,7 +74,7 @@ function HackernewsHome() {
                     post ? (
                         <PostPreviewCard postDetail={post} key={index} />
                     ) : (
-                        <Skeleton variant="rounded" height={130} key={index} sx={{ mt: 4 }} />
+                        <Skeleton variant="rounded" height={100} key={index} sx={{ mt: 2.5 }} />
                     )
                 )}
             </Stack>
