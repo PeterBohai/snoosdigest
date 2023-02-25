@@ -692,7 +692,7 @@ function Header() {
                         size="small"
                         color="primary"
                         aria-label="add subreddit"
-                        sx={{ position: "absolute", bottom: 20, right: 20 }}
+                        sx={{ position: "absolute", bottom: 26, right: 20 }}
                         onClick={handleAddSubredditClick}
                     >
                         <AddIcon />
