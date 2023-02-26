@@ -31,7 +31,7 @@ const userInitialState = {
     userLoginPending: false,
     userError: null,
     userData: setUserData(localUserData),
-    subscriptions: [],
+    subscriptions: null,
 };
 
 export const attemptUserLogin = createAsyncThunk(
@@ -126,6 +126,7 @@ const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.userData = null;
+            state.subscriptions = null;
         },
         updateUserData: (state, action) => {
             state.userData = { ...state.userData, ...action.payload };
@@ -138,6 +139,7 @@ const userSlice = createSlice({
             })
             .addCase(attemptUserLogin.fulfilled, (state, action) => {
                 state.userLoginPending = false;
+                state.subscriptions = null;
                 try {
                     state.userData = setUserData(action.payload);
                 } catch {
@@ -161,6 +163,7 @@ const userSlice = createSlice({
             })
             .addCase(attemptUserRegistration.fulfilled, (state, action) => {
                 state.userLoginPending = false;
+                state.subscriptions = null;
                 try {
                     state.userData = setUserData(action.payload);
                 } catch {

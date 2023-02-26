@@ -8,6 +8,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Skeleton from "@mui/material/Skeleton";
 import Divider from "@mui/material/Divider";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import PostPreviewCard from "../PostPreviewCard";
 import apiService from "../../services/api";
@@ -16,30 +19,45 @@ import { userActions } from "../../store/userSlice";
 
 function RedditHome() {
     const [subredditPosts, setSubredditPosts] = useState({});
+    const [displayNoSubredditAlert, setDisplayNoSubredditAlert] = useState(false);
     const dispatch = useDispatch();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
     useEffect(() => {
-        apiService
-            .getHomePagePosts("day")
-            .then((res) => {
-                setSubredditPosts(res.data);
-                if (res.status === 204) {
-                    setSubredditPosts(null);
-                }
-            })
-            .catch((err) => {
-                console.error("ERROR getting home page posts", err.response.data);
-                if (err.response.data.code === "user_not_found") {
-                    localStorage.removeItem("user");
-                    dispatch(userActions.logout());
-                    window.location.reload();
-                }
-            });
+        if (userSubscriptions !== null) {
+            apiService
+                .getHomePagePosts("day")
+                .then((res) => {
+                    setDisplayNoSubredditAlert(false);
+                    setSubredditPosts(res.data);
+                    if (res.status === 204) {
+                        setSubredditPosts(null);
+                        setDisplayNoSubredditAlert(true);
+                    }
+                })
+                .catch((err) => {
+                    console.error("ERROR getting home page posts", err.response.data);
+                    setDisplayNoSubredditAlert(false);
+                    if (err.response.data.code === "user_not_found") {
+                        localStorage.removeItem("user");
+                        dispatch(userActions.logout());
+                        window.location.reload();
+                    }
+                });
+        }
     }, [userSubscriptions, dispatch]);
 
     return (
         <Box>
+            {displayNoSubredditAlert && (
+                <Alert severity="info" color="primary">
+                    <AlertTitle>No Subreddits</AlertTitle>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                        <Box>Add one in the side menu (top-left)</Box>
+                        <MenuIcon />
+                    </Stack>
+                </Alert>
+            )}
             {/* If subredditPosts is not loaded, provide empty (2D) Array 
             to map function in order to properly display loading skeletons */}
             {subredditPosts === null

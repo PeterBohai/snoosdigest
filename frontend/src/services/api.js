@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store/index";
+import qs from "qs";
 
 const baseUrl = "/api";
 
@@ -34,7 +35,13 @@ function getHomePagePosts(timeFilter) {
     const storeState = store.getState();
     const userData = storeState.user.userData;
     const requestConfig = {
-        params: { time_filter: timeFilter },
+        params: {
+            time_filter: timeFilter,
+            subreddits: storeState.user.subscriptions.map((name) => name.slice(2)),
+        },
+        paramsSerializer: (params) => {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+        },
     };
     if (userData) {
         // Send JWT access token through the Authorization header for server to authenticate and identify the user

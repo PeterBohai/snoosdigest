@@ -5,6 +5,8 @@ from cachetools import TTLCache, cached
 from django.conf import settings
 from django.http import Http404
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from praw import Reddit
 from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
@@ -28,7 +30,6 @@ from api.serializers import (
     SubredditPostSerializer,
     SubredditSerializer,
 )
-from users.utils import get_user_subscriptions
 
 from .utils import get_augmented_post_details
 
@@ -83,14 +84,16 @@ def get_subreddit_top_posts(
 
 
 class HomePagePostsList(APIView):
+    @method_decorator(cache_page(2 * 60))
     def get(self, request: Request) -> Response:
         # Example GET request: /api/reddit/posts/homepage?time_filter=day&posts_per_subreddit=3
         posts_per_subreddit: int = int(
             request.query_params.get("posts_per_subreddit", DEFAULT_POSTS_PER_SUBREDDIT_HOME)
         )
         time_filter: str = request.query_params["time_filter"]
-        user = request.user
-        subreddits: list[str] = get_user_subscriptions(user, reddit)
+        subreddits: list[str] = request.query_params.getlist("subreddits")
+        if not subreddits:
+            return Response(subreddits, status=status.HTTP_204_NO_CONTENT)
 
         response: dict[str, list[dict]] = {}
         for subreddit in subreddits:
@@ -100,12 +103,13 @@ class HomePagePostsList(APIView):
             response[display_name_prefixed] = posts
             queries.update_subreddit_last_viewed(subreddit)
 
-        if not subreddits and not response:
+        if not response:
             return Response(response, status=status.HTTP_204_NO_CONTENT)
         return Response(response)
 
 
 class SubredditTopPostsList(APIView):
+    @method_decorator(cache_page(2 * 60))
     def get(self, request: Request, subreddit: str) -> Response:
         # Example GET request: /api/reddit/subreddits/news/top-posts?time_filter=day&n=2
         n: int = int(request.query_params["n"])

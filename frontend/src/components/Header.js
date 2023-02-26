@@ -637,55 +637,56 @@ function Header() {
                             </ListSubheader>
                         </ListItem>
 
-                        {userSubscriptions.map((subreddit_name, index) => (
-                            <ListItem
-                                button={!subheaderYourSubredditState.edit}
-                                key={subreddit_name}
-                                sx={{ maxWidth: "100%" }}
-                                onClick={
-                                    subheaderYourSubredditState.edit
-                                        ? null
-                                        : () => handleSubredditClick(subreddit_name)
-                                }
-                                secondaryAction={
-                                    subheaderYourSubredditState.edit ? (
-                                        <IconButton
-                                            aria-label="delete"
-                                            onClick={() =>
-                                                handleDeleteSubredditClick(subreddit_name)
-                                            }
-                                        >
-                                            <DeleteIcon sx={{ fontSize: 20 }} />
-                                        </IconButton>
-                                    ) : null
-                                }
-                            >
-                                <ListItemIcon sx={{ minWidth: "36px" }}>
-                                    {theme.palette.mode === "light" ? (
-                                        <ArrowCircleRightIcon color="primary" />
-                                    ) : (
-                                        <ArrowCircleUpIcon
-                                            sx={{
-                                                color: "primary.main",
-                                                transform: "rotate(90deg)",
-                                            }}
-                                        />
-                                    )}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={subreddit_name}
-                                    primaryTypographyProps={{
-                                        style: {
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                        },
-                                    }}
-                                    onKeyDown={toggleDrawer()}
-                                    onClick={toggleDrawer()}
-                                />
-                            </ListItem>
-                        ))}
+                        {userSubscriptions &&
+                            userSubscriptions.map((subreddit_name, index) => (
+                                <ListItem
+                                    button={!subheaderYourSubredditState.edit}
+                                    key={subreddit_name}
+                                    sx={{ maxWidth: "100%" }}
+                                    onClick={
+                                        subheaderYourSubredditState.edit
+                                            ? null
+                                            : () => handleSubredditClick(subreddit_name)
+                                    }
+                                    secondaryAction={
+                                        subheaderYourSubredditState.edit ? (
+                                            <IconButton
+                                                aria-label="delete"
+                                                onClick={() =>
+                                                    handleDeleteSubredditClick(subreddit_name)
+                                                }
+                                            >
+                                                <DeleteIcon sx={{ fontSize: 20 }} />
+                                            </IconButton>
+                                        ) : null
+                                    }
+                                >
+                                    <ListItemIcon sx={{ minWidth: "36px" }}>
+                                        {theme.palette.mode === "light" ? (
+                                            <ArrowCircleRightIcon color="primary" />
+                                        ) : (
+                                            <ArrowCircleUpIcon
+                                                sx={{
+                                                    color: "primary.main",
+                                                    transform: "rotate(90deg)",
+                                                }}
+                                            />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={subreddit_name}
+                                        primaryTypographyProps={{
+                                            style: {
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            },
+                                        }}
+                                        onKeyDown={toggleDrawer()}
+                                        onClick={toggleDrawer()}
+                                    />
+                                </ListItem>
+                            ))}
                     </List>
 
                     <Fab
