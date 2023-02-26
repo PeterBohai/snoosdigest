@@ -67,6 +67,7 @@ function SubredditScreen() {
                             variant="h3"
                             component="h2"
                             color="primary"
+                            fontWeight={"500"}
                             sx={{ mb: { xs: 0.2, md: 0.5 } }}
                         >
                             {posts.subreddit_name}
