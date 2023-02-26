@@ -75,7 +75,7 @@ def build_post_like_item(item: dict[str, Any]) -> dict:
         "upvotes": item.get("score", ""),
         "num_comments": item.get("descendants"),
         "body": build_post_body(item),
-        "body_is_url": determine_is_body_url(item),
+        "body_url": build_post_body(item) if determine_is_body_url(item) else "",
         "hackernews_url": build_source_url(item),
         "created_utc": item.get("time"),
         "comments": item.get("kids", [])[:MAX_COMMENTS],

@@ -20,6 +20,16 @@ function isValidHttpUrl(string) {
     return url.protocol === "http:" || url.protocol === "https:";
 }
 
+function getShortUrl(urlString) {
+    // Cleans url into something like "example.com/techno...". No www, no protocol (https), etc.
+    const urlObj = new URL(urlString);
+    let hostname = urlObj.hostname;
+    if (hostname.indexOf("www.") === 0) {
+        hostname = hostname.replace("www.", "");
+    }
+    return hostname + (urlObj.pathname === "/" ? "" : urlObj.pathname.slice(0, 7) + "...");
+}
+
 function removeSubredditPrefix(subreddit_with_prefix) {
     return subreddit_with_prefix.slice(2);
 }
@@ -82,6 +92,7 @@ const exportedFunctions = {
     getUserWelcomeName,
     sleep,
     validateEmail,
+    getShortUrl,
 };
 
 export default exportedFunctions;

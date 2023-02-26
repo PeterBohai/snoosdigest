@@ -34,16 +34,16 @@ const getPostContent = (post, appName) => {
     if (post.video_url && post.video_url.length !== 0) {
         return <CardMedia component="video" image={post.video_url} controls />;
     }
-    if (post.body_is_url) {
+    if (post.snoosdigest_app === "hackernews" && post.body_url !== "") {
         return (
             <Link
                 component={RouterLink}
-                to={post.body}
+                to={post.body_url}
                 target="_blank"
                 sx={{ color: "primary.main" }}
                 underline="hover"
             >
-                {post.body}
+                {utilsService.getShortUrl(post.body_url)}
             </Link>
         );
     }

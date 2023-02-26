@@ -21,16 +21,16 @@ import { getHackernewsPostDetails } from "../services/hackernews";
 const CONTENT_MAX_CHARS = 800;
 const getPostContent = (post) => {
     if (Object.keys(post).length === 0 || !post.body) return "";
-    if (post.body_is_url) {
+    if (post.snoosdigest_app === "hackernews" && post.body_url !== "") {
         return (
             <Link
                 component={RouterLink}
-                to={post.body}
+                to={post.body_url}
                 target="_blank"
                 sx={{ color: "primary.main" }}
                 underline="hover"
             >
-                {post.body}
+                {utilsService.getShortUrl(post.body_url)}
             </Link>
         );
     }
