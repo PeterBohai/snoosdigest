@@ -1,5 +1,6 @@
 from typing import Union
 
+from django.db import Error as DbError
 from django.utils import timezone
 from praw.models import Submission
 from rest_framework import serializers
@@ -21,6 +22,7 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     img_url = serializers.SerializerMethodField()
     video_url = serializers.SerializerMethodField()
     body = serializers.SerializerMethodField()
+    body_url = serializers.SerializerMethodField()
     permalink = serializers.SerializerMethodField()
     created_utc = serializers.FloatField()
     over_18 = serializers.BooleanField(allow_null=True)
@@ -29,25 +31,32 @@ class RedditPostPreviewSerializer(serializers.Serializer):
     def get_permalink(self, obj: Submission) -> str:
         return utils.generate_full_reddit_link(obj.permalink)
 
-    def get_body(self, obj: Submission) -> str:
-        body: str = obj.selftext or ""
-
+    def _extract_body_text_or_url(self, obj: Submission, body_text: str) -> str:
+        if body_text:
+            return utils.normalize_text_content(body_text)
         # Check if body is just a http link
         permalink: str = self.get_permalink(obj)
-        if not body:
-            if obj.id_from_url(permalink) != obj.id:
-                # Link is another reddit post
-                body = permalink
-            elif hasattr(obj, "url_overridden_by_dest"):
-                # Link is a non-reddit article
-                body = obj.url_overridden_by_dest
-
-        # Check if body is a cross-post (nests another reddit post directly in the post body)
-        if not body and hasattr(obj, "crosspost_parent_list"):
+        if obj.id_from_url(permalink) != obj.id:
+            # Link is another reddit post
+            return utils.normalize_text_content(permalink)
+        if hasattr(obj, "url_overridden_by_dest"):
+            # Link is a non-reddit article
+            return utils.normalize_text_content(obj.url_overridden_by_dest)
+        if hasattr(obj, "crosspost_parent_list"):
+            # Check if body is a cross-post (links to another reddit post in the post body)
             crosspost_id: str = obj.crosspost_parent_list[0].get("id", "")
-            body = utils.generate_reddit_link_from_id(crosspost_id)
+            crosspost_link = utils.generate_reddit_link_from_id(crosspost_id)
+            return utils.normalize_text_content(crosspost_link)
+        return ""
 
-        return utils.normalize_text_content(body)
+    def get_body(self, obj: Submission) -> str:
+        return self._extract_body_text_or_url(obj, obj.selftext or "")
+
+    def get_body_url(self, obj: Submission) -> str:
+        body: str = obj.selftext or ""
+        if body:
+            return ""
+        return self._extract_body_text_or_url(obj, body)
 
     def get_img_url(self, obj: Submission) -> str:
         if "i.redd.it" in obj.url:
@@ -95,7 +104,14 @@ class SubredditPostSerializer(serializers.ModelSerializer):
         Create and return a new `SubredditPost` instance, given the validated data.
         """
         validated_data["data_updated_timestamp_utc"] = timezone.now()
-        return SubredditPost.objects.create(**validated_data)
+        try:
+            return SubredditPost.objects.create(**validated_data)
+        except DbError as err:
+            print(f"DB ERROR - {err}")
+            return SubredditPost.objects.get(
+                reddit_id=validated_data.get("reddit_id"),
+                top_day_order=validated_data.get("top_day_order"),
+            )
 
 
 class SubredditSerializer(serializers.ModelSerializer):

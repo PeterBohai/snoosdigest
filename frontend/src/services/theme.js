@@ -52,7 +52,7 @@ const getTheme = (mode) => {
                 },
             },
             panel_section_title: {
-                fontWeight: "normal",
+                fontWeight: "500",
                 lineHeight: theme.typography.h4.lineHeight,
                 letterSpacing: theme.typography.h4.letterSpacing,
                 [theme.breakpoints.up("xs")]: {

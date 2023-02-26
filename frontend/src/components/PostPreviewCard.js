@@ -21,7 +21,7 @@ import { getHackernewsPostDetails } from "../services/hackernews";
 const CONTENT_MAX_CHARS = 800;
 const getPostContent = (post) => {
     if (Object.keys(post).length === 0 || !post.body) return "";
-    if (post.snoosdigest_app === "hackernews" && post.body_url !== "") {
+    if (post.body_url && post.body_url !== "") {
         return (
             <Link
                 component={RouterLink}

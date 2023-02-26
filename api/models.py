@@ -34,6 +34,7 @@ class SubredditPost(models.Model):
     top_all_order = models.PositiveSmallIntegerField(null=True)
     title = models.CharField(max_length=300)
     body = models.TextField(null=True, blank=True)
+    body_url = models.TextField(null=False, blank=True, default="")
     author_name = models.CharField(max_length=64)
     upvotes = models.IntegerField()
     upvote_ratio = models.FloatField(null=True)

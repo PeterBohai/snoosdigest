@@ -111,7 +111,7 @@ def test_build_post_like_item(hackernews_json_res: dict) -> None:
         "upvotes": 104,
         "num_comments": 71,
         "body": "http://www.getdropbox.com/u/2/screencast.html",
-        "body_is_url": True,
+        "body_url": "http://www.getdropbox.com/u/2/screencast.html",
         "hackernews_url": "https://news.ycombinator.com/item?id=8863",
         "created_utc": 1175714200,
         "comments": [9224, 8917],

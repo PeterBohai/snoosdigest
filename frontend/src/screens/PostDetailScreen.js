@@ -34,7 +34,7 @@ const getPostContent = (post, appName) => {
     if (post.video_url && post.video_url.length !== 0) {
         return <CardMedia component="video" image={post.video_url} controls />;
     }
-    if (post.snoosdigest_app === "hackernews" && post.body_url !== "") {
+    if (post.body_url && post.body_url !== "") {
         return (
             <Link
                 component={RouterLink}
