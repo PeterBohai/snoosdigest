@@ -1,9 +1,12 @@
 """This module contains utility functions that help abstract actions and promote DRY."""
+import asyncio
 import logging
 import time
 from typing import Any
 
+import aiohttp
 import requests
+from asyncache import cached as async_cached
 from cachetools import TTLCache, cached
 from django.conf import settings
 from requests import JSONDecodeError
@@ -28,15 +31,37 @@ def get_item_details(item_id: int) -> dict[str, Any]:
         raise APIException("Found invalid JSON when parsing item from HN API response")
 
 
-def get_post_details_from_ids(post_ids: list[int]) -> list[dict]:
+@async_cached(cache=TTLCache(maxsize=500, ttl=20))
+async def async_get_item_details(item_id: int) -> dict[str, Any]:
+    """Returns the specified item's details as a dictionary. Can raise APIException."""
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_BASE_URL}/item/{item_id}.json") as item_response:
+            if item_response.status != status.HTTP_200_OK:
+                raise APIException(
+                    f"HN API returned {item_response.status} status for item_id={item_id}"
+                )
+            try:
+                item = await item_response.json()
+                return item
+            except Exception as err:
+                raise APIException(f"Error when parsing item from HN API response - {err}")
+
+
+async def get_post_details_from_ids(post_ids: list[int]) -> list[dict]:
     """Given a list of post ids, return their post details as a list."""
-    post_details: list[dict] = []
     start_benchmark = time.time()
-    for post_id in post_ids:
-        post = get_item_details(post_id)
-        post_details.append(build_post_like_item(post))
-    logger.info(f"{time.time() - start_benchmark:.3f}s to finish querying all post details")
-    return post_details
+    try:
+        post_details = await asyncio.gather(
+            *[async_get_item_details(post_id) for post_id in post_ids]
+        )
+        normalized_post_details = [
+            build_post_like_item(post_detail) for post_detail in post_details
+        ]
+        logger.info(f"{time.time() - start_benchmark:.3f}s to finish querying all post details")
+        return normalized_post_details
+    except RuntimeError as err:
+        logger.error(f"Async RuntimeError: {err}")
+    return []
 
 
 def determine_is_body_url(item: dict[str, Any]) -> bool:

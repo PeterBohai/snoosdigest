@@ -126,6 +126,13 @@ First, run the Django backend using the local settings
 python manage.py runserver --settings=snoosdigest.settings.local
 ```
 
+Note - for running Django in a ASGI environment,
+
+```shell
+export DJANGO_SETTINGS_MODULE=snoosdigest.settings.local
+python start_asgi_server.py
+```
+
 In a second terminal window, run the React frontend
 
 ```shell

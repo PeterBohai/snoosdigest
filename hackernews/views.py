@@ -5,6 +5,7 @@ More info about their API can be found at https://github.com/HackerNews/API
 import logging
 
 import requests
+from asgiref.sync import async_to_sync
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from requests import Response
@@ -32,7 +33,8 @@ class PostList(APIView):
     """
 
     @method_decorator(cache_page(10 * 60))
-    def get(self, request: Request) -> DrfResponse:
+    @async_to_sync
+    async def get(self, request: Request) -> DrfResponse:
         """Returns a lists o posts under the specified `sort_type`.
 
         Example request: GET /api/hackernews/posts/best.
@@ -51,7 +53,8 @@ class PostList(APIView):
 
         res: Response = requests.get(f"{API_BASE_URL}/{sort_type}stories.json")
         post_ids: list[int] = res.json()[:MAX_POSTS]
-        return DrfResponse(get_post_details_from_ids(post_ids))
+        post_details = await get_post_details_from_ids(post_ids)
+        return DrfResponse(post_details)
 
 
 class PostDetail(APIView):

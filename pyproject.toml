@@ -20,7 +20,11 @@ module = [
     "rest_framework_simplejwt.*",
     "pytest.*",
     "sendgrid.*",
-    "requests.*"
+    "requests.*",
+    "aiohttp.*",
+    "asyncache.*",
+    "uvicorn.*",
+    "asgiref.*",
 ]
 ignore_missing_imports = true
 
