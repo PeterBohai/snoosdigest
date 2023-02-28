@@ -24,15 +24,46 @@ import apiService from "../services/api";
 import utilsService from "../services/utils";
 import themeService from "../services/theme";
 
-const getPostContent = (post, appName) => {
+const getPostContent = (post, appName, theme) => {
     if (Object.keys(post).length === 0) {
         return "";
     }
     if (post.img_url && post.img_url.length !== 0) {
-        return <img src={post.img_url} alt="" />;
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            >
+                <Link
+                    component={RouterLink}
+                    to={post.img_url}
+                    target="_blank"
+                    sx={{
+                        maxWidth: "100%",
+                        [theme.breakpoints.up("sm")]: {
+                            maxWidth: "90%",
+                        },
+                    }}
+                >
+                    <Box
+                        component="img"
+                        src={post.img_url}
+                        alt={`${appName} post main content`}
+                        sx={{
+                            maxWidth: "100%",
+                            [theme.breakpoints.up("sm")]: {
+                                maxHeight: "800px",
+                            },
+                        }}
+                    />
+                </Link>
+            </Box>
+        );
     }
     if (post.video_url && post.video_url.length !== 0) {
-        return <CardMedia component="video" image={post.video_url} controls />;
+        return <CardMedia component="video" src={post.video_url} controls />;
     }
     if (post.body_url && post.body_url !== "") {
         return (
@@ -194,7 +225,7 @@ function PostDetailScreen() {
                             component="div"
                             sx={{ my: 3, overflowWrap: "break-word" }}
                         >
-                            {getPostContent(post, app)}
+                            {getPostContent(post, app, theme)}
                         </Typography>
                         <Stack
                             direction="row"

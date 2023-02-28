@@ -1,4 +1,13 @@
-import { Typography, Table, TableBody, TableCell, TableHead, TableRow, Link } from "@mui/material";
+import {
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Link,
+    Box,
+} from "@mui/material";
 import { grey, common } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
@@ -331,6 +340,11 @@ const markdownBaseOptions = {
             component: Link,
             props: {
                 target: "_blank",
+            },
+        },
+        img: {
+            props: {
+                style: { maxWidth: "100%" },
             },
         },
     },
