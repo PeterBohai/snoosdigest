@@ -6,10 +6,18 @@ import {
     TableHead,
     TableRow,
     Link,
+    TableContainer,
+    Paper,
     Box,
 } from "@mui/material";
 import { grey, common } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+
+const MdTableComponent = ({ children, ...props }) => (
+    <TableContainer component={Paper} sx={{ boxShadow: 1 }}>
+        <Table {...props}>{children}</Table>
+    </TableContainer>
+);
 
 const getTheme = (mode) => {
     let theme = createTheme(baseTheme(mode));
@@ -303,34 +311,16 @@ const markdownBaseOptions = {
             },
         },
         table: {
-            component: Table,
+            component: MdTableComponent,
             props: {
                 size: "small",
             },
         },
-        thead: {
-            component: TableHead,
-        },
-        tr: {
-            component: TableRow,
-        },
-        th: {
-            component: TableCell,
-            props: {
-                style: {},
-                align: "left",
-            },
-        },
-        tbody: {
-            component: TableBody,
-        },
-        td: {
-            component: TableCell,
-            props: {
-                style: {},
-                align: "left",
-            },
-        },
+        thead: TableHead,
+        tr: TableRow,
+        th: TableCell,
+        tbody: TableBody,
+        td: TableCell,
         blockquote: {
             props: {
                 className: "markdown",
@@ -345,6 +335,21 @@ const markdownBaseOptions = {
         img: {
             props: {
                 style: { maxWidth: "100%" },
+            },
+        },
+        code: {
+            component: Box,
+            props: {
+                component: "code",
+            },
+        },
+        pre: {
+            component: Box,
+            props: {
+                component: "pre",
+                my: 0.5,
+                p: 0.8,
+                backgroundColor: "background.paper",
             },
         },
     },
