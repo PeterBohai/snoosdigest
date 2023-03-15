@@ -3,7 +3,7 @@ from typing import Union
 
 from cachetools import TTLCache, cached
 from django.conf import settings
-from django.http import Http404
+from django.http import Http404, HttpResponseServerError
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -12,6 +12,7 @@ from praw.models import Submission as PrawSubmission
 from praw.models import Subreddit as PrawSubreddit
 from prawcore.exceptions import NotFound as PrawNotFound
 from prawcore.exceptions import Redirect as PrawRedirect
+from prawcore.exceptions import ResponseException as PrawResException
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -41,6 +42,7 @@ logger = logging.getLogger(__name__)
 def get_subreddit_top_posts(
     subreddit_name: str, time_filter: str, num_posts: int
 ) -> tuple[str, list[dict]]:
+    raise HttpResponseServerError
     # Query database first
     posts_up_to_date = True
 
@@ -74,9 +76,15 @@ def get_subreddit_top_posts(
         f"query reddit API and cache to db"
     )
     praw_subreddit: PrawSubreddit = reddit.subreddit(subreddit_name)
-    serialized_posts = queries.update_or_insert_subreddit_posts(
-        subreddit_posts, praw_subreddit, time_filter
-    )
+    try:
+        serialized_posts = queries.update_or_insert_subreddit_posts(
+            subreddit_posts, praw_subreddit, time_filter
+        )
+    except PrawResException as err:
+        logger.error(f"prawcore.exceptions.ResponseException: {err}")
+        logger.info("Due to response issues from Reddit, using outdated posts for now")
+        serialized_posts = SubredditPostSerializer(subreddit_posts, many=True).data
+
     posts = []
     for post_details in serialized_posts[:num_posts]:
         posts.append(get_augmented_post_details(post_details, praw_subreddit.display_name_prefixed))
