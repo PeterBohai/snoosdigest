@@ -20,6 +20,7 @@ import { userActions } from "../../store/userSlice";
 function RedditHome() {
     const [subredditPosts, setSubredditPosts] = useState({});
     const [displayNoSubredditAlert, setDisplayNoSubredditAlert] = useState(false);
+    const [displayServerErrorAlert, setDisplayServerErrorAlert] = useState(false);
     const dispatch = useDispatch();
     const userSubscriptions = useSelector((state) => state.user.subscriptions);
 
@@ -29,6 +30,7 @@ function RedditHome() {
                 .getHomePagePosts("day")
                 .then((res) => {
                     setDisplayNoSubredditAlert(false);
+                    setDisplayServerErrorAlert(false);
                     setSubredditPosts(res.data);
                     if (res.status === 204) {
                         setSubredditPosts(null);
@@ -36,12 +38,16 @@ function RedditHome() {
                     }
                 })
                 .catch((err) => {
-                    console.error("ERROR getting home page posts", err.response.data);
+                    console.error("ERROR getting home page posts", err.response);
                     setDisplayNoSubredditAlert(false);
+
+                    setSubredditPosts(null);
                     if (err.response.data.code === "user_not_found") {
                         localStorage.removeItem("user");
                         dispatch(userActions.logout());
                         window.location.reload();
+                    } else {
+                        setDisplayServerErrorAlert(true);
                     }
                 });
         }
@@ -56,6 +62,15 @@ function RedditHome() {
                         <Box>Add one in the side menu (top-left)</Box>
                         <MenuIcon />
                     </Stack>
+                </Alert>
+            )}
+            {displayServerErrorAlert && (
+                <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    There was an issue retrieving updated posts from{" "}
+                    <Link href="https://www.reddit.com/">Reddit</Link>. In the meantime, please
+                    check <Link href="https://www.redditstatus.com/">redditstatus.com</Link> to see
+                    if others are affected. Thank you!
                 </Alert>
             )}
             {/* If subredditPosts is not loaded, provide empty (2D) Array 

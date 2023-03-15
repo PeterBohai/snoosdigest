@@ -3,7 +3,7 @@ from typing import Union
 
 from cachetools import TTLCache, cached
 from django.conf import settings
-from django.http import Http404, HttpResponseServerError
+from django.http import Http404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -42,7 +42,6 @@ logger = logging.getLogger(__name__)
 def get_subreddit_top_posts(
     subreddit_name: str, time_filter: str, num_posts: int
 ) -> tuple[str, list[dict]]:
-    raise HttpResponseServerError
     # Query database first
     posts_up_to_date = True
 
