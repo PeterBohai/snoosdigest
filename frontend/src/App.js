@@ -25,6 +25,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import authService from "./services/auth";
 import { updateUserSubscriptions } from "./store/userSlice";
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-ZC713DFWZW");
 
 function App() {
     const dispatch = useDispatch();
