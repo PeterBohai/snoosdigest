@@ -22,7 +22,16 @@ function isValidHttpUrl(string) {
 
 function getShortUrl(urlString) {
     // Cleans url into something like "example.com/techno...". No www, no protocol (https), etc.
-    const urlObj = new URL(urlString);
+    let urlObj = null;
+    try {
+        urlObj = new URL(urlString);
+    } catch ({ errorType, message }) {
+        console.error(
+            `Got ${errorType}: ${message} while trying to parse this url string: ${urlString}`
+        );
+        return "link";
+    }
+
     let hostname = urlObj.hostname;
     if (hostname.indexOf("www.") === 0) {
         hostname = hostname.replace("www.", "");
