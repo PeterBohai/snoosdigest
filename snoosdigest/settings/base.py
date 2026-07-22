@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import base64
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -148,6 +149,8 @@ REDDIT_APP_SETTINGS = {
     "client_id": os.environ.get("REDDIT_APP_CLIENT_ID"),
     "client_secret": os.environ.get("REDDIT_APP_SECRET"),
     "user_agent": os.environ.get("REDDIT_APP_USER_AGENT"),
+    "username": os.environ.get("REDDIT_USERNAME"),
+    "password": base64.b64decode(os.environ.get("REDDIT_PASSWORD_ENCODED", "")).decode("utf-8"),
 }
 
 CORS_ALLOWED_ORIGINS = [
